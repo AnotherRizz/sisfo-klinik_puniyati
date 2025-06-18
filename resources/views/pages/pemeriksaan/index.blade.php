@@ -7,7 +7,7 @@
 
     <div class="flex w-full gap-2 justify-end items-center ">
         <a href="{{ route('pmr.export') }} " target="_blank"
-            class="px-3 py-1.5 text-white flex gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Export
+            class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Export
             Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -75,17 +75,17 @@
 
                                 <a href="{{ route('pemeriksaan.edit', $item->id) }}"
                                     class="px-3 py-1 text-white bg-yellow-500 rounded text-xs hover:bg-yellow-600">Edit</a>
-                                <form id="delete-form-{{ $item->id }}"
+                                {{-- <form id="delete-form-{{ $item->id }}"
                                     action="{{ route('pemeriksaan.destroy', $item->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button"
                                         class="px-3 py-1 text-white bg-red-500 rounded text-xs hover:bg-red-600"
                                         onclick="confirmDelete({{ $item->id }})">Hapus</button>
-                                </form>
-                            </div>
+                                </form> --}}
+                            {{-- </div>
 
-                            <div>
+                            <div> --}}
 
                                 <a href="{{ route('pemeriksaan.show', $item->id) }}"
                                     class="px-3 py-1 text-white bg-sky-500 rounded text-xs hover:bg-sky-600">Detail</a>
