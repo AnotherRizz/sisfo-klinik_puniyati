@@ -40,8 +40,10 @@ public function export()
 {
     $pasien = Pasien::all();
 
-    $pdf = Pdf::loadView('pages.export.pasien', compact('pasien'));
-    return $pdf->stream('data_pasien_.pdf');
+    $pdf = Pdf::loadView('pages.export.pasien', compact('pasien'))
+     ->setPaper('a4', 'landscape');
+    return $pdf->stream('data_pasien_.pdf') ; 
+   
 }
 
 
@@ -82,7 +84,7 @@ public function store(Request $request)
     $newNoRm = str_pad(($lastNoRm ? $lastNoRm + 1 : 1), 8, '0', STR_PAD_LEFT); // Format menjadi 8 digit
 
     // Buat data baru dengan no_rm yang di-generate
-    Pasien::create([
+   $pasien = Pasien::create([
         'no_rm' => $newNoRm,
         'nik_pasien' => $request->nik_pasien,
         'nama_pasien' => $request->nama_pasien,
@@ -98,7 +100,12 @@ public function store(Request $request)
         'no_tlp' => $request->no_tlp,
     ]);
 
-    return redirect()->route('pasien.index')->with('success', 'Data pasien berhasil ditambahkan.');
+     if ($request->source_form == 'pasien') {
+        return redirect()->route('pasien.index')->with('success', 'Data pasien berhasil ditambahkan.');
+    } elseif ($request->source_form == 'pendaftaran') {
+      return redirect()->route('pendaftaran.create', ['pasien_id' => $pasien->id])
+        ->with('success', 'Data pasien berhasil ditambahkan.');
+    }
 }
 
 

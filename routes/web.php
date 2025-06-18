@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/laporan/pemeriksaan', [LaporanController::class, 'exportPemeriksaan'])->name('laporan.pemeriksaan');
 Route::get('/laporan/pembayaran', [LaporanController::class, 'exportPembayaran'])->name('laporan.pembayaran');
 Route::get('/pasien/{id}/cetak-kib', [PasienController::class, 'cetakKIB'])->name('pasien.cetak.kib');
-Route::get('/pasein/export', [PasienController::class, 'export'])->name('pasien.export');
+Route::get('/pasien/export', [PasienController::class, 'export'])->name('pasien.export');
 Route::get('/bidan/export', [BidanController::class, 'export'])->name('bidan.export');
 Route::get('/obat/export', [ObatController::class, 'export'])->name('obat.export');
 Route::get('/pelayanan/export', [PelayananController::class, 'export'])->name('pelayanan.export');

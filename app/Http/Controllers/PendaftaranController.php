@@ -36,15 +36,16 @@ $perPage = $request->get('per_page', 5);
     /**
      * Show the form for creating a new resource.
      */
-     public function create()
-    {
-        return view('pages.pendaftaran.create', [
-            'pasiens' => Pasien::all(),
-           
-            'bidans' => Bidan::all(),
-            'pelayanans' => Pelayanan::all(),
-        ]);
-    }
+   public function create(Request $request)
+{
+    return view('pages.pendaftaran.create', [
+        'pasiens' => Pasien::all(),
+        'bidans' => Bidan::all(),
+        'pelayanans' => Pelayanan::all(),
+        'selectedPasien' => $request->pasien_id,
+    ]);
+}
+
 
     /**
      * Store a newly created resource in storage.

@@ -18,6 +18,7 @@
         <form action="{{ route('pasien.store') }}" method="POST">
             @csrf
             <div class="grid gap-6 mb-6 md:grid-cols-2">
+                <input type="hidden" name="source_form" value="pasien">
                 <div>
                     <label for="nik_pasien" class="block mb-2 text-sm font-medium text-gray-900">NIK Pasien</label>
                     <input type="number" id="nik_pasien" name="nik_pasien" value="{{ old('nik_pasien') }}"

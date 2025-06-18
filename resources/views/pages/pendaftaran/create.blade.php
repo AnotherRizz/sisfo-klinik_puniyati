@@ -21,9 +21,10 @@
 
                 {{-- Pasien --}}
                 <div>
-                    <x-select2 id="pasien_id" name="pasien_id" label="Pasien"
-                        :options="$pasiens->mapWithKeys(fn($p) => [$p->id => $p->nama_pasien .' - '. $p->no_rm])"
-                        :selected="old('pasien_id')" />
+                   <x-select2 id="pasien_id" name="pasien_id" label="Pasien"
+    :options="$pasiens->mapWithKeys(fn($p) => [$p->id => $p->nama_pasien .' - '. $p->no_rm])"
+    :selected="old('pasien_id', $selectedPasien ?? '')" />
+
                 </div>
 
                 {{-- Bidan --}}
