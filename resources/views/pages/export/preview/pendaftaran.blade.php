@@ -27,7 +27,7 @@
             {{-- Header Logo dan Info --}}
             <div class="flex items-start gap-4 mb-4 relative">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo"
-                    class="w-30 h-30 absolute  -top-7 left-32 object-contain">
+                    class="w-30 h-30 absolute  -top-7 left-16 object-contain">
                 <div class="text-center flex-1">
                     <h1 class="text-lg font-bold uppercase">Bidan Praktik Mandiri Puniyati A.Md Keb</h1>
                     <p class="text-sm">Nomor SIPB: 0026/SIPB/33.11/VI/2019</p>

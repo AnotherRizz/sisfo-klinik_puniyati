@@ -3,10 +3,10 @@
 @section('title', 'Data Pemeriksaan')
 
 @section('content')
-    <h1 class="text-xl font-semibold mb-4">Data Pemeriksaan</h1>
+    <h1 class="text-xl font-semibold mb-4">Data Pemeriksaan Ibu Nifas</h1>
 
     <div class="flex w-full gap-2 justify-end items-center ">
-        <a href="{{ route('pmr.export') }} " target="_blank"
+        <a  href="{{ route('all.export', ['nama_pelayanan' => 'Ibu Nifas']) }}" target="_blank"
             class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Export
             Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
@@ -15,7 +15,7 @@
             </svg>
         </a>
 
-        <a href="{{ route('pemeriksaan.create') }}"
+        <a href="{{ route('nifas.create') }}"
             class="px-3 py-1.5 text-white flex items-center gap-2 mt-2 cursor-pointer bg-sky-500 hover:bg-sky-600 rounded mb-4 text-sm">
             Tambah Pemeriksaan
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -33,9 +33,9 @@
         <div class="w-full flex justify-between">
 
             <div class="mb-4 basis-1/2">
-                <x-search-input :action="route('pemeriksaan.index')" name="search" placeholder="Cari nama / no periksa..." />
+                <x-search-input :action="route('nifas.index')" name="search" placeholder="Cari nama / no periksa..." />
             </div>
-            <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('pemeriksaan.index')" />
+            <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('nifas.index')" />
 
         </div>
 
@@ -73,7 +73,7 @@
                         <td class="px-4 py-2 text-sm text-gray-900 flex flex-col gap-1">
                             <div>
 
-                                <a href="{{ route('pemeriksaan.edit', $item->id) }}"
+                                <a href="{{ route('nifas.edit', $item->id) }}"
                                     class="px-3 py-1 text-white bg-yellow-500 rounded text-xs hover:bg-yellow-600">Edit</a>
                                 {{-- <form id="delete-form-{{ $item->id }}"
                                     action="{{ route('pemeriksaan.destroy', $item->id) }}" method="POST" class="inline">
@@ -87,9 +87,9 @@
 
                             <div> --}}
 
-                                <a href="{{ route('pemeriksaan.show', $item->id) }}"
+                                <a href="{{ route('nifas.show', $item->id) }}"
                                     class="px-3 py-1 text-white bg-sky-500 rounded text-xs hover:bg-sky-600">Detail</a>
-                                <a href="{{ route('pmr.resume', $item->id) }}" target="_blank"
+                                <a href="{{ route('nifas.resume', $item->id) }}" target="_blank"
                                     class="px-3 py-1 text-white bg-teal-500 rounded text-xs hover:bg-teal-600">Resume</a>
                             </div>
                         </td>

@@ -20,7 +20,7 @@
             @method('PUT')
 
             <div class="grid gap-6 mb-6 md:grid-cols-2">
-                 {{--Kode Bayar --}}
+                {{-- Kode Bayar --}}
                 <div>
                     <label for="kd_bayar" class="block text-sm font-medium text-gray-700 mb-1">Kode Bayar<span
                             class="text-xs text-gray-500"></span></label>
@@ -29,27 +29,26 @@
                 </div>
 
                 {{-- No Registrasi --}}
-                <div>
-                    <x-select2 id="no_periksa" name="pemeriksaan_id" label="No Pemeriksaan" :options="$pemeriksaans->mapWithKeys(
-                        fn($p) => [
-                            $p->id => [
-                                'label' =>
-                                    $p->no_periksa .
-                                    ' - ' .
-                                    ($p->pendaftaran->pasien->nama_pasien ?? 'Tidak Diketahui'),
-                                'data-pasien-nama' => $p->pendaftaran->pasien->nama_pasien ?? '',
-                                'data-obat-nama' => $p->obat->nama_obat ?? '',
-                                'data-pelayanan-nama' => $p->pendaftaran->pelayanan->nama_pelayanan ?? '-',
-                                'data-bidan-nama' => $p->pendaftaran->bidan->nama_bidan ?? '',
-                            ],
-                        ],
-                    )"
-                        :selected="old('no_periksa', $pembayarans->pemeriksaan_id)" />
+               <div>
+   <x-select2 id="no_periksa" name="pemeriksaan_id" label="No Pemeriksaan" 
+    :options="$pemeriksaans->mapWithKeys(
+        fn($p) => [
+            $p->id => [
+                'label' => $p->no_periksa . ' - ' . ($p->pendaftaran->pasien->nama_pasien ?? 'Tidak Diketahui'),
+                'data-pasien-nama' => $p->pendaftaran->pasien->nama_pasien ?? '',
+                'data-obat-nama' => $p->obat ? $p->obat->pluck('nama_obat')->join(', ') : '',
+                'data-pelayanan-nama' => $p->pendaftaran->pelayanan->nama_pelayanan ?? '-',
+                'data-bidan-nama' => $p->pendaftaran->bidan->nama_bidan ?? '',
+            ],
+        ]
+    )"
+    :selected="$pembayarans->pemeriksaan_id"
+/>
+
+</div>
 
 
-                </div>
 
-               
                 {{-- Nama Pasien --}}
                 <div>
                     <label for="pasien_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Pasien <span
@@ -74,8 +73,9 @@
                     <label for="obat_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Obat <span
                             class="text-xs text-gray-500">(otomatis terisi berdasar No Pemeriksaan)</span></label>
                     <input type="text" id="obat_nama" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100"
-                        readonly>
+                        value="{{ $pembayarans->pemeriksaan->obat->pluck('nama_obat')->join(', ') ?? '' }}" readonly>
                 </div>
+
                 {{-- Nama pelayanan --}}
                 <div>
                     <label for="nama_pelayanan" class="block text-sm font-medium text-gray-700 mb-1">Nama Pelayanan <span
@@ -90,14 +90,16 @@
                 <div>
                     <label for="administrasi" class="block text-sm font-medium text-gray-700 mb-1">Administrasi</label>
                     <input type="text" name="administrasi" id="administrasi"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('administrasi', $pembayarans->administrasi) }}" required>
+                        class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('administrasi', $pembayarans->administrasi) }}" required>
                 </div>
                 {{-- biaya administrasi --}}
                 <div>
                     <label for="biaya_administrasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
                         Administrasi</label>
                     <input type="text" name="biaya_administrasi" id="biaya_administrasi"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('biaya_administrasi', $pembayarans->biaya_administrasi) }}" required>
+                        class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('biaya_administrasi', $pembayarans->biaya_administrasi) }}" required>
                 </div>
                 {{-- tindakan --}}
                 <div>
@@ -108,7 +110,8 @@
                 <div>
                     <label for="biaya_tindakan" class="block text-sm font-medium text-gray-700 mb-1">Biaya Tindakan</label>
                     <input type="number" name="biaya_tindakan" id="biaya_tindakan"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('biaya_tindakan', $pembayarans->biaya_tindakan) }}" required>
+                        class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('biaya_tindakan', $pembayarans->biaya_tindakan) }}" required>
                 </div>
                 {{-- Tanggal Daftar --}}
                 <div>
@@ -124,8 +127,11 @@
                     <label for="jenis_bayar" class="block text-sm font-medium text-gray-700 mb-1">Jenis Bayar</label>
                     <select id="jenis_bayar" name="jenis_bayar" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Pilih Jenis --</option>
-                        <option value="Tunai" {{ old('jenis_bayar', $pembayarans->jenis_bayar) == 'Tunai' ? 'selected' : '' }}>Tunai</option>
-                        <option value="Transfer" {{ old('jenis_bayar', $pembayarans->jenis_bayar) == 'Transfer' ? 'selected' : '' }}>Transfer</option>
+                        <option value="Tunai"
+                            {{ old('jenis_bayar', $pembayarans->jenis_bayar) == 'Tunai' ? 'selected' : '' }}>Tunai</option>
+                        <option value="Transfer"
+                            {{ old('jenis_bayar', $pembayarans->jenis_bayar) == 'Transfer' ? 'selected' : '' }}>Transfer
+                        </option>
                     </select>
                 </div>
 
@@ -149,35 +155,29 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            // Inisialisasi Select2
-            $('#no_periksa').select2({
-                placeholder: 'Pilih No Pemeriksaan...',
-                allowClear: true,
-                width: '100%'
-            });
+      $(document).ready(function() {
+    const noPeriksaSelect = $('#no_periksa');
+    const pasienNama = $('#pasien_nama');
+    const bidanNama = $('#bidan_nama');
+    const obatNama = $('#obat_nama');
+    const pelayananNama = $('#nama_pelayanan');
 
-            // Elemen yang terkait
-            const noPeriksaSelect = $('#no_periksa');
-            const pasienNama = $('#pasien_nama');
-            const bidanNama = $('#bidan_nama');
-            const obatNama = $('#obat_nama');
-            const pelayananNama = $('#nama_pelayanan');
+    // Fungsi untuk memperbarui informasi berdasarkan pilihan
+ function updateInfo() {
+    const selected = noPeriksaSelect.find(':selected');
+    console.log(selected.data());
+    pasienNama.val(selected.data('pasien-nama') || '');
+    bidanNama.val(selected.data('bidan-nama') || '');
+    obatNama.val(selected.data('obat-nama') || '');
+    pelayananNama.val(selected.data('pelayanan-nama') || '');
+}
 
-            // Fungsi untuk memperbarui informasi berdasarkan pilihan
-            function updateInfo() {
-                const selected = noPeriksaSelect.find(':selected');
-                pasienNama.val(selected.data('pasien-nama') || '');
-                bidanNama.val(selected.data('bidan-nama') || '');
-                obatNama.val(selected.data('obat-nama') || '');
-                pelayananNama.val(selected.data('pelayanan-nama') || '');
-            }
+    // Event listener untuk perubahan pada Select2
+    noPeriksaSelect.on('change', updateInfo);
 
-            // Event listener untuk perubahan pada Select2
-            noPeriksaSelect.on('change', updateInfo);
+    // Set value awal saat halaman dimuat
+    updateInfo();
+});
 
-            // Jalankan saat halaman dimuat
-            updateInfo();
-        });
     </script>
 @endpush

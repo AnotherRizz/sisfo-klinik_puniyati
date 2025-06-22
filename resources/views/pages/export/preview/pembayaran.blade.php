@@ -26,7 +26,7 @@
             {{-- Header Logo dan Info --}}
             <div class="flex items-start gap-4 mb-4 relative">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo"
-                    class="w-30 h-30 absolute  -top-7 left-32 object-contain">
+                    class="w-30 h-30 absolute  -top-7 left-16 object-contain">
                 <div class="text-center flex-1">
                     <h1 class="text-lg font-bold uppercase">Bidan Praktik Mandiri Puniyati A.Md Keb</h1>
                     <p class="text-sm">Nomor SIPB: 0026/SIPB/33.11/VI/2019</p>
@@ -42,41 +42,67 @@
             </div>
 
             <div class="overflow-x-auto">
-                <table class="min-w-full text-sm text-left border border-gray-300">
-                    <thead class="bg-gray-100 text-gray-700">
-                        <tr>
-                            <th class="border px-2 py-1 text-xs text-center">No</th>
-                            <th class="border px-2 py-1 text-xs text-center">No. Pembayaran</th>
-                            <th class="border px-2 py-1 text-xs text-center">No. Periksa</th>
-                            <th class="border px-2 py-1 text-xs text-center">No. Reg</th>
-                            <th class="border px-2 py-1 text-xs text-center">Nama Pasien</th>
-                            <th class="border px-2 py-1 text-xs text-center">Nama Bidan</th>
-                            <th class="border px-2 py-1 text-xs text-center">Jenis Pelayanan</th>
-                            <th class="border px-2 py-1 text-xs text-center">Biaya Obat</th>
-                            <th class="border px-2 py-1 text-xs text-center">Biaya Tindakan</th>
-                            <th class="border px-2 py-1 text-xs text-center">Total Bayar</th>
-                            <th class="border px-2 py-1 text-xs text-center">Tanggal Bayar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($pembayarans as $i => $item)
-                            <tr class="border-b">
-                                <td class="border px-2 py-1 text-xs text-center">{{ $i + 1 }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">{{ $item->kd_bayar ?? '-' }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->no_periksa ?? '-' }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->pendaftaran->noreg ?? '-' }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->pendaftaran->pelayanan->nama_pelayanan ?? '-' }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">Rp{{ number_format($item->pemeriksaan->obat->harga_jual, 0, ',', '.') }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">Rp{{ number_format($item->biaya_tindakan, 0, ',', '.') }}</td>
-                                <td  class="border px-2 py-1 text-xs text-center">Rp{{ number_format($item->biaya_tindakan + $item->pemeriksaan->obat->harga_jual, 0, ',', '.') }}
-                                </td>
-                                <td  class="border px-2 py-1 text-xs text-center">{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+               <table class="min-w-full text-sm text-left border border-gray-300">
+    <thead class="bg-gray-100 text-gray-700">
+        <tr>
+            <th class="border px-2 py-1 text-xs text-center">No</th>
+            <th class="border px-2 py-1 text-xs text-center">No. Pembayaran</th>
+            <th class="border px-2 py-1 text-xs text-center">No. Periksa</th>
+            <th class="border px-2 py-1 text-xs text-center">No. Reg</th>
+            <th class="border px-2 py-1 text-xs text-center">Nama Pasien</th>
+            <th class="border px-2 py-1 text-xs text-center">Nama Bidan</th>
+            <th class="border px-2 py-1 text-xs text-center">Jenis Pelayanan</th>
+            <th class="border px-2 py-1 text-xs text-center">Biaya Obat</th>
+            <th class="border px-2 py-1 text-xs text-center">Biaya Tindakan</th>
+            <th class="border px-2 py-1 text-xs text-center">Biaya Administrasi</th>
+            <th class="border px-2 py-1 text-xs text-center">Total Bayar</th>
+            <th class="border px-2 py-1 text-xs text-center">Tanggal Bayar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($pembayarans as $i => $item)
+            @php
+                $totalObat = $item->pemeriksaan->obat->sum('harga_jual');
+                $totalBayar = ($item->biaya_tindakan ?? 0) + ($item->biaya_administrasi ?? 0) + $totalObat;
+            @endphp
+            <tr class="border-b">
+                <td class="border px-2 py-1 text-xs text-center">{{ $i + 1 }}</td>
+                <td class="border px-2 py-1 text-xs text-center">{{ $item->kd_bayar ?? '-' }}</td>
+                <td class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->no_periksa ?? '-' }}</td>
+                <td class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->pendaftaran->noreg ?? '-' }}</td>
+                <td class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                <td class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
+                <td class="border px-2 py-1 text-xs text-center">{{ $item->pemeriksaan->pendaftaran->pelayanan->nama_pelayanan ?? '-' }}</td>
+
+                {{-- Total harga obat --}}
+                <td class="border px-2 py-1 text-xs text-center">
+                    Rp{{ number_format($totalObat, 0, ',', '.') }}
+                </td>
+
+                {{-- Biaya tindakan --}}
+                <td class="border px-2 py-1 text-xs text-center">
+                    Rp{{ number_format($item->biaya_tindakan, 0, ',', '.') }}
+                </td>
+
+                {{-- Biaya administrasi --}}
+                <td class="border px-2 py-1 text-xs text-center">
+                    Rp{{ number_format($item->biaya_administrasi, 0, ',', '.') }}
+                </td>
+
+                {{-- Total bayar --}}
+                <td class="border px-2 py-1 text-xs text-center">
+                    Rp{{ number_format($totalBayar, 0, ',', '.') }}
+                </td>
+
+                {{-- Tanggal pembayaran --}}
+                <td class="border px-2 py-1 text-xs text-center">
+                    {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
             </div>
 
             <div class="text-right text-xs text-gray-600 mt-6">

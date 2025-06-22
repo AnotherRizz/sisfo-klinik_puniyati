@@ -83,21 +83,26 @@
     <thead>
         <tr>
             <th>No</th>
-            <th>No. Pembayaran</th>
-            <th>No. Periksa</th>
-            <th>No. Reg</th>
-            <th>Nama Pasien</th>
-            <th>Nama Bidan</th>
-            <th>Jenis Pelayanan</th>
-            <th>Biaya Obat</th>
-            <th>Biaya Tindakan</th>
-            <th>Total Bayar</th>
-            <th>Tanggal Bayar</th>
+              <th >No. Pembayaran</th>
+            <th >No. Periksa</th>
+            <th >No. Reg</th>
+            <th >Nama Pasien</th>
+            <th >Nama Bidan</th>
+            <th >Jenis Pelayanan</th>
+            <th >Biaya Obat</th>
+            <th >Biaya Tindakan</th>
+            <th >Biaya Administrasi</th>
+            <th >Total Bayar</th>
+            <th >Tanggal Bayar</th>
         </tr>
     </thead>
     <tbody>
-        @foreach ($pembayarans as $i => $item)
-            <tr>
+       @foreach ($pembayarans as $i => $item)
+            @php
+                $totalObat = $item->pemeriksaan->obat->sum('harga_jual');
+                $totalBayar = ($item->biaya_tindakan ?? 0) + ($item->biaya_administrasi ?? 0) + $totalObat;
+            @endphp
+            <tr >
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $item->kd_bayar ?? '-' }}</td>
                 <td>{{ $item->pemeriksaan->no_periksa ?? '-' }}</td>
@@ -105,10 +110,31 @@
                 <td>{{ $item->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
                 <td>{{ $item->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
                 <td>{{ $item->pemeriksaan->pendaftaran->pelayanan->nama_pelayanan ?? '-' }}</td>
-                <td>Rp{{ number_format($item->pemeriksaan->obat->harga_jual, 0, ',', '.') }}</td>
-                <td>Rp{{ number_format($item->biaya_tindakan, 0, ',', '.') }}</td>
-                <td>Rp{{ number_format(($item->biaya_tindakan + $item->pemeriksaan->obat->harga_jual), 0, ',', '.') }}</td>
-                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+
+                {{-- Total harga obat --}}
+                <td>
+                    Rp{{ number_format($totalObat, 0, ',', '.') }}
+                </td>
+
+                {{-- Biaya tindakan --}}
+                <td>
+                    Rp{{ number_format($item->biaya_tindakan, 0, ',', '.') }}
+                </td>
+
+                {{-- Biaya administrasi --}}
+                <td>
+                    Rp{{ number_format($item->biaya_administrasi, 0, ',', '.') }}
+                </td>
+
+                {{-- Total bayar --}}
+                <td>
+                    Rp{{ number_format($totalBayar, 0, ',', '.') }}
+                </td>
+
+                {{-- Tanggal pembayaran --}}
+                <td>
+                    {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
+                </td>
             </tr>
         @endforeach
     </tbody>

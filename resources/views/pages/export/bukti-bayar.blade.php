@@ -9,7 +9,7 @@
             font-size: 12px;
         }
         
-         .header {
+        .header {
             text-align: center;
             margin-bottom: 10px;
             position: relative;
@@ -68,13 +68,13 @@
 </head>
 <body>
     <div class="header">
-    <img src="{{ public_path('images/logo.png') }}" alt="Logo" class="logo">
-    <div class="kop">
-        <h1>BIDAN PRAKTIK MANDIRI PUNIYATI A.Md Keb</h1>
-        <p>Nomor SIPB: 0026/SIPB/33.11/VI/2019</p>
-        <p>Dusun Kalipejang RT01/RW 07, Desa Demakan, Kecamatan Mojolaban, Kabupaten Sukoharjo</p>
+        <img src="{{ public_path('images/logo.png') }}" alt="Logo" class="logo">
+        <div class="kop">
+            <h1>BIDAN PRAKTIK MANDIRI PUNIYATI A.Md Keb</h1>
+            <p>Nomor SIPB: 0026/SIPB/33.11/VI/2019</p>
+            <p>Dusun Kalipejang RT01/RW 07, Desa Demakan, Kecamatan Mojolaban, Kabupaten Sukoharjo</p>
+        </div>
     </div>
-</div>
 
     <div class="divider"></div>
     <h4 style="text-align: center; margin-bottom: 10px;">BUKTI PEMBAYARAN</h4>
@@ -113,42 +113,43 @@
                 <th>TOTAL</th>
             </tr>
         </thead>
-      <tbody>
-    <tr>
-        <td>ADMINISTRASI</td>
-        <td>Rp {{ number_format($pembayaran->biaya_administrasi, 0, ',', '.') }}</td>
-    </tr>
-    <tr>
-        <td><strong>TINDAKAN DAN LAYANAN MEDIS</strong></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>{{ $pembayaran->tindakan }}</td>
-        <td>Rp {{ number_format($pembayaran->biaya_tindakan, 0, ',', '.') }}</td>
-    </tr>
-    <tr>
-        <td>{{ $pembayaran->pemeriksaan->obat->nama_obat ?? 'OBAT' }}</td>
-        <td>Rp {{ number_format($pembayaran->pemeriksaan->obat->harga_jual ?? 0, 0, ',', '.') }}</td>
-    </tr>
-    <tr>
-        <td>KONSULTASI</td>
-        <td>Rp {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
-    </tr>
-    <tr>
-        <td><strong>TOTAL</strong></td>
-        <td>
-            <?php
-                $total = 
-                    ($pembayaran->biaya_administrasi ?? 0) + 
-                    ($pembayaran->biaya_tindakan ?? 0) + 
-                    ($pembayaran->pemeriksaan->obat->harga_jual ?? 0) + 
-                    ($pembayaran->biaya_konsultasi ?? 0);
-            ?>
-            <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
-        </td>
-    </tr>
-</tbody>
-
+        <tbody>
+            <tr>
+                <td>ADMINISTRASI</td>
+                <td>Rp {{ number_format($pembayaran->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td><strong>TINDAKAN DAN LAYANAN MEDIS</strong></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>{{ $pembayaran->tindakan }}</td>
+                <td>Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
+            </tr>
+            @foreach ($pembayaran->pemeriksaan->obat as $obat)
+                <tr>
+                    <td>{{ $obat->nama_obat }} ({{ $obat->pivot->dosis_carkai }})</td>
+                    <td>Rp {{ number_format($obat->harga_jual, 0, ',', '.') }}</td>
+                </tr>
+            @endforeach
+            <tr>
+                <td>KONSULTASI</td>
+                <td>Rp {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td><strong>TOTAL</strong></td>
+                <td>
+                    <?php
+                        $total = 
+                            ($pembayaran->biaya_administrasi ?? 0) + 
+                            ($pembayaran->biaya_tindakan ?? 0) + 
+                            $pembayaran->pemeriksaan->obat->sum('harga_jual') + 
+                            ($pembayaran->biaya_konsultasi ?? 0);
+                    ?>
+                    <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
+                </td>
+            </tr>
+        </tbody>
     </table>
 
     <div class="footer">

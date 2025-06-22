@@ -3,51 +3,106 @@
 @section('title', 'Detail Pembayaran')
 
 @section('content')
-    <div class="max-w-6xl mx-auto px-4 py-6">
-        <div class="bg-white shadow-md rounded-xl p-6">
-            <h1 class="text-2xl font-bold text-blue-700 mb-6">Detail Pembayaran</h1>
-
-            {{-- Informasi Umum --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
-                <x-detail-card label="Kode Bayar" :value="$pembayaran->kd_bayar" />
-                <x-detail-card label="No Registrasi" :value="$pembayaran->pemeriksaan->pendaftaran->noreg ?? '-'" />
-                <x-detail-card label="No Rekam Medis" :value="$pembayaran->pemeriksaan->pendaftaran->pasien->no_rm ?? '-'" />
-                <x-detail-card label="Nama Pasien" :value="$pembayaran->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-'" />
-                <x-detail-card label="Kode Bidan" :value="$pembayaran->pemeriksaan->pendaftaran->bidan->kd_bidan ?? '-'" />
-                <x-detail-card label="Nama Bidan" :value="$pembayaran->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-'" />
-
-            </div>
-
-            <h2 class="text-lg font-semibold text-gray-700 mt-8 mb-2">Obat</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                <x-detail-card label="Administrasi" :value="$pembayaran->administrasi ?? '-'" />
-                <x-detail-card label="Biaya Administrasi" :value="$pembayaran->biaya_administrasi
-                    ? 'Rp' . number_format($pembayaran->biaya_administrasi, 0, ',', '.')
-                    : '-'" />
-
-                <x-detail-card label="Tindakan" :value="$pembayaran->tindakan ?? '-'" />
-                <x-detail-card label="Biaya Tindakan" :value="$pembayaran->biaya_tindakan
-                    ? 'Rp' . number_format($pembayaran->biaya_tindakan, 0, ',', '.')
-                    : '-'" />
-
-            </div>
-            <h2 class="text-lg font-semibold text-gray-700 mt-8 mb-2">Pembayaran</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                <x-detail-card label="Kode Obat" :value="$pembayaran->pemeriksaan->obat->kd_obat ?? '-'" />
-                <x-detail-card label="Nama Obat" :value="$pembayaran->pemeriksaan->obat->nama_obat ?? '-'" />
-                <x-detail-card label="Pembayaran" :value="$pembayaran->jenis_bayar ?? '-'" />
-                <x-detail-card label="Tanggal Bayar" :value="$pembayaran->tgl_bayar ?? '-'" />
-
-
-            </div>
-
-
-
-            <div class="mt-6">
-                <a href="{{ route('pembayaran.index') }}"
-                    class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-6">
+       <a href="{{ route('pembayaran.index') }}"
+                    class="inline-block bg-gray-200 mb-3 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded shadow-sm">
                     ← Kembali ke daftar
                 </a>
+        <div class="bg-white shadow-md rounded-xl p-6">
+            <div class="flex justify-center mb-6">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-20 h-20 mr-4">
+                <div class="text-center">
+                    <h1 class="text-lg font-bold">BIDAN PRAKTIK MANDIRI PUNIYATI A.Md Keb</h1>
+                    <p>Nomor SIPB: 0026/SIPB/33.11/VI/2019</p>
+                    <p>Dusun Kalipejang RT01/RW 07, Desa Demakan, Kecamatan Mojolaban, Kabupaten Sukoharjo</p>
+                </div>
+            </div>
+
+            <hr class="border-t-2 border-gray-800 my-4">
+
+            <h2 class="text-center text-xl font-semibold mb-4">BUKTI PEMBAYARAN</h2>
+
+            {{-- Informasi Umum --}}
+            <table class="w-full text-sm mb-4">
+                <tr>
+                    <td>No. RM</td>
+                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->no_rm ?? '-' }}</td>
+                    <td>No. Registrasi</td>
+                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->noreg ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Nama Pasien</td>
+                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                    <td>Tanggal Pemeriksaan</td>
+                    <td>: {{ $pembayaran->pemeriksaan->created_at ? \Carbon\Carbon::parse($pembayaran->pemeriksaan->created_at)->format('d-m-Y') : '-' }}</td>
+                </tr>
+                <tr>
+                    <td>Alamat</td>
+                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->alamat ?? '-' }}</td>
+                    <td>Tanggal Cetak</td>
+                    <td>: {{ now()->format('d-m-Y') }}</td>
+                </tr>
+                <tr>
+                    <td>Tanggal Lahir</td>
+                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->tgl_lahir ? \Carbon\Carbon::parse($pembayaran->pemeriksaan->pendaftaran->pasien->tgl_lahir)->format('d-m-Y') : '-' }}</td>
+                    <td>Nama Bidan</td>
+                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
+                </tr>
+            </table>
+
+            {{-- Informasi Pembayaran --}}
+            <table class="w-full border-collapse border text-sm">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border px-4 py-2">DESKRIPSI</th>
+                        <th class="border px-4 py-2">TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border px-4 py-2">ADMINISTRASI</td>
+                        <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="border px-4 py-2 font-semibold">TINDAKAN DAN LAYANAN MEDIS</td>
+                        <td class="border px-4 py-2"></td>
+                    </tr>
+                    <tr>
+                        <td class="border px-4 py-2">{{ $pembayaran->tindakan ?? '-' }}</td>
+                        <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
+                    </tr>
+                    @foreach ($pembayaran->pemeriksaan->obat as $obat)
+                        <tr>
+                            <td class="border px-4 py-2">{{ $obat->nama_obat }} ({{ $obat->pivot->dosis_carkai ?? '-' }})</td>
+                            <td class="border px-4 py-2">Rp {{ number_format($obat->harga_jual ?? 0, 0, ',', '.') }}</td>
+                        </tr>
+                    @endforeach
+                    <tr>
+                        <td class="border px-4 py-2">KONSULTASI</td>
+                        <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr class="bg-gray-100 font-bold">
+                        <td class="border px-4 py-2">TOTAL</td>
+                        <td class="border px-4 py-2">
+                            @php
+                                $total = ($pembayaran->biaya_administrasi ?? 0) +
+                                         ($pembayaran->biaya_tindakan ?? 0) +
+                                         $pembayaran->pemeriksaan->obat->sum('harga_jual') +
+                                         ($pembayaran->biaya_konsultasi ?? 0);
+                            @endphp
+                            Rp {{ number_format($total, 0, ',', '.') }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {{-- Tombol Kembali --}}
+            <div class="mt-6 text-center">
+                 <a href="{{ route('pmb.bukti-bayar', $pembayaran->id) }}" target="_blank"
+                                    class="px-3 py-1 text-white flex gap-2 items-center justify-center text-center bg-teal-500 rounded text-sm hover:bg-teal-600">Cetak Bukti<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+</svg>
+</a>
             </div>
         </div>
     </div>

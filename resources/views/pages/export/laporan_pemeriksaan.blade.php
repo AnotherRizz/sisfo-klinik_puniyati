@@ -76,7 +76,8 @@
 </div>
 
 <div class="divider"></div>
-<h3 class="title">Laporan Pemeriksaan</h3>
+<h3 class="title">Laporan Pemeriksaan - {{ \Carbon\Carbon::createFromDate($tahun, $bulan)->locale('id')->translatedFormat('F Y') }}</h3>
+<p style="font-size: 15px; margin-bottom: 10px;">Jenis Pelayanan: <strong>{{ $namaPelayanan }}</strong></p>
 
 <table class="table">
     <thead>
@@ -100,7 +101,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach ($pemeriksaans  as $i => $item)
+        @foreach ($pemeriksaans as $i => $item)
             <tr>
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $item->no_periksa ?? '-' }}</td>
@@ -114,14 +115,28 @@
                 <td>{{ $item->riw_penyakit ?? '-' }}</td>
                 <td>{{ $item->diagnosa ?? '-' }}</td>
                 <td>{{ $item->tindakan ?? '-' }}</td>
-                <td>{{ $item->obat->kd_obat ?? '-' }}</td>
-                <td>{{ $item->obat->nama_obat ?? '-' }}</td>
-                <td>{{ $item->dosis_carkai ?? '-' }}</td>
+                
+                {{-- Kode Obat --}}
+                <td>
+                    {{ $item->obat->pluck('kd_obat')->join(', ') ?? '-' }}
+                </td>
+                
+                {{-- Nama Obat --}}
+                <td>
+                    {{ $item->obat->pluck('nama_obat')->join(', ') ?? '-' }}
+                </td>
+                
+                {{-- Dosis Carkai --}}
+                <td>
+                    {{ $item->obat->map(fn($o) => $o->pivot->dosis_carkai)->join(', ') ?? '-' }}
+                </td>
+                
                 <td>{{ $item->tgl_kembali ? \Carbon\Carbon::parse($item->tgl_kembali)->format('d-m-Y') : '-' }}</td>
             </tr>
         @endforeach
     </tbody>
 </table>
+
 
 <div class="footer">
     Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}

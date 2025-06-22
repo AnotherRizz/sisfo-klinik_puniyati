@@ -68,22 +68,12 @@
 
 
 
-                        <td class="px-4 py-2 text-sm text-gray-900 flex flex-col gap-1">
-                            <div>
+                        <td class="px-4 py-2 text-sm text-gray-900 flex  gap-2">
+                            <div class="flex gap-2">
 
                                 <a href="{{ route('pembayaran.edit', $item->id) }}"
                                     class="px-3 py-1 text-white bg-yellow-500 rounded text-xs hover:bg-yellow-600">Edit</a>
-                                {{-- <form id="delete-form-{{ $item->id }}"
-                                    action="{{ route('pembayaran.destroy', $item->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button"
-                                        class="px-3 py-1 text-white bg-red-500 rounded text-xs hover:bg-red-600"
-                                        onclick="confirmDelete({{ $item->id }})">Hapus</button>
-                                </form> --}}
-                                {{-- </div>
-                        
-                            <div> --}}
+                            
 
                                 <a href="{{ route('pembayaran.show', $item->id) }}"
                                     class="px-3 py-1 text-white bg-sky-500 rounded text-xs hover:bg-sky-600">Detail</a>

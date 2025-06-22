@@ -1,9 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Create Pemeriksaan')
+@section('title', 'Create Pemeriksaan KB')
 
 @section('content')
-    <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan</h1>
+    <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan KB</h1>
+    <div class="mb-5 flex justify-end">
+
+        <a href="{{ route('kb.index') }}"
+            class="text-white cursor-pointer flex items-center gap-2 bg-slate-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-1.5 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+            </svg>
+            Kembali
+        </a>
+    </div>
     <div class="p-7 bg-white rounded shadow">
         @if ($errors->any())
             <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
@@ -15,14 +26,14 @@
             </div>
         @endif
 
-        <form action="{{ route('pemeriksaan.store') }}" method="POST">
+        <form action="{{ route('kb.store') }}" method="POST">
             @csrf
-            <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div class="grid gap-6 mb-6 md:grid-cols-3">
 
                 {{-- No reg --}}
                 {{-- No Registrasi --}}
                 <div>
-                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi" :options="$pendaftarans->mapWithKeys(
+                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan KB)" :options="$pendaftarans->mapWithKeys(
                         fn($p) => [
                             $p->id => [
                                 'label' =>
@@ -85,12 +96,7 @@
                     <input type="text" name="riw_penyakit" id="riw_penyakit"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
-                <div>
-                    <label for="riw_imunisasi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat
-                        Imunisasi</label>
-                    <input type="text" name="riw_imunisasi" id="riw_imunisasi"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-                </div>
+              
                 <div>
                     <label for="td" class="block text-sm font-medium text-gray-700 mb-1">Tensi Darah <span
                             class="text-red-500 text-xs">(mmHg)</span> </label>
@@ -121,44 +127,71 @@
                     <input type="number" name="saturasiOx" id="saturasiOx"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
-                <div>
-                    <label for="lila" class="block text-sm font-medium text-gray-700 mb-1">Lingkar lengan Atas <span
-                            class="text-red-500 text-xs"> (Cm)</span></label>
-                    <input type="number" name="lila" id="lila"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-                </div>
-                <div>
-                    <label for="pemeriksaan_ibu_hamil" class="block text-sm font-medium text-gray-700 mb-1">Pemeriksaan
-                        Ibu
-                        Hamil</label>
-                    <input type="text" name="pemeriksaan_ibu_hamil" id="pemeriksaan_ibu_hamil"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
-                </div>
-                <div>
-                    <label for="pemeriksaan_ibu_nifas_kb" class="block text-sm font-medium text-gray-700 mb-1">Pemeriksaan
-                        Ibu Nifas/KB</label>
-                    <input type="text" name="pemeriksaan_ibu_nifas_kb" id="pemeriksaan_ibu_nifas_kb"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
-                </div>
-                <div>
-                    <label for="diagnosa" class="block text-sm font-medium text-gray-700 mb-1">Diagnosa</label>
-                    <input type="text" name="diagnosa" id="diagnosa"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
-                </div>
-                <div>
 
-                    <div class="mb-6">
-                        <label for="tindakan" class="block text-sm font-medium text-gray-700 mb-1">Tindakan</label>
-                        <input type="text" name="tindakan" id="tindakan"
-                            class="w-full border-gray-300 rounded-lg shadow-sm" value="">
-                    </div>
+                
+                <div>
+                    <label for="hpht" class="block text-sm font-medium text-gray-700 mb-1">Hari Pertama Haid</label>
+                    <input type="date" name="hpht" id="hpht"
+                        class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" value="" required>
+                </div>
+                 <div>
+                    <label for="jmlh_anak" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Anak</label>
+                    <input type="number" name="jmlh_anak" id="jmlh_anak"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
+                </div>
+                 <div>
+                    <label for="tgl_pasang" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pasang</label>
+                    <input type="date" name="tgl_pasang" id="tgl_pasang"
+                        class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" value="" required>
+                </div>
+                 <div class="mb-6">
+                    <label for="metode_KB" class="block text-sm font-medium text-gray-700 mb-1">Metode KB</label>
+                    <select id="metode_KB" name="metode_KB"
+                        class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
+                        <option value="">-- Pilih  --</option>
+                        <option value="Pil" {{ old('metode_KB') == 'Pil' ? 'selected' : '' }}>Pil</option>
+                        <option value="Suntik" {{ old('metode_KB') == 'Suntik' ? 'selected' : '' }}>Suntik</option>
+                        <option value="Implan" {{ old('metode_KB') == 'Implan' ? 'selected' : '' }}>Implan</option>
+                        <option value="IUD" {{ old('metode_KB') == 'IUD' ? 'selected' : '' }}>IUD</option>
+                        <option value="Kondom" {{ old('metode_KB') == 'Kondom' ? 'selected' : '' }}>Kondom</option>
+                        <option value="MOW/MOP" {{ old('metode_KB') == 'MOW/MOP' ? 'selected' : '' }}>MOW/MOP</option>
+                    </select>
+                </div>
+                 <div>
+                    <label for="edukasi" class="block text-sm font-medium text-gray-700 mb-1">Edukasi</span></label>
+                    <textarea name="edukasi" class="w-full border-gray-300 rounded-lg text-xs  shadow-sm" id="" cols="30"
+                        rows="2" placeholder="Edukasi kepada pasien"></textarea>
+                </div>
+                <div>
+                    <label for="intervensi" class="block text-sm font-medium text-gray-700 mb-1">Intervensi</label>
+                    <input type="text" name="intervensi" id="intervensi"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
+                </div>
+                <div>
+                    <label for="efek_samping" class="block text-sm font-medium text-gray-700 mb-1">Efek Samping</label>
+                    <input type="text" name="efek_samping" id="efek_samping"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
+                </div>
+               
+                
+
+                 
                     <div>
                         <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                             Kembali</label>
                         <input type="date" name="tgl_kembali" id="tgl_kembali"
-                            class="w-full border-gray-300 rounded-lg shadow-sm"
+                            class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
                             value="{{ old('tgl_kembali', now()->toDateString()) }}" required>
                     </div>
+                <div class="mb-6">
+                    <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
+                    <select id="tindak_lnjt" name="tindak_lnjt"
+                        class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
+                        <option value="">-- Pilih  --</option>
+                        <option value="Puskesmas" {{ old('tindak_lnjt') == 'Puskesmas' ? 'selected' : '' }}>Puskesmas</option>
+                        <option value="Klinik" {{ old('tindak_lnjt') == 'Klinik' ? 'selected' : '' }}>Klinik</option>
+                        <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rumah Sakit</option>
+                    </select>
                 </div>
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
@@ -174,7 +207,8 @@
                                 class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
                         </div>
                     </div>
-                    <button type="button" id="add-obat" class="text-sm cursor-pointer text-blue-600">+ Tambah Obat</button>
+                    <button type="button" id="add-obat" class="text-sm cursor-pointer text-blue-600">+ Tambah
+                        Obat</button>
                 </div>
 
             </div>

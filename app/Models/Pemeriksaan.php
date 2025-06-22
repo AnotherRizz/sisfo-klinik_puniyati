@@ -11,12 +11,55 @@ class Pemeriksaan extends Model
 {
     protected $table = 'pemeriksaan';
 
-    protected $fillable = [
-        'no_periksa', 'pendaftaran_id', 'keluhan', 'riw_penyakit',
-        'riw_imunisasi', 'td', 'bb', 'tb', 'suhu', 'saturasiOx', 'lila',
-        'pemeriksaan_ibu_hamil', 'pemeriksaan_ibu_nifas_kb', 'diagnosa', 'tindakan',
-        'tgl_kembali',
-    ];
+protected $fillable = [
+    'no_periksa', 
+    'pendaftaran_id', 
+    'keluhan', 
+    'riw_penyakit', 
+    'riw_imunisasi', 
+    'riw_alergi', 
+    'td', 
+    'bb', 
+    'tb', 
+    'suhu', 
+    'saturasiOx', 
+    'nadi', 
+    'lila', 
+    'hpht', 
+    'hpl', 
+    'gpa', 
+    'riwayat_kehamilan_kesehatan', 
+    'umur_hamil', 
+    'lingkar_perut', 
+    'tifu', 
+    'djj', 
+    'ltkjanin', 
+    'ktrkuterus', 
+    'refla', 
+    'lab', 
+    'resti', 
+    'intervensi', 
+    'frek_kunjungan', 
+    'riw_alergi', 
+    'lochea', 
+    'payudara', 
+    'luka_jahit', 
+    'tgl_lahir', 
+    'tmpt_persalinan', 
+    'bantu_persalinan', 
+    'jns_persalinan', 
+    'besar_rahim', 
+    'infeksi_kompli', 
+    'edukasi', 
+    'jmlh_anak', 
+    'tgl_pasang', 
+    'metode_KB', 
+    'efek_samping', 
+    'diagnosa', 
+    'tindakan', 
+    'tgl_kembali',
+];
+
 
     /**
      * Pemeriksaan milik satu pendaftaran

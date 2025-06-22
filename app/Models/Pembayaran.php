@@ -35,6 +35,7 @@ public function pendaftaran()
 }
 
 
+
     public function bidan()
     {
         return $this->belongsTo(Bidan::class);

@@ -3,7 +3,7 @@
 @section('title', 'Profil Saya')
 
 @section('content')
-    <div class="w-full mx-auto  p-6 bg-white rounded-xl shadow-md">
+    <div class="w-full mx-auto max-w-2xl  p-6 bg-white rounded-xl shadow-md">
         <h3 class="text-2xl font-semibold text-gray-800 mb-6">Edit Profil Pengguna</h3>
 
         @if (session('success'))
@@ -59,7 +59,7 @@
 
 
                 <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white cursor-pointer py-2 px-4 rounded-lg transition duration-200">
                     Update Profil
                 </button>
             </form>
