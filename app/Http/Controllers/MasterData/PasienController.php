@@ -144,7 +144,7 @@ public function store(Request $request)
         'pendidikan' => 'required|string',
         'pekerjaan' => 'required|string',
         'penanggungjawab' => 'required|string',
-        'golda' => 'required|string|in:A,B,AB,O',
+        'golda' => 'required|string|in:A,B,AB,O,-',
         'no_tlp' => 'required|numeric',
     ]);
 

@@ -74,7 +74,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <a href="{{ route('obat.edit', $obat->id) }}"
                                 class="px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600">Edit</a>
-                            <form id="delete-form-{{ $obat->id }}" action="{{ route('obat.destroy', $obat->id) }}"
+                            {{-- <form id="delete-form-{{ $obat->id }}" action="{{ route('obat.destroy', $obat->id) }}"
                                 method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -83,7 +83,7 @@
                                     onclick="confirmDelete({{ $obat->id }})">
                                     Hapus
                                 </button>
-                            </form>
+                            </form> --}}
                             <!-- Tombol modal -->
                             <button data-modal-target="tambahStokModal-{{ $obat->id }}"
                                 data-modal-toggle="tambahStokModal-{{ $obat->id }}"

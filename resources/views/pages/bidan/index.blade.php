@@ -67,11 +67,11 @@
                                 method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button"
+                                {{-- <button type="button"
                                     class="px-3 py-1 cursor-pointer text-white bg-red-500 rounded hover:bg-red-600"
                                     onclick="confirmDelete({{ $bidan->id }})">
                                     Hapus
-                                </button>
+                                </button> --}}
                             </form>
 
                         </td>

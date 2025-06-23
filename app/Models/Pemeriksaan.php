@@ -58,6 +58,7 @@ protected $fillable = [
     'diagnosa', 
     'tindakan', 
     'tgl_kembali',
+    'tindak_lnjt',
 ];
 
 

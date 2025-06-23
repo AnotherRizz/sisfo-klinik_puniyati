@@ -18,7 +18,7 @@
         <form action="{{ route('pembayaran.update', $pembayarans->id) }}" method="POST">
             @csrf
             @method('PUT')
-
+<h1 class=" mt-2 mb-7 text-blue-500 text-xl">Data </h1>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 {{-- Kode Bayar --}}
                 <div>
@@ -83,6 +83,10 @@
                     <input type="text" id="nama_pelayanan"
                         class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100" readonly>
                 </div>
+                </div>
+            <h1 class=" mt-10 mb-7 text-orange-500 text-xl">Pembayaran</h1>
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
+
 
 
 
@@ -100,6 +104,14 @@
                     <input type="text" name="biaya_administrasi" id="biaya_administrasi"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('biaya_administrasi', $pembayarans->biaya_administrasi) }}" required>
+                </div>
+                {{-- biaya konsultasi --}}
+                <div>
+                    <label for="biaya_konsultasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
+                        Konsultasi</label>
+                    <input type="text" name="biaya_konsultasi" id="biaya_konsultasi"
+                        class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('biaya_konsultasi', $pembayarans->biaya_konsultasi) }}" required>
                 </div>
                 {{-- tindakan --}}
                 <div>

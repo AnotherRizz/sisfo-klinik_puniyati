@@ -14,7 +14,7 @@ class Pembayaran extends Model
 
     protected $fillable = [
         'kd_bayar', 'pemeriksaan_id', 
-        'tgl_bayar', 'administrasi', 'biaya_administrasi',
+        'tgl_bayar', 'administrasi', 'biaya_administrasi','biaya_konsultasi',
         'biaya_tindakan','tindakan',  'jenis_bayar'
     ];
 

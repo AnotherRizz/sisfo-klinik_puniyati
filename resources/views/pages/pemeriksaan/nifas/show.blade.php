@@ -75,7 +75,7 @@
             {{-- Tindakan dan Tindak Lanjut --}}
             <h2 class="text-lg font-semibold text-amber-500 mt-8 mb-4">Tindakan dan Tindak Lanjut</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <x-detail-card label="Tindak Lanjut" :value="$pemeriksaan->tindak_lnjt ?? '-'" />
+                          <x-detail-card label="Tindak Lanjut" :value="($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk')  ? ($pemeriksaan->tindak_lnjt ?? '-')  : ('Rujukan ' . ($pemeriksaan->tindak_lnjt ?? '-'))" />
                 <x-detail-card label="Tanggal Kembali" :value="$pemeriksaan->tgl_kembali
                     ? \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->translatedFormat('d F Y')
                     : '-'" />

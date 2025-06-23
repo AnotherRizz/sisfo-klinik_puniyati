@@ -40,6 +40,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Kode Transaksi</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Pasien</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Bidan</th>
@@ -50,10 +51,10 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($pembayarans as $item)
+                @forelse($pembayarans as $i => $item)
                     <tr
                         x-show="{{ json_encode(strtolower($item->pasien->nama_pasien ?? '')) }}.includes(search.toLowerCase())">
-
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $i + 1 }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->kd_bayar }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ $item->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
@@ -73,7 +74,7 @@
 
                                 <a href="{{ route('pembayaran.edit', $item->id) }}"
                                     class="px-3 py-1 text-white bg-yellow-500 rounded text-xs hover:bg-yellow-600">Edit</a>
-                            
+
 
                                 <a href="{{ route('pembayaran.show', $item->id) }}"
                                     class="px-3 py-1 text-white bg-sky-500 rounded text-xs hover:bg-sky-600">Detail</a>

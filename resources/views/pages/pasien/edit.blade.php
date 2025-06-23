@@ -94,7 +94,7 @@
         <div>
             <label for="golda" class="block mb-2 text-sm font-medium text-gray-900">Golongan Darah</label>
             @php
-                $goldaList = ['A', 'B', 'AB', 'O'];
+                $goldaList = ['-','A', 'B', 'AB', 'O'];
             @endphp
             <select id="golda" name="golda" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
                 <option value="">-- Pilih --</option>
@@ -105,7 +105,7 @@
         </div>
         <div>
             <label for="no_tlp" class="block mb-2 text-sm font-medium text-gray-900">No Telepon</label>
-            <input type="number" id="no_tlp" name="no_tlp" value="{{ old('no_tlp', $pasien->no_tlp) }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required />
+            <input type="text" id="no_tlp" name="no_tlp" value="{{ old('no_tlp', $pasien->no_tlp) }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required />
         </div>
     </div>
     <div class=" flex gap-4">

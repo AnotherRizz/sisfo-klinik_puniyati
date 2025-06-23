@@ -119,27 +119,27 @@
                 <div>
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan <span
                             class="text-red-500 text-xs">(Kg)</span></label>
-                    <input type="number" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('bb', $pemeriksaan->bb) }}" required>
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan <span
                             class="text-red-500 text-xs">(Cm)</span></label>
-                    <input type="number" name="tb" id="tb"
+                    <input type="text" name="tb" id="tb"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('tb', $pemeriksaan->tb) }}"
                         required>
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
-                    <input type="number" name="suhu" id="suhu"
+                    <input type="text" name="suhu" id="suhu"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('suhu', $pemeriksaan->suhu) }}"
                         required>
                 </div>
                 <div>
                     <label for="saturasiOx" class="block text-sm font-medium text-gray-700 mb-1">Saturasi Oksigen <span
                             class="text-red-500 text-xs"> (%)</span></label>
-                    <input type="number" name="saturasiOx" id="saturasiOx"
+                    <input type="text" name="saturasiOx" id="saturasiOx"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('saturasiOx', $pemeriksaan->saturasiOx) }}" required>
                 </div>
@@ -169,17 +169,21 @@
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
                     <select id="tindak_lnjt" name="tindak_lnjt" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
+                        
                         <option value="Puskesmas"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Puskesmas' ? 'selected' : '' }}>
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Puskesmas' ? 'selected' : '' }}>Rujukan 
                             Puskesmas
                         </option>
                         <option value="Klinik"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Klinik' ? 'selected' : '' }}>
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Klinik' ? 'selected' : '' }}>Rujukan 
                             Klinik
                         </option>
                         <option value="Rumah Sakit"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rumah Sakit' ? 'selected' : '' }}>
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rumah Sakit' ? 'selected' : '' }}>Rujukan 
                             Rumah Sakit
+                        </option>
+                        <option value="Tidak Dirujuk"
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak Dirujuk
                         </option>
                     </select>
                 </div>

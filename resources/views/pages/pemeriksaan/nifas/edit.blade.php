@@ -115,28 +115,28 @@
                 <div>
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan <span
                             class="text-red-500 text-xs">(Kg)</span></label>
-                    <input type="number" name="bb" id="bb"
+                    <input type="text" name="bb" id="bb"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
                         value="{{ old('bb', $pemeriksaan->bb) }}" required>
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan <span
                             class="text-red-500 text-xs">(Cm)</span></label>
-                    <input type="number" name="tb" id="tb"
+                    <input type="text" name="tb" id="tb"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
                         value="{{ old('tb', $pemeriksaan->tb) }}" required>
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
-                    <input type="number" name="suhu" id="suhu"
+                    <input type="text" name="suhu" id="suhu"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
                         value="{{ old('suhu', $pemeriksaan->suhu) }}" required>
                 </div>
                 <div>
                     <label for="saturasiOx" class="block text-sm font-medium text-gray-700 mb-1">Saturasi Oksigen <span
                             class="text-red-500 text-xs"> (%)</span></label>
-                    <input type="number" name="saturasiOx" id="saturasiOx"
+                    <input type="text" name="saturasiOx" id="saturasiOx"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
                         value="{{ old('saturasiOx', $pemeriksaan->saturasiOx) }}" required>
                 </div>
@@ -149,7 +149,7 @@
                 <div>
                     <label for="tifu" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Fundus <span
                             class="text-red-500 text-xs">(Cm)</span></label>
-                    <input type="number" name="tifu" id="tifu"
+                    <input type="text" name="tifu" id="tifu"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
                         value="{{ old('tifu', $pemeriksaan->tifu) }}" required>
                 </div>
@@ -171,7 +171,7 @@
                 </div>
                 <div>
                     <label for="tgl_lahir" class="block text-sm font-medium text-gray-500 mb-1">Tanggal
-                        Lahir</label>
+                        Lahir Bayi</label>
                     <input type="date" name="tgl_lahir" id="tgl_lahir"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
                         value="{{ old('tgl_lahir', $pemeriksaan->tgl_lahir) }}" required>
@@ -260,20 +260,24 @@
                 </div>
                 <div class="mb-6">
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
-                    <select id="tindak_lnjt" name="tindak_lnjt"
-                        class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
+                    <select id="tindak_lnjt" name="tindak_lnjt" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
+
                         <option value="Puskesmas"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Puskesmas' ? 'selected' : '' }}>
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Puskesmas' ? 'selected' : '' }}>Rujukan
                             Puskesmas
                         </option>
                         <option value="Klinik"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Klinik' ? 'selected' : '' }}>
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Klinik' ? 'selected' : '' }}>Rujukan
                             Klinik
                         </option>
                         <option value="Rumah Sakit"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rumah Sakit' ? 'selected' : '' }}>
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
                             Rumah Sakit
+                        </option>
+                        <option value="Tidak Dirujuk"
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
+                            Dirujuk
                         </option>
                     </select>
                 </div>
@@ -319,7 +323,7 @@
 
             </div>
 
-             <div class="flex gap-2 justify-end">
+            <div class="flex gap-2 justify-end">
                 <button type="submit"
                     class="text-white cursor-pointer bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                     Perbarui
@@ -327,7 +331,7 @@
                 <a href="{{ route('nifas.index') }}"
                     class="text-white cursor-pointer bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                     Batal
-               </a>
+                </a>
             </div>
         </form>
     </div>

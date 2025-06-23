@@ -33,21 +33,24 @@
                 {{-- No reg --}}
                 {{-- No Registrasi --}}
                 <div>
-                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan umum)" :options="$pendaftarans->mapWithKeys(
-                        fn($p) => [
-                            $p->id => [
-                                'label' =>
-                                    $p->noreg . ' - ' . $p->pasien->nama_pasien . (!$p->pemeriksaan ? ' 🔹(New)' : ''),
-                                'data-pendaftaran-id' => $p->id,
-                                'data-pasien-nama' => $p->pasien->nama_pasien,
-                                'data-bidan-nama' => $p->bidan->nama_bidan,
-                                'data-bidan-kd' => $p->bidan->kd_bidan,
-                                'data-pelayanan-nama' => $p->pelayanan->nama_pelayanan,
-                                'data-pelayanan-kode' => $p->pelayanan->kodpel,
+                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan umum)"
+                        :options="$pendaftarans->mapWithKeys(
+                            fn($p) => [
+                                $p->id => [
+                                    'label' =>
+                                        $p->noreg .
+                                        ' - ' .
+                                        $p->pasien->nama_pasien .
+                                        (!$p->pemeriksaan ? ' 🔹(New)' : ''),
+                                    'data-pendaftaran-id' => $p->id,
+                                    'data-pasien-nama' => $p->pasien->nama_pasien,
+                                    'data-bidan-nama' => $p->bidan->nama_bidan,
+                                    'data-bidan-kd' => $p->bidan->kd_bidan,
+                                    'data-pelayanan-nama' => $p->pelayanan->nama_pelayanan,
+                                    'data-pelayanan-kode' => $p->pelayanan->kodpel,
+                                ],
                             ],
-                        ],
-                    )"
-                        :selected="old('pendaftaran_id')" />
+                        )" :selected="old('pendaftaran_id')" />
                 </div>
 
                 {{-- Nama Pasien --}}
@@ -117,25 +120,25 @@
                 <div>
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan <span
                             class="text-red-500 text-xs">(Kg)</span></label>
-                    <input type="number" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="" required>
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan <span
                             class="text-red-500 text-xs">(Cm)</span></label>
-                    <input type="number" name="tb" id="tb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" required>
+                    <input type="text" name="tb" id="tb"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
-                    <input type="number" name="suhu" id="suhu" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" required>
+                    <input type="text" name="suhu" id="suhu"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div>
                     <label for="saturasiOx" class="block text-sm font-medium text-gray-700 mb-1">Saturasi Oksigen <span
                             class="text-red-500 text-xs"> (%)</span></label>
-                    <input type="number" name="saturasiOx" id="saturasiOx"
+                    <input type="text" name="saturasiOx" id="saturasiOx"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
 
@@ -144,28 +147,33 @@
                     <input type="text" name="diagnosa" id="diagnosa"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
-                
 
-                    <div class="mb-6">
-                        <label for="tindakan" class="block text-sm font-medium text-gray-700 mb-1">Tindakan</label>
-                        <input type="text" name="tindakan" id="tindakan"
-                            class="w-full border-gray-300 rounded-lg shadow-sm" value="">
-                    </div>
-                    <div>
-                        <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
-                            Kembali</label>
-                        <input type="date" name="tgl_kembali" id="tgl_kembali"
-                            class="w-full border-gray-300 rounded-lg shadow-sm"
-                            value="{{ old('tgl_kembali', now()->toDateString()) }}" required>
-                    </div>
+
+                <div class="mb-6">
+                    <label for="tindakan" class="block text-sm font-medium text-gray-700 mb-1">Tindakan</label>
+                    <input type="text" name="tindakan" id="tindakan"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
+                </div>
+                <div>
+                    <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
+                        Kembali</label>
+                    <input type="date" name="tgl_kembali" id="tgl_kembali"
+                        class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('tgl_kembali', now()->toDateString()) }}" required>
+                </div>
                 <div class="mb-6">
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
-                    <select id="tindak_lnjt" name="tindak_lnjt"
-                        class="w-full border-gray-300 rounded-lg shadow-sm">
-                        <option value="">-- Pilih  --</option>
-                        <option value="Puskesmas" {{ old('tindak_lnjt') == 'Puskesmas' ? 'selected' : '' }}>Puskesmas</option>
-                        <option value="Klinik" {{ old('tindak_lnjt') == 'Klinik' ? 'selected' : '' }}>Klinik</option>
-                        <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rumah Sakit</option>
+                    <select id="tindak_lnjt" name="tindak_lnjt" class="w-full border-gray-300 rounded-lg shadow-sm">
+                        <option value="">-- Pilih --</option>
+                       
+                        <option value="Puskesmas" {{ old('tindak_lnjt') == 'Puskesmas' ? 'selected' : '' }}>Rujukan
+                            Puskesmas</option>
+                        <option value="Klinik" {{ old('tindak_lnjt') == 'Klinik' ? 'selected' : '' }}>Rujukan Klinik
+                        </option>
+                        <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
+                            Rumah Sakit</option>
+                             <option value="Tidak Dirujuk" {{ old('tindak_lnjt') == 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
+                            Dirujuk</option>
                     </select>
                 </div>
                 <div class="mb-6">

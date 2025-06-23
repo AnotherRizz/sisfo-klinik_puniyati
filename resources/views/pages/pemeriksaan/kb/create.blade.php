@@ -33,21 +33,24 @@
                 {{-- No reg --}}
                 {{-- No Registrasi --}}
                 <div>
-                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan KB)" :options="$pendaftarans->mapWithKeys(
-                        fn($p) => [
-                            $p->id => [
-                                'label' =>
-                                    $p->noreg . ' - ' . $p->pasien->nama_pasien . (!$p->pemeriksaan ? ' 🔹(New)' : ''),
-                                'data-pendaftaran-id' => $p->id,
-                                'data-pasien-nama' => $p->pasien->nama_pasien,
-                                'data-bidan-nama' => $p->bidan->nama_bidan,
-                                'data-bidan-kd' => $p->bidan->kd_bidan,
-                                'data-pelayanan-nama' => $p->pelayanan->nama_pelayanan,
-                                'data-pelayanan-kode' => $p->pelayanan->kodpel,
+                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan KB)"
+                        :options="$pendaftarans->mapWithKeys(
+                            fn($p) => [
+                                $p->id => [
+                                    'label' =>
+                                        $p->noreg .
+                                        ' - ' .
+                                        $p->pasien->nama_pasien .
+                                        (!$p->pemeriksaan ? ' 🔹(New)' : ''),
+                                    'data-pendaftaran-id' => $p->id,
+                                    'data-pasien-nama' => $p->pasien->nama_pasien,
+                                    'data-bidan-nama' => $p->bidan->nama_bidan,
+                                    'data-bidan-kd' => $p->bidan->kd_bidan,
+                                    'data-pelayanan-nama' => $p->pelayanan->nama_pelayanan,
+                                    'data-pelayanan-kode' => $p->pelayanan->kodpel,
+                                ],
                             ],
-                        ],
-                    )"
-                        :selected="old('pendaftaran_id')" />
+                        )" :selected="old('pendaftaran_id')" />
                 </div>
 
                 {{-- Nama Pasien --}}
@@ -96,7 +99,7 @@
                     <input type="text" name="riw_penyakit" id="riw_penyakit"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
-              
+
                 <div>
                     <label for="td" class="block text-sm font-medium text-gray-700 mb-1">Tensi Darah <span
                             class="text-red-500 text-xs">(mmHg)</span> </label>
@@ -106,49 +109,49 @@
                 <div>
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan <span
                             class="text-red-500 text-xs">(Kg)</span></label>
-                    <input type="number" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="" required>
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan <span
                             class="text-red-500 text-xs">(Cm)</span></label>
-                    <input type="number" name="tb" id="tb" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="tb" id="tb" class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="" required>
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
-                    <input type="number" name="suhu" id="suhu" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" required>
+                    <input type="text" name="suhu" id="suhu"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div>
                     <label for="saturasiOx" class="block text-sm font-medium text-gray-700 mb-1">Saturasi Oksigen <span
                             class="text-red-500 text-xs"> (%)</span></label>
-                    <input type="number" name="saturasiOx" id="saturasiOx"
+                    <input type="text" name="saturasiOx" id="saturasiOx"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
 
-                
+
                 <div>
                     <label for="hpht" class="block text-sm font-medium text-gray-700 mb-1">Hari Pertama Haid</label>
                     <input type="date" name="hpht" id="hpht"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" value="" required>
                 </div>
-                 <div>
+                <div>
                     <label for="jmlh_anak" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Anak</label>
-                    <input type="number" name="jmlh_anak" id="jmlh_anak"
+                    <input type="text" name="jmlh_anak" id="jmlh_anak"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
-                 <div>
+                <div>
                     <label for="tgl_pasang" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pasang</label>
                     <input type="date" name="tgl_pasang" id="tgl_pasang"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" value="" required>
                 </div>
-                 <div class="mb-6">
+                <div class="mb-6">
                     <label for="metode_KB" class="block text-sm font-medium text-gray-700 mb-1">Metode KB</label>
                     <select id="metode_KB" name="metode_KB"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
-                        <option value="">-- Pilih  --</option>
+                        <option value="">-- Pilih --</option>
                         <option value="Pil" {{ old('metode_KB') == 'Pil' ? 'selected' : '' }}>Pil</option>
                         <option value="Suntik" {{ old('metode_KB') == 'Suntik' ? 'selected' : '' }}>Suntik</option>
                         <option value="Implan" {{ old('metode_KB') == 'Implan' ? 'selected' : '' }}>Implan</option>
@@ -157,7 +160,7 @@
                         <option value="MOW/MOP" {{ old('metode_KB') == 'MOW/MOP' ? 'selected' : '' }}>MOW/MOP</option>
                     </select>
                 </div>
-                 <div>
+                <div>
                     <label for="edukasi" class="block text-sm font-medium text-gray-700 mb-1">Edukasi</span></label>
                     <textarea name="edukasi" class="w-full border-gray-300 rounded-lg text-xs  shadow-sm" id="" cols="30"
                         rows="2" placeholder="Edukasi kepada pasien"></textarea>
@@ -172,25 +175,30 @@
                     <input type="text" name="efek_samping" id="efek_samping"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
-               
-                
 
-                 
-                    <div>
-                        <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
-                            Kembali</label>
-                        <input type="date" name="tgl_kembali" id="tgl_kembali"
-                            class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
-                            value="{{ old('tgl_kembali', now()->toDateString()) }}" required>
-                    </div>
+
+
+
+                <div>
+                    <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
+                        Kembali</label>
+                    <input type="date" name="tgl_kembali" id="tgl_kembali"
+                        class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
+                        value="{{ old('tgl_kembali', now()->toDateString()) }}" required>
+                </div>
                 <div class="mb-6">
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
-                    <select id="tindak_lnjt" name="tindak_lnjt"
-                        class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
-                        <option value="">-- Pilih  --</option>
-                        <option value="Puskesmas" {{ old('tindak_lnjt') == 'Puskesmas' ? 'selected' : '' }}>Puskesmas</option>
-                        <option value="Klinik" {{ old('tindak_lnjt') == 'Klinik' ? 'selected' : '' }}>Klinik</option>
-                        <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rumah Sakit</option>
+                    <select id="tindak_lnjt" name="tindak_lnjt" class="w-full border-gray-300 rounded-lg shadow-sm">
+                        <option value="">-- Pilih --</option>
+
+                        <option value="Puskesmas" {{ old('tindak_lnjt') == 'Puskesmas' ? 'selected' : '' }}>Rujukan
+                            Puskesmas</option>
+                        <option value="Klinik" {{ old('tindak_lnjt') == 'Klinik' ? 'selected' : '' }}>Rujukan Klinik
+                        </option>
+                        <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
+                            Rumah Sakit</option>
+                        <option value="Tidak Dirujuk" {{ old('tindak_lnjt') == 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
+                            Dirujuk</option>
                     </select>
                 </div>
                 <div class="mb-6">

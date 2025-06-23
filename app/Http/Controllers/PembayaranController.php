@@ -96,6 +96,7 @@ public function bukti($id)
   public function store(Request $request)
 {
     $request->merge([
+        'biaya_konsultasi' => str_replace('.', '', $request->biaya_konsultasi),
         'biaya_administrasi' => str_replace('.', '', $request->biaya_administrasi),
         'biaya_tindakan' => str_replace('.', '', $request->biaya_tindakan),
     ]);
@@ -106,6 +107,7 @@ public function bukti($id)
         'biaya_administrasi' => 'nullable|numeric',
         'tindakan' => 'nullable|string',
         'biaya_tindakan' => 'nullable|numeric',
+        'biaya_konsultasi' => 'nullable|numeric',
         'jenis_bayar' => 'required|in:Tunai,Transfer',
     ]);
 
@@ -180,6 +182,7 @@ public function bukti($id)
         'tgl_bayar' => 'required|date',
         'administrasi' => 'nullable|string',
         'biaya_administrasi' => 'nullable|numeric',
+        'biaya_konsultasi' => 'nullable|numeric',
         'tindakan' => 'nullable|string',
         'biaya_tindakan' => 'nullable|numeric',
         'jenis_bayar' => 'required|in:Tunai,Transfer',

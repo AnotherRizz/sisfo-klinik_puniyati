@@ -84,7 +84,6 @@
         <tr>
             <th>No</th>
               <th >No. Pembayaran</th>
-            <th >No. Periksa</th>
             <th >No. Reg</th>
             <th >Nama Pasien</th>
             <th >Nama Bidan</th>
@@ -92,7 +91,9 @@
             <th >Biaya Obat</th>
             <th >Biaya Tindakan</th>
             <th >Biaya Administrasi</th>
+            <th >Biaya Konsultasi</th>
             <th >Total Bayar</th>
+            <th >Jenis Bayar</th>
             <th >Tanggal Bayar</th>
         </tr>
     </thead>
@@ -100,12 +101,11 @@
        @foreach ($pembayarans as $i => $item)
             @php
                 $totalObat = $item->pemeriksaan->obat->sum('harga_jual');
-                $totalBayar = ($item->biaya_tindakan ?? 0) + ($item->biaya_administrasi ?? 0) + $totalObat;
+                $totalBayar = ($item->biaya_tindakan ?? 0) + ($item->biaya_konsultasi ?? 0) + ($item->biaya_administrasi ?? 0) + $totalObat;
             @endphp
             <tr >
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $item->kd_bayar ?? '-' }}</td>
-                <td>{{ $item->pemeriksaan->no_periksa ?? '-' }}</td>
                 <td>{{ $item->pemeriksaan->pendaftaran->noreg ?? '-' }}</td>
                 <td>{{ $item->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
                 <td>{{ $item->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
@@ -125,10 +125,18 @@
                 <td>
                     Rp{{ number_format($item->biaya_administrasi, 0, ',', '.') }}
                 </td>
+                {{-- Biaya konsultasi --}}
+                <td>
+                    Rp{{ number_format($item->biaya_konsultasi, 0, ',', '.') }}
+                </td>
 
                 {{-- Total bayar --}}
                 <td>
                     Rp{{ number_format($totalBayar, 0, ',', '.') }}
+                </td>
+                {{-- jenis_bbayar --}}
+                <td>
+                    Rp{{ number_format($item->jenis_bayar, 0, ',', '.') }}
                 </td>
 
                 {{-- Tanggal pembayaran --}}

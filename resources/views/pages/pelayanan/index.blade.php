@@ -64,7 +64,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <a href="{{ route('pelayanan.edit', $pelayanan->id) }}"
                                 class="px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600">Edit</a>
-                            <form id="delete-form-{{ $pelayanan->id }}"
+                            {{-- <form id="delete-form-{{ $pelayanan->id }}"
                                 action="{{ route('pelayanan.destroy', $pelayanan->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -73,7 +73,7 @@
                                     onclick="confirmDelete({{ $pelayanan->id }})">
                                     Hapus
                                 </button>
-                            </form>
+                            </form> --}}
 
                         </td>
                     </tr>

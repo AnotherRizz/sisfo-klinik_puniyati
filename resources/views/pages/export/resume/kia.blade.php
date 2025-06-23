@@ -165,7 +165,19 @@
         </tr>
         <tr>
             <td class="left">Tindak Lanjut</td>
-            <td>{{ $pemeriksaan->tindak_lnjt }}</td>
+              <td>
+                @if ($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk')
+                    Tidak dirujuk
+                @elseif ($pemeriksaan->tindak_lnjt === 'Puskesmas')
+                    Rujukan ke Puskesmas
+                @elseif ($pemeriksaan->tindak_lnjt === 'Klinik')
+                    Rujukan ke Klinik
+                @elseif ($pemeriksaan->tindak_lnjt === 'Rumah Sakit')
+                    Rujukan ke Rumah Sakit
+                @else
+                    -
+                @endif
+            </td>
         </tr>
          <tr>
             <td class="left">Tanggal Kembali</td>

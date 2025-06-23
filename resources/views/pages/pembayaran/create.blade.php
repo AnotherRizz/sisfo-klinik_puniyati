@@ -17,21 +17,26 @@
 
         <form action="{{ route('pembayaran.store') }}" method="POST">
             @csrf
+            <h1 class=" mt-2 mb-7 text-blue-500 text-xl">Data </h1>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
 
                 {{-- No Registrasi --}}
                 <div>
-                  <x-select2 id="no_periksa" name="pemeriksaan_id" label="No Pemeriksaan" 
-    :options="$pemeriksaans->mapWithKeys(fn($p) => [
-        $p->id => [
-            'label' => $p->no_periksa . ' - ' . ($p->pendaftaran->pasien->nama_pasien ?? 'Tidak Diketahui'),
-            'data-pasien-nama' => $p->pendaftaran->pasien->nama_pasien ?? '',
-            'data-bidan-nama' => $p->pendaftaran->bidan->nama_bidan ?? '',
-            'data-pelayanan-nama' => $p->pendaftaran->pelayanan->nama_pelayanan ?? '-',
-            'data-obat-nama' => $p->obat->pluck('nama_obat')->join(', ') ?? '',
-        ],
-    ])"
-    :selected="old('no_periksa')" />
+                    <x-select2 id="no_periksa" name="pemeriksaan_id" label="No Pemeriksaan" :options="$pemeriksaans->mapWithKeys(
+                        fn($p) => [
+                            $p->id => [
+                                'label' =>
+                                    $p->no_periksa .
+                                    ' - ' .
+                                    ($p->pendaftaran->pasien->nama_pasien ?? 'Tidak Diketahui'),
+                                'data-pasien-nama' => $p->pendaftaran->pasien->nama_pasien ?? '',
+                                'data-bidan-nama' => $p->pendaftaran->bidan->nama_bidan ?? '',
+                                'data-pelayanan-nama' => $p->pendaftaran->pelayanan->nama_pelayanan ?? '-',
+                                'data-obat-nama' => $p->obat->pluck('nama_obat')->join(', ') ?? '',
+                            ],
+                        ],
+                    )"
+                        :selected="old('no_periksa')" />
 
 
                 </div>
@@ -69,6 +74,16 @@
                     <input type="text" id="nama_pelayanan"
                         class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100" readonly>
                 </div>
+                {{-- tindakan --}}
+                <div>
+                    <label for="tindakan" class="block text-sm font-medium text-gray-700 mb-1">Tindakan</label>
+                    <input type="text" name="tindakan" id="tindakan" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
+            </div>
+            <h1 class=" mt-10 mb-7 text-orange-500 text-xl">Pembayaran</h1>
+            <div class="grid gap-6 mb-6 md:grid-cols-2">
+
 
 
 
@@ -80,22 +95,24 @@
                 </div>
                 {{-- biaya administrasi --}}
                 <div>
-    <label for="biaya_administrasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
-        Administrasi</label>
-    <input type="text" name="biaya_administrasi" id="biaya_administrasi"
-        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-</div>
-                {{-- tindakan --}}
-                <div>
-                    <label for="tindakan" class="block text-sm font-medium text-gray-700 mb-1">Tindakan</label>
-                    <input type="text" name="tindakan" id="tindakan" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" required>
+                    <label for="biaya_administrasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
+                        Administrasi</label>
+                    <input type="text" name="biaya_administrasi" id="biaya_administrasi"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
+                {{-- biaya konsultasi --}}
                 <div>
-    <label for="biaya_tindakan" class="block text-sm font-medium text-gray-700 mb-1">Biaya Tindakan</label>
-    <input type="text" name="biaya_tindakan" id="biaya_tindakan"
-        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-</div>
+                    <label for="biaya_konsultasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
+                        Konsultasi</label>
+                    <input type="text" name="biaya_konsultasi" id="biaya_konsultasi"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
+                </div>
+
+                <div>
+                    <label for="biaya_tindakan" class="block text-sm font-medium text-gray-700 mb-1">Biaya Tindakan</label>
+                    <input type="text" name="biaya_tindakan" id="biaya_tindakan"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
+                </div>
                 {{-- Tanggal Daftar --}}
                 <div>
                     <label for="tgl_bayar" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Bayar</label>
@@ -116,74 +133,79 @@
                 </div>
 
             </div>
+            <div class="flex gap-2 justify-end">
 
-            <button type="submit"
-                class="text-white cursor-pointer bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
-                Simpan
-            </button>
+
+                <button type="submit"
+                    class="text-white cursor-pointer bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+                    Simpan
+                </button>
+            </div>
+
         </form>
     </div>
 @endsection
 
 @push('scripts')
-  <script>
-    $(document).ready(function() {
-        // Inisialisasi Select2
-        $('#no_periksa').select2({
-            placeholder: 'Pilih No Pemeriksaan...',
-            allowClear: true,
-            width: '100%'
-        });
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi Select2
+            $('#no_periksa').select2({
+                placeholder: 'Pilih No Pemeriksaan...',
+                allowClear: true,
+                width: '100%'
+            });
 
-        // Elemen yang terkait
-        const noPeriksaSelect = $('#no_periksa');
-        const pasienNama = $('#pasien_nama');
-        const bidanNama = $('#bidan_nama');
-        const obatNama = $('#obat_nama');
-        const pelayananNama = $('#nama_pelayanan');
+            // Elemen yang terkait
+            const noPeriksaSelect = $('#no_periksa');
+            const pasienNama = $('#pasien_nama');
+            const bidanNama = $('#bidan_nama');
+            const obatNama = $('#obat_nama');
+            const pelayananNama = $('#nama_pelayanan');
 
-        // Fungsi untuk memperbarui informasi berdasarkan pilihan
-        function updateInfo() {
-            const selected = noPeriksaSelect.find(':selected');
-            pasienNama.val(selected.data('pasien-nama') || '');
-            bidanNama.val(selected.data('bidan-nama') || '');
-            obatNama.val(selected.data('obat-nama') || '');
-            pelayananNama.val(selected.data('pelayanan-nama') || '');
-        }
-
-        // Event listener untuk perubahan pada Select2
-        noPeriksaSelect.on('change', updateInfo);
-
-        // Jalankan saat halaman dimuat
-        updateInfo();
-    });
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Fungsi untuk memformat angka dengan titik ribuan
-    function formatRibuan(input) {
-        input.addEventListener('input', function () {
-            let value = this.value.replace(/[^0-9]/g, ''); // Hapus karakter non-angka
-            if (value) {
-                value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Tambahkan titik setiap tiga digit
+            // Fungsi untuk memperbarui informasi berdasarkan pilihan
+            function updateInfo() {
+                const selected = noPeriksaSelect.find(':selected');
+                pasienNama.val(selected.data('pasien-nama') || '');
+                bidanNama.val(selected.data('bidan-nama') || '');
+                obatNama.val(selected.data('obat-nama') || '');
+                pelayananNama.val(selected.data('pelayanan-nama') || '');
             }
-            this.value = value;
+
+            // Event listener untuk perubahan pada Select2
+            noPeriksaSelect.on('change', updateInfo);
+
+            // Jalankan saat halaman dimuat
+            updateInfo();
         });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fungsi untuk memformat angka dengan titik ribuan
+            function formatRibuan(input) {
+                input.addEventListener('input', function() {
+                    let value = this.value.replace(/[^0-9]/g, ''); // Hapus karakter non-angka
+                    if (value) {
+                        value = value.replace(/\B(?=(\d{3})+(?!\d))/g,
+                            '.'); // Tambahkan titik setiap tiga digit
+                    }
+                    this.value = value;
+                });
 
-        // Hilangkan titik sebelum pengiriman
-        input.addEventListener('blur', function () {
-            this.value = this.value.replace(/\./g, ''); // Hapus semua titik
+                // Hilangkan titik sebelum pengiriman
+                input.addEventListener('blur', function() {
+                    this.value = this.value.replace(/\./g, ''); // Hapus semua titik
+                });
+            }
+
+            // Seleksi kedua input dan terapkan format
+            const biayaKonsultasiInput = document.getElementById('biaya_konsultasi');
+            const biayaAdministrasiInput = document.getElementById('biaya_administrasi');
+            const biayaTindakanInput = document.getElementById('biaya_tindakan');
+
+            formatRibuan(biayaKonsultasiInput);
+            formatRibuan(biayaAdministrasiInput);
+            formatRibuan(biayaTindakanInput);
         });
-    }
-
-    // Seleksi kedua input dan terapkan format
-    const biayaAdministrasiInput = document.getElementById('biaya_administrasi');
-    const biayaTindakanInput = document.getElementById('biaya_tindakan');
-
-    formatRibuan(biayaAdministrasiInput);
-    formatRibuan(biayaTindakanInput);
-});
-
-</script>
-
+    </script>
 @endpush

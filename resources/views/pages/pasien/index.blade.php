@@ -63,7 +63,7 @@
                             <a href="{{ route('pasien.edit', $pasien->id) }}"
                                 class="px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600">Edit</a>
 
-                            <form id="delete-form-{{ $pasien->id }}" action="{{ route('pasien.destroy', $pasien->id) }}"
+                            {{-- <form id="delete-form-{{ $pasien->id }}" action="{{ route('pasien.destroy', $pasien->id) }}"
                                 method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -72,7 +72,7 @@
                                     onclick="confirmDelete({{ $pasien->id }})">
                                     Hapus
                                 </button>
-                            </form>
+                            </form> --}}
                             <a href="{{ route('pasien.cetak.kib', $pasien->id) }}" target="_blank"
                                 class="px-3 py-1 text-white bg-teal-500 rounded hover:bg-teal-600">Cetak KIB</a>
 

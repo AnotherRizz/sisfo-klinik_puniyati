@@ -6,7 +6,7 @@
     <h1 class="text-xl font-semibold mb-4">Data Pemeriksaan KB</h1>
 
     <div class="flex w-full gap-2 justify-end items-center ">
-        <a href="{{ route('pmr.export') }} " target="_blank"
+                <a href="{{ route('all.export', ['nama_pelayanan' => 'KB']) }}" target="_blank"
             class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Export
             Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
@@ -42,6 +42,7 @@
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No </th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No Pemeriksaan</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Pasien</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Bidan</th>
@@ -52,10 +53,11 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($pemeriksaans as $item)
+                @forelse($pemeriksaans as $i => $item)
                     <tr
                         x-show="{{ json_encode(strtolower($item->pasien->nama_pasien ?? '')) }}.includes(search.toLowerCase())">
 
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $i+1 }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->no_periksa }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}
                         </td>

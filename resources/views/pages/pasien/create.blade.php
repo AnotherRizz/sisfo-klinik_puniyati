@@ -118,6 +118,7 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required>
                         <option value="">-- Pilih --</option>
+                        <option value="-">-</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="AB">AB</option>
@@ -126,9 +127,9 @@
                 </div>
                 <div>
                     <label for="no_tlp" class="block mb-2 text-sm font-medium text-gray-900">No Telepon</label>
-                    <input type="number" id="no_tlp" name="no_tlp" value="{{ old('no_tlp') }}"
+                    <input type="text" id="no_tlp" name="no_tlp" value="{{ old('no_tlp') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                        required />
+                        required  />
                 </div>
             </div>
             <button type="submit"

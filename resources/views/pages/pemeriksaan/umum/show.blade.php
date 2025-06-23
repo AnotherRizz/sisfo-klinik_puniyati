@@ -4,13 +4,13 @@
 
 @section('content')
     <div class="max-w-6xl mx-auto px-4 py-6">
-          {{-- Button Kembali --}}
-            <div class="mb-6">
-                <a href="{{ route('umum.index') }}"
-                    class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded shadow-sm">
-                    ← Kembali ke daftar
-                </a>
-            </div>
+        {{-- Button Kembali --}}
+        <div class="mb-6">
+            <a href="{{ route('umum.index') }}"
+                class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded shadow-sm">
+                ← Kembali ke daftar
+            </a>
+        </div>
         <div class="bg-white shadow-md rounded-xl p-6">
             <h1 class="text-2xl font-bold text-slate-600 mb-6">Detail Pemeriksaan</h1>
 
@@ -57,9 +57,9 @@
                 </svg>
                 Vital Sign</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                 <x-detail-card label="Tensi Darah" :value="$pemeriksaan->td .'   mmHg' ?? '-'" />
+                <x-detail-card label="Tensi Darah" :value="$pemeriksaan->td . '   mmHg' ?? '-'" />
                 <x-detail-card label="Berat Badan (BB)" :value="$pemeriksaan->bb . '   Kg' ?? '-'" />
-                <x-detail-card label="Tinggi Badan (TB)" :value="$pemeriksaan->tb . '  Cm' ??  '-'" />
+                <x-detail-card label="Tinggi Badan (TB)" :value="$pemeriksaan->tb . '  Cm' ?? '-'" />
                 <x-detail-card label="Suhu" :value="$pemeriksaan->suhu . ' °C' ?? '-'" />
                 <x-detail-card label="Saturasi Oksigen" :value="$pemeriksaan->saturasiOx . ' %' ?? '-'" />
             </div>
@@ -91,13 +91,14 @@
                 Tindakan dan Tindak Lanjut</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
                 <x-detail-card label="Tindakan" :value="$pemeriksaan->tindakan ?? '-'" />
-                <x-detail-card label="Tindak Lanjut" :value="$pemeriksaan->tindak_lnjt ?? '-'" />
+                <x-detail-card label="Tindak Lanjut" :value="($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk')  ? ($pemeriksaan->tindak_lnjt ?? '-')  : ('Rujukan ' . ($pemeriksaan->tindak_lnjt ?? '-'))" />
+
                 <x-detail-card label="Tanggal Kembali" :value="$pemeriksaan->tgl_kembali
                     ? \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->translatedFormat('d F Y')
-                    : '-'"  />
+                    : '-'" />
             </div>
 
-          
+
         </div>
     </div>
 
