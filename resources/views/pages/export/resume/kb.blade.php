@@ -178,7 +178,7 @@
         </tr>
        <tr>
             <td class="left">Alegi</td>
-            <td>{{ $pemeriksaan->riw_alergi }}</td>
+            <td>{{ $pemeriksaan->alergi }}</td>
         </tr>
          <tr>
             <td class="left">Hari Pertama Haid Ibu Hamil</td>
@@ -187,15 +187,15 @@
          
         <tr>
             <td class="left">Jumlah Anak</td>
-            <td>{{ $pemeriksaan->jmlh_anak }}</td>
+            <td>{{ $pemeriksaan->jmlhanak }}</td>
         </tr>
         <tr>
             <td class="left">Tanggal Pasang</td>
-            <td>{{ \Carbon\Carbon::parse($pemeriksaan->tgl_pasang)->locale('id')->translatedFormat('d F Y') }} </td>
+            <td>{{ \Carbon\Carbon::parse($pemeriksaan->tglpasang)->locale('id')->translatedFormat('d F Y') }} </td>
         </tr>
         <tr>
             <td class="left">Metode KB</td>
-            <td>{{ $pemeriksaan->metode_KB }} </td>
+            <td>{{ $pemeriksaan->metode_kb }} </td>
         </tr>
         <tr>
             <td class="left">Edukasi</td>
@@ -233,11 +233,11 @@
         </tr>
 
         <tr>
-            <td class="left">Obat dan Dosis</td>
+           <td class="left">Obat dan Dosis</td>
             <td>
-                @forelse ($pemeriksaan->obat as $o)
+                @forelse ($pemeriksaan->obatPemeriksaan as $o)
                     <div>
-                        {{ $o->nama_obat }} ({{ $o->pivot->dosis_carkai ?? '-' }})
+                        {{ $o->obat->nama_obat }} ({{ $o->dosis_carkai ?? '-' }})
                     </div>
                 @empty
                     Tidak ada obat

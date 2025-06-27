@@ -147,14 +147,106 @@
     <h4 style="margin-top: 10px;">PEMERIKSAAN</h4>
     <table class="bordered">
         <tr>
+            <td class="left">Keluhan</td>
+            <td>{{ $pemeriksaan->keluhan }}</td>
+        </tr>
+        <tr>
+            <td class="left">Riwayat Penyakit</td>
+            <td>{{ $pemeriksaan->riw_penyakit }}</td>
+        </tr>
+        <tr>
+            <td class="left">Tensi Darah (mm/Hg)</td>
+            <td>{{ $pemeriksaan->td }} mmHg</td>
+        </tr>
+        <tr>
+            <td class="left">Berat Badan (Kg)</td>
+            <td>{{ $pemeriksaan->bb }} Kg</td>
+        </tr>
+        <tr>
+            <td class="left">Tinggi Badan (Cm)</td>
+            <td>{{ $pemeriksaan->tb }} Cm</td>
+        </tr>
+        <tr>
+            <td class="left">Suhu (Celcius)</td>
+            <td>{{ $pemeriksaan->suhu }} °C</td>
+        </tr>
+        <tr>
+            <td class="left">Saturasi Oksigen</td>
+            <td>{{ $pemeriksaan->saturasiOx }} %</td>
+        </tr>
+        <tr>
+            <td class="left">Tinggi Fundus (Cm)</td>
+            <td>{{ $pemeriksaan->tifu }} Cm</td>
+        </tr>
+        <tr>
+            <td class="left">Denyut Nadi Ibu Hamil</td>
+            <td>{{ $pemeriksaan->nadi ?? '-' }} bpm</td>
+        </tr>
+        <tr>
+            <td class="left">Lingkar Lengan Atas (LILA)</td>
+            <td>{{ $pemeriksaan->lila ?? '-' }} cm</td>
+        </tr>
+        <tr>
+            <td class="left">Hari Pertama Haid Ibu
+                Hamil
+            </td>
+            <td>{{ $pemeriksaan->hpht ? \Carbon\Carbon::parse($pemeriksaan->hpht)->translatedFormat('d F Y') : '-' }}
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Hari Perkiraan Lahir
+                Bayi
+            </td>
+            <td>{{ $pemeriksaan->hpl ? \Carbon\Carbon::parse($pemeriksaan->hpl)->translatedFormat('d F Y') : '-' }}
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Gravida, Paritas,
+                Abortus Ibu Hamil
+            </td>
+            <td>{{ $pemeriksaan->gpa ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Riwayat Kehamilan dan Kesehatan</td>
+            <td>{{ $pemeriksaan->riwayatkehamilankesehatan ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Umur Kehamilan</td>
+            <td>{{ $pemeriksaan->umr_hamil ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Lingkar Perut</td>
+            <td>{{ $pemeriksaan->ling_perut ?? '-' }} cm</td>
+        </tr>
+        <tr>
+            <td class="left">Tinggi Fundus Uteri (TFU)</td>
+            <td>{{ $pemeriksaan->tifu ?? '-' }} cm</td>
+        </tr>
+        <tr>
+            <td class="left">Denyut Jantung Janin</td>
+            <td>{{ $pemeriksaan->djj ?? '-' }} bpm</td>
+        </tr>
+        <tr>
+            <td class="left">Letak Janin</td>
+            <td>{{ $pemeriksaan->ltkjanin ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Kontraksi Uterus</td>
+            <td>{{ $pemeriksaan->ktrkuterus ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Refleks Patela (Refla)</td>
+            <td>{{ $pemeriksaan->refla ?? '-' }}</td>
+        </tr>
+        <tr>
             <td class="left">Pemeriksaan Lab</td>
             <td>{{ $pemeriksaan->lab }}</td>
         </tr>
         <tr>
-            <td class="left">keterangan Resiko Tiggi</td>
+            <td class="left">keterangan Resiko Tinggi</td>
             <td>{{ $pemeriksaan->resti }}</td>
         </tr>
-        
+
         <tr>
             <td class="left">Diagnosa</td>
             <td>{{ $pemeriksaan->diagnosa }}</td>
@@ -165,7 +257,7 @@
         </tr>
         <tr>
             <td class="left">Tindak Lanjut</td>
-              <td>
+            <td>
                 @if ($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk')
                     Tidak dirujuk
                 @elseif ($pemeriksaan->tindak_lnjt === 'Puskesmas')
@@ -179,7 +271,7 @@
                 @endif
             </td>
         </tr>
-         <tr>
+        <tr>
             <td class="left">Tanggal Kembali</td>
             <td>{{ \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->locale('id')->translatedFormat('d F Y') }}</td>
         </tr>
@@ -187,9 +279,9 @@
         <tr>
             <td class="left">Obat dan Dosis</td>
             <td>
-                @forelse ($pemeriksaan->obat as $o)
+                @forelse ($pemeriksaan->obatPemeriksaan as $o)
                     <div>
-                        {{ $o->nama_obat }} ({{ $o->pivot->dosis_carkai ?? '-' }})
+                        {{ $o->obat->nama_obat }} ({{ $o->dosis_carkai ?? '-' }})
                     </div>
                 @empty
                     Tidak ada obat

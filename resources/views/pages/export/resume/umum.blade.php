@@ -155,10 +155,6 @@
             <td>{{ $pemeriksaan->riw_penyakit }}</td>
         </tr>
         <tr>
-            <td class="left">Riwayat Imunisasi</td>
-            <td>{{ $pemeriksaan->riw_imunisasi }}</td>
-        </tr>
-        <tr>
             <td class="left">Riwayat Alegi</td>
             <td>{{ $pemeriksaan->riw_alergi }}</td>
         </tr>
@@ -215,9 +211,9 @@
         <tr>
             <td class="left">Obat dan Dosis</td>
             <td>
-                @forelse ($pemeriksaan->obat as $o)
+                @forelse ($pemeriksaan->obatPemeriksaan as $o)
                     <div>
-                        {{ $o->nama_obat }} ({{ $o->pivot->dosis_carkai ?? '-' }})
+                        {{ $o->obat->nama_obat }} ({{ $o->dosis_carkai ?? '-' }})
                     </div>
                 @empty
                     Tidak ada obat

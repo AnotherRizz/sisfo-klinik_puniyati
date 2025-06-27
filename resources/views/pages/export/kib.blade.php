@@ -83,6 +83,7 @@
         <tr><td>Nama Pasien</td><td>: {{ $pasien->nama_pasien }}</td></tr>
         <tr><td>Tempat Lahir</td><td>: {{ $pasien->tempt_lahir }}</td></tr>
         <tr><td>Tanggal Lahir</td><td>: {{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') }}</td></tr>
+        <tr><td>Umur</td><td>: {{ $pasien->umur }}</td></tr>
         <tr><td>Jenis Kelamin</td><td>: {{ $pasien->jenis_kelamin }}</td></tr>
         <tr><td>Agama</td><td>: {{ $pasien->agama }}</td></tr>
         <tr><td>Gol. Darah</td><td>: {{ $pasien->golda }}</td></tr>

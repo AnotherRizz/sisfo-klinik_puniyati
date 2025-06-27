@@ -104,11 +104,11 @@
                         value="{{ old('riw_penyakit', $pemeriksaan->riw_penyakit) }}" required>
                 </div>
                 <div>
-                    <label for="riw_alergi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat
+                    <label for="alergi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat
                         Alergi</label>
-                    <input type="text" name="riw_alergi" id="riw_alergi"
+                    <input type="text" name="alergi" id="alergi"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('riw_alergi', $pemeriksaan->riw_alergi) }}" required>
+                        value="{{ old('alergi', $pemeriksaan->alergi) }}" required>
                 </div>
                 <div>
                     <label for="td" class="block text-sm font-medium text-gray-700 mb-1">Tensi Darah <span
@@ -149,34 +149,34 @@
                         value="{{ old('hpht', $pemeriksaan->hpht) }}" required>
                 </div>
                 <div>
-                    <label for="jmlh_anak" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Anak</label>
-                    <input type="text" name="jmlh_anak" id="jmlh_anak"
+                    <label for="jmlhanak" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Anak</label>
+                    <input type="text" name="jmlhanak" id="jmlhanak"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('jmlh_anak', $pemeriksaan->jmlh_anak) }}">
+                        value="{{ old('jmlhanak', $pemeriksaan->jmlhanak) }}">
                 </div>
                 <div>
-                    <label for="tgl_pasang" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pasang</label>
-                    <input type="date" name="tgl_pasang" id="tgl_pasang"
+                    <label for="tglpasang" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pasang</label>
+                    <input type="date" name="tglpasang" id="tglpasang"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
-                        value="{{ old('tgl_pasang', $pemeriksaan->tgl_pasang) }}" required>
+                        value="{{ old('tglpasang', $pemeriksaan->tglpasang) }}" required>
                 </div>
                 <div class="mb-6">
-                    <label for="metode_KB" class="block text-sm font-medium text-gray-700 mb-1">Metode KB</label>
-                    <select id="metode_KB" name="metode_KB"
+                    <label for="metode_kb" class="block text-sm font-medium text-gray-700 mb-1">Metode KB</label>
+                    <select id="metode_kb" name="metode_kb"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
-                        <option value="Pil" {{ old('metode_KB', $pemeriksaan->metode_KB) == 'Pil' ? 'selected' : '' }}>
+                        <option value="Pil" {{ old('metode_kb', $pemeriksaan->metode_kb) == 'Pil' ? 'selected' : '' }}>
                             Pil</option>
                         <option value="Suntik"
-                            {{ old('metode_KB', $pemeriksaan->metode_KB) == 'Suntik' ? 'selected' : '' }}>Suntik</option>
+                            {{ old('metode_kb', $pemeriksaan->metode_kb) == 'Suntik' ? 'selected' : '' }}>Suntik</option>
                         <option value="Implan"
-                            {{ old('metode_KB', $pemeriksaan->metode_KB) == 'Implan' ? 'selected' : '' }}>Implan</option>
-                        <option value="IUD" {{ old('metode_KB', $pemeriksaan->metode_KB) == 'IUD' ? 'selected' : '' }}>
+                            {{ old('metode_kb', $pemeriksaan->metode_kb) == 'Implan' ? 'selected' : '' }}>Implan</option>
+                        <option value="IUD" {{ old('metode_kb', $pemeriksaan->metode_kb) == 'IUD' ? 'selected' : '' }}>
                             IUD</option>
                         <option value="Kondom"
-                            {{ old('metode_KB', $pemeriksaan->metode_KB) == 'Kondom' ? 'selected' : '' }}>Kondom</option>
+                            {{ old('metode_kb', $pemeriksaan->metode_kb) == 'Kondom' ? 'selected' : '' }}>Kondom</option>
                         <option value="MOW/MOP"
-                            {{ old('metode_KB', $pemeriksaan->metode_KB) == 'MOW/MOP' ? 'selected' : '' }}>MOW/MOP</option>
+                            {{ old('metode_kb', $pemeriksaan->metode_kb) == 'MOW/MOP' ? 'selected' : '' }}>MOW/MOP</option>
                     </select>
                 </div>
                 <div>
@@ -231,19 +231,19 @@
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
                     <div id="obat-wrapper">
-                        @forelse ($pemeriksaan->obat as $pivotObat)
+                        @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
                             <div class="flex gap-2 mb-2">
                                 <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" required>
                                     <option value="">-- Pilih Obat --</option>
                                     @foreach ($obats as $obat)
                                         <option value="{{ $obat->id }}"
-                                            {{ $obat->id == $pivotObat->id ? 'selected' : '' }}>
+                                            {{ $obat->id == $pivotObat->obat_id ? 'selected' : '' }}>
                                             {{ $obat->nama_obat }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <input type="text" name="dosis_carkai[]"
-                                    value="{{ $pivotObat->pivot->dosis_carkai }}"
+                                    value="{{ $pivotObat->dosis_carkai }}"
                                     class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
                             </div>
                         @empty

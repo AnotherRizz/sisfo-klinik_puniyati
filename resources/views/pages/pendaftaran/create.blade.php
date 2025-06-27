@@ -4,6 +4,12 @@
 
 @section('content')
     <h1 class="text-xl font-semibold mb-4">Tambah Data Pendaftaran</h1>
+    <div class="mb-6">
+        <a href="{{ route('pendaftaran.index') }}"
+            class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+    </div>
     <div class="flex justify-end">
 
         <button data-modal-target="crud-modal" data-modal-toggle="crud-modal"

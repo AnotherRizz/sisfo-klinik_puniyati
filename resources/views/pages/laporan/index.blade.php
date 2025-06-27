@@ -27,7 +27,7 @@
                         @endforeach
                     </select>
                     <button type="submit"
-                        class="w-full bg-blue-500 cursor-pointer hover:bg-blue-600 text-white py-2 rounded text-sm">Generate
+                        class="w-full bg-blue-500 cursor-pointer hover:bg-blue-600 text-white py-2 rounded text-sm">Cetak
                         PDF</button>
                 </form>
             </div>
@@ -54,7 +54,7 @@
                         @endforeach
                     </select>
                     <button type="submit"
-                        class="w-full bg-green-500 cursor-pointer hover:bg-green-600 text-white py-2 rounded text-sm">Generate
+                        class="w-full bg-green-500 cursor-pointer hover:bg-green-600 text-white py-2 rounded text-sm">Cetak
                         PDF</button>
                 </form>
             </div>
@@ -83,7 +83,7 @@
                     </select>
                     <button type="submit"
                         class="w-full cursor-pointer bg-red-500 hover:bg-red-600 text-white py-2 rounded text-sm">
-                        Generate PDF
+                        Cetak PDF
                     </button>
                 </form>
 

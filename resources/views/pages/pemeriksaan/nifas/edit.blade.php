@@ -104,6 +104,12 @@
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
                         value="{{ old('riw_penyakit', $pemeriksaan->riw_penyakit) }}" required>
                 </div>
+                <div>
+                    <label for="frek_kunjungan" class="block text-sm font-medium text-gray-700 mb-1">Frekuensi
+                        Kunjungan<span class="text-red-500 text-xs">(hari)</span></label>
+                    <textarea name="frek_kunjungan" class="w-full border-gray-300 rounded-lg shadow-sm text-xs"
+                        placeholder="Frekuensi kunjungan (hari ke berapa nifas) satuan hari" id="" cols="30" rows="2">{{ old('frek_kunjungan', $pemeriksaan->frek_kunjungan) }}</textarea>
+                </div>
 
                 <div>
                     <label for="td" class="block text-sm font-medium text-gray-700 mb-1">Tensi Darah <span
@@ -141,10 +147,10 @@
                         value="{{ old('saturasiOx', $pemeriksaan->saturasiOx) }}" required>
                 </div>
                 <div>
-                    <label for="riw_alergi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat Alergi </label>
-                    <input type="text" name="riw_alergi" id="riw_alergi"
+                    <label for="alergi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat Alergi </label>
+                    <input type="text" name="alergi" id="alergi"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
-                        value="{{ old('riw_alergi', $pemeriksaan->riw_alergi) }}" required>
+                        value="{{ old('alergi', $pemeriksaan->alergi) }}" required>
                 </div>
                 <div>
                     <label for="tifu" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Fundus <span
@@ -165,53 +171,53 @@
                         placeholder="Keterangan tentang payudara apakah mengalami pembengkakan, puting lecet, asi keluar atau tidak)">{{ old('payudara', $pemeriksaan->payudara) }}</textarea>
                 </div>
                 <div>
-                    <label for="luka_jahit" class="block text-sm font-medium text-gray-700 mb-1">Luka Jahit</span></label>
-                    <textarea name="luka_jahit" class="w-full border-gray-300  text-xs  rounded-lg shadow-sm" id=""
-                        cols="30" rows="2" placeholder="Keterangan kondisi luka jahit apabila ada">{{ old('luka_jahit', $pemeriksaan->luka_jahit) }}</textarea>
+                    <label for="lukajahit" class="block text-sm font-medium text-gray-700 mb-1">Luka Jahit</span></label>
+                    <textarea name="lukajahit" class="w-full border-gray-300  text-xs  rounded-lg shadow-sm" id=""
+                        cols="30" rows="2" placeholder="Keterangan kondisi luka jahit apabila ada">{{ old('lukajahit', $pemeriksaan->lukajahit) }}</textarea>
                 </div>
                 <div>
-                    <label for="tgl_lahir" class="block text-sm font-medium text-gray-500 mb-1">Tanggal
+                    <label for="tgllahir" class="block text-sm font-medium text-gray-500 mb-1">Tanggal
                         Lahir Bayi</label>
-                    <input type="date" name="tgl_lahir" id="tgl_lahir"
+                    <input type="date" name="tgllahir" id="tgllahir"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
-                        value="{{ old('tgl_lahir', $pemeriksaan->tgl_lahir) }}" required>
+                        value="{{ old('tgllahir', $pemeriksaan->tgllahir) }}" required>
                 </div>
                 <div>
-                    <label for="tmpt_persalinan" class="block text-sm font-medium text-gray-700 mb-1">Tempat Persalinan
+                    <label for="tmptpersalinan" class="block text-sm font-medium text-gray-700 mb-1">Tempat Persalinan
                         </span></label>
-                    <input type="text" name="tmpt_persalinan" id="tmpt_persalinan"
+                    <input type="text" name="tmptpersalinan" id="tmptpersalinan"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('tmpt_persalinan', $pemeriksaan->tmpt_persalinan) }}" required>
+                        value="{{ old('tmptpersalinan', $pemeriksaan->tmptpersalinan) }}" required>
                 </div>
                 <div class="mb-6">
-                    <label for="bantu_persalinan" class="block text-sm font-medium text-gray-700 mb-1">Penolong
+                    <label for="bantupersalinan" class="block text-sm font-medium text-gray-700 mb-1">Penolong
                         Persalinan</label>
-                    <select id="bantu_persalinan" name="bantu_persalinan"
+                    <select id="bantupersalinan" name="bantupersalinan"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
                         <option value="Bidan"
-                            {{ old('bantu_persalinan', $pemeriksaan->bantu_persalinan ?? '') == 'Bidan' ? 'selected' : '' }}>
+                            {{ old('bantupersalinan', $pemeriksaan->bantupersalinan ?? '') == 'Bidan' ? 'selected' : '' }}>
                             Bidan</option>
                         <option value="Dokter"
-                            {{ old('bantu_persalinan', $pemeriksaan->bantu_persalinan ?? '') == 'Dokter' ? 'selected' : '' }}>
+                            {{ old('bantupersalinan', $pemeriksaan->bantupersalinan ?? '') == 'Dokter' ? 'selected' : '' }}>
                             Dokter</option>
                     </select>
                 </div>
 
                 <div class="mb-6">
-                    <label for="jns_persalinan" class="block text-sm font-medium text-gray-700 mb-1">Jenis
+                    <label for="jnspersalinan" class="block text-sm font-medium text-gray-700 mb-1">Jenis
                         Persalinan</label>
-                    <select id="jns_persalinan" name="jns_persalinan"
+                    <select id="jnspersalinan" name="jnspersalinan"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
                         <option value="Spontan"
-                            {{ old('jns_persalinan', $pemeriksaan->jns_persalinan ?? '') == 'Spontan' ? 'selected' : '' }}>
+                            {{ old('jnspersalinan', $pemeriksaan->jnspersalinan ?? '') == 'Spontan' ? 'selected' : '' }}>
                             Spontan</option>
                         <option value="Cesar"
-                            {{ old('jns_persalinan', $pemeriksaan->jns_persalinan ?? '') == 'Cesar' ? 'selected' : '' }}>
+                            {{ old('jnspersalinan', $pemeriksaan->jnspersalinan ?? '') == 'Cesar' ? 'selected' : '' }}>
                             Cesar</option>
                         <option value="Vakum"
-                            {{ old('jns_persalinan', $pemeriksaan->jns_persalinan ?? '') == 'Vakum' ? 'selected' : '' }}>
+                            {{ old('jnspersalinan', $pemeriksaan->jnspersalinan ?? '') == 'Vakum' ? 'selected' : '' }}>
                             Vakum</option>
                     </select>
                 </div>
@@ -219,10 +225,10 @@
 
 
                 <div>
-                    <label for="besar_rahim" class="block text-sm font-medium text-gray-700 mb-1">Besar Rahim</label>
-                    <input type="text" name="besar_rahim" id="besar_rahim"
+                    <label for="besarrahim" class="block text-sm font-medium text-gray-700 mb-1">Besar Rahim</label>
+                    <input type="text" name="besarrahim" id="besarrahim"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('besar_rahim', $pemeriksaan->besar_rahim) }}">
+                        value="{{ old('besarrahim', $pemeriksaan->besarrahim) }}">
                 </div>
                 <div>
                     <label for="infeksi_kompli" class="block text-sm font-medium text-gray-700 mb-1">Infeksi /
@@ -285,20 +291,20 @@
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
                     <div id="obat-wrapper">
-                        @forelse ($pemeriksaan->obat as $pivotObat)
+                        @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
                             <div class="flex gap-2 mb-2">
                                 <select name="obat_id[]" class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm"
                                     required>
                                     <option value="">-- Pilih Obat --</option>
-                                    @foreach ($obats as $obat)
+                                   @foreach ($obats as $obat)
                                         <option value="{{ $obat->id }}"
-                                            {{ $obat->id == $pivotObat->id ? 'selected' : '' }}>
+                                            {{ $obat->id == $pivotObat->obat_id ? 'selected' : '' }}>
                                             {{ $obat->nama_obat }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <input type="text" name="dosis_carkai[]"
-                                    value="{{ $pivotObat->pivot->dosis_carkai }}"
+                                    value="{{ $pivotObat->dosis_carkai }}"
                                     class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm" placeholder="Dosis"
                                     required />
                             </div>

@@ -93,6 +93,7 @@
             <th>Nama Pasien</th>
             <th>Tempat Lahir</th>
             <th>Tanggal Lahir</th>
+            <th>Umur</th>
             <th>Alamat</th>
             <th>Agama</th>
             <th>Pendidikan</th>
@@ -112,6 +113,7 @@
                 <td>{{ $item->nama_pasien ?? '-' }}</td>
                 <td>{{ $item->tempt_lahir ?? '-' }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y') }}</td>
+                <td>{{ $item->umur ?? '-' }}</td>
                 <td>{{ $item->alamat ?? '-' }}</td>
                 <td>{{ $item->agama ?? '-' }}</td>
                 <td>{{ $item->pendidikan ?? '-' }}</td>

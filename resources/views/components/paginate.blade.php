@@ -3,7 +3,7 @@
         <input type="hidden" name="{{ $key }}" value="{{ $value }}">
     @endforeach
 
-    <label for="rowsPerPage" class="mr-2 text-slate-500">Show</label>
+    <label for="rowsPerPage" class="mr-2 text-slate-500">Lihat</label>
     <select name="per_page" id="rowsPerPage" class="border rounded-lg px-6 py-1 text-slate-500"
         onchange="document.getElementById('paginationForm').submit();">
         @foreach ($options as $option)
@@ -12,5 +12,5 @@
             </option>
         @endforeach
     </select>
-    <span class="ml-2 text-slate-500">entries</span>
+    <span class="ml-2 text-slate-500">baris</span>
 </form>

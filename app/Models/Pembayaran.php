@@ -4,45 +4,50 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Pembayaran extends Model
 {
     use HasFactory;
-     protected $table = 'pembayaran';
+
+    protected $table = 'pembayaran';
 
     protected $fillable = [
-        'kd_bayar', 'pemeriksaan_id', 
-        'tgl_bayar', 'administrasi', 'biaya_administrasi','biaya_konsultasi',
-        'biaya_tindakan','tindakan',  'jenis_bayar'
+        'kd_bayar',
+        'pemeriksaanable_id',
+        'pemeriksaanable_type',
+        'tgl_bayar',
+        'administrasi',
+        'biaya_administrasi',
+        'biaya_konsultasi',
+        'biaya_tindakan',
+        'tindakan',
+        'jenis_bayar',
     ];
 
-    public function pasien()
+    /**
+     * Relasi polymorphic ke berbagai jenis pemeriksaan (umum, kb, kia, dll)
+     */
+    public function pemeriksaanable(): MorphTo
     {
-        return $this->belongsTo(Pasien::class);
+        return $this->morphTo();
     }
 
-  /* many-to-one (balikannya) */
-    public function pemeriksaan(): BelongsTo
-    {
-        return $this->belongsTo(Pemeriksaan::class, 'pemeriksaan_id');
-    }
+    // Relasi di bawah ini sebaiknya DIHAPUS, karena sudah tersedia lewat pemeriksaanable
 
-public function pendaftaran()
-{
-    return $this->belongsTo(Pendaftaran::class);
-}
+    // public function pasien() {
+    //     return $this->belongsTo(Pasien::class);
+    // }
 
+    // public function pendaftaran() {
+    //     return $this->belongsTo(Pendaftaran::class);
+    // }
 
+    // public function bidan() {
+    //     return $this->belongsTo(Bidan::class);
+    // }
 
-    public function bidan()
-    {
-        return $this->belongsTo(Bidan::class);
-    }
-
-    public function obat()
-    {
-        return $this->belongsTo(Obat::class);
-    }
+    // public function obat() {
+    //     return $this->belongsTo(Obat::class);
+    // }
 }

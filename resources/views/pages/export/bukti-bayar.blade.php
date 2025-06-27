@@ -8,7 +8,6 @@
             font-family: 'Times New Roman', Times, serif;
             font-size: 12px;
         }
-        
         .header {
             text-align: center;
             margin-bottom: 10px;
@@ -82,27 +81,27 @@
     <table class="info-table">
         <tr>
             <td>No. RM</td>
-            <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->no_rm ?? '-' }}</td>
+            <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->no_rm ?? '-' }}</td>
             <td>No. Registrasi</td>
-            <td>: {{ $pembayaran->pemeriksaan->pendaftaran->noreg ?? '-' }}</td>
+            <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->noreg ?? '-' }}</td>
         </tr>
         <tr>
             <td>Nama Pasien</td>
-            <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+            <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
             <td>Tanggal Pemeriksaan</td>
-            <td>: {{ \Carbon\Carbon::parse($pembayaran->pemeriksaan->tgl_periksa ?? now())->format('d-m-Y') }}</td>
+            <td>: {{ optional($pembayaran->pemeriksaanable->created_at)->format('d-m-Y') ?? '-' }}</td>
         </tr>
         <tr>
             <td>Alamat</td>
-            <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->alamat ?? '-' }}</td>
+            <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->alamat ?? '-' }}</td>
             <td>Tanggal Cetak</td>
-            <td>: {{ \Carbon\Carbon::now()->format('d-m-Y') }}</td>
+            <td>: {{ now()->format('d-m-Y') }}</td>
         </tr>
         <tr>
             <td>Tanggal Lahir</td>
-            <td>: {{ \Carbon\Carbon::parse($pembayaran->pemeriksaan->pendaftaran->pasien->tgl_lahir ?? now())->format('d-m-Y') }}</td>
+            <td>: {{ optional($pembayaran->pemeriksaanable->pendaftaran->pasien->tgl_lahir)->format('d-m-Y') ?? '-' }}</td>
             <td>Nama Bidan</td>
-            <td>: {{ $pembayaran->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
+            <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
         </tr>
     </table>
 
@@ -123,13 +122,13 @@
                 <td></td>
             </tr>
             <tr>
-                <td>{{ $pembayaran->tindakan }}</td>
+                <td>{{ $pembayaran->tindakan ?? '-' }}</td>
                 <td>Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
             </tr>
-            @foreach ($pembayaran->pemeriksaan->obat as $obat)
+            @foreach ($pembayaran->pemeriksaanable->obat ?? [] as $obat)
                 <tr>
-                    <td>{{ $obat->nama_obat }} ({{ $obat->pivot->dosis_carkai }})</td>
-                    <td>Rp {{ number_format($obat->harga_jual, 0, ',', '.') }}</td>
+                    <td>{{ $obat->nama_obat }} ({{ $obat->pivot->dosis_carkai ?? '-' }})</td>
+                    <td>Rp {{ number_format($obat->harga_jual ?? 0, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
             <tr>
@@ -139,13 +138,13 @@
             <tr>
                 <td><strong>TOTAL</strong></td>
                 <td>
-                    <?php
+                    @php
                         $total = 
                             ($pembayaran->biaya_administrasi ?? 0) + 
                             ($pembayaran->biaya_tindakan ?? 0) + 
-                            $pembayaran->pemeriksaan->obat->sum('harga_jual') + 
-                            ($pembayaran->biaya_konsultasi ?? 0);
-                    ?>
+                            ($pembayaran->biaya_konsultasi ?? 0) + 
+                            ($pembayaran->pemeriksaanable->obat->sum('harga_jual') ?? 0);
+                    @endphp
                     <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
                 </td>
             </tr>

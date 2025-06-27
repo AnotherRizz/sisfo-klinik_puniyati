@@ -85,11 +85,11 @@
 
     <h3 class="title">Data Pembayaran</h3>
 
-<table class="table">
+<table class="table" style="width: 100%; border-collapse: collapse; font-size: 12px;">
     <thead>
-        <tr>
-            <th>No</th>
-              <th >No. Pembayaran</th>
+        <tr style="background-color: #f0f0f0;">
+            <th >No</th>
+            <th >No. Pembayaran</th>
             <th >No. Periksa</th>
             <th >No. Reg</th>
             <th >Nama Pasien</th>
@@ -103,48 +103,37 @@
         </tr>
     </thead>
     <tbody>
-       @foreach ($pembayaran as $i => $item)
+        @foreach ($pembayaran as $i => $item)
             @php
-                $totalObat = $item->pemeriksaan->obat->sum('harga_jual');
+                $pemeriksaan = $item->pemeriksaanable;
+                $pendaftaran = optional($pemeriksaan)->pendaftaran;
+                $pasien = optional($pendaftaran)->pasien;
+                $bidan = optional($pendaftaran)->bidan;
+                $pelayanan = optional($pendaftaran)->pelayanan;
+                $obats = optional($pemeriksaan)->obat ?? collect();
+                $totalObat = $obats->sum('harga_jual');
                 $totalBayar = ($item->biaya_tindakan ?? 0) + ($item->biaya_administrasi ?? 0) + $totalObat;
             @endphp
-            <tr >
-                <td>{{ $i + 1 }}</td>
-                <td>{{ $item->kd_bayar ?? '-' }}</td>
-                <td>{{ $item->pemeriksaan->no_periksa ?? '-' }}</td>
-                <td>{{ $item->pemeriksaan->pendaftaran->noreg ?? '-' }}</td>
-                <td>{{ $item->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
-                <td>{{ $item->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
-                <td>{{ $item->pemeriksaan->pendaftaran->pelayanan->nama_pelayanan ?? '-' }}</td>
-
-                {{-- Total harga obat --}}
-                <td>
-                    Rp{{ number_format($totalObat, 0, ',', '.') }}
-                </td>
-
-                {{-- Biaya tindakan --}}
-                <td>
-                    Rp{{ number_format($item->biaya_tindakan, 0, ',', '.') }}
-                </td>
-
-                {{-- Biaya administrasi --}}
-                <td>
-                    Rp{{ number_format($item->biaya_administrasi, 0, ',', '.') }}
-                </td>
-
-                {{-- Total bayar --}}
-                <td>
-                    Rp{{ number_format($totalBayar, 0, ',', '.') }}
-                </td>
-
-                {{-- Tanggal pembayaran --}}
-                <td>
+            <tr>
+                <td >{{ $i + 1 }}</td>
+                <td >{{ $item->kd_bayar ?? '-' }}</td>
+                <td >{{ $pemeriksaan->nomor_periksa ?? '-' }}</td>
+                <td >{{ $pendaftaran->noreg ?? '-' }}</td>
+                <td >{{ $pasien->nama_pasien ?? '-' }}</td>
+                <td >{{ $bidan->nama_bidan ?? '-' }}</td>
+                <td >{{ $pelayanan->nama_pelayanan ?? '-' }}</td>
+                <td >Rp{{ number_format($totalObat, 0, ',', '.') }}</td>
+                <td >Rp{{ number_format($item->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
+                <td >Rp{{ number_format($item->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
+                <td >Rp{{ number_format($totalBayar, 0, ',', '.') }}</td>
+                <td >
                     {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}
                 </td>
             </tr>
         @endforeach
     </tbody>
 </table>
+
 
 
 

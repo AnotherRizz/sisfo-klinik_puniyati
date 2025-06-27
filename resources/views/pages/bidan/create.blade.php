@@ -4,6 +4,12 @@
 
 @section('content')
 <h1 class="text-xl font-semibold mb-4">Tambah Data Bidan</h1>
+<div class="mb-6">
+        <a href="{{ route('bidan.index') }}"
+            class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+    </div>
 <div class="p-7 bg-white rounded shadow">
    @if ($errors->any())
     <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
@@ -21,15 +27,16 @@
        
         <div>
             <label for="nama_bidan" class="block mb-2 text-sm font-medium text-gray-900">Nama Bidan</label>
-            <input type="text" id="nama_bidan" name="nama_bidan" value="{{ old('nama_bidan') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" placeholder="cth : Risqi" required />
+            <input type="text" id="nama_bidan" name="nama_bidan" value="{{ old('nama_bidan') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required />
         </div>
         <div>
             <label for="alamat" class="block mb-2 text-sm font-medium text-gray-900">Alamat</label>
-            <input type="text" id="alamat" name="alamat" value="{{ old('alamat') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" placeholder="cth : Boyolali" required />
+            <input type="text" id="alamat" name="alamat" value="{{ old('alamat') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"  required />
         </div>
         <div>
             <label for="jadwal" class="block mb-2 text-sm font-medium text-gray-900">Jadwal</label>
-            <input type="text" id="jadwal" name="jadwal" value="{{ old('jadwal') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" placeholder="cth : Boyolali" required />
+            <input type="text" id="jadwal" name="jadwal" value="{{ old('jadwal') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"  required />
+            <label for="jadwal" class="block mb-2 text-xs font-medium text-gray-400">Cth : 08.00-10.00</label>
         </div>
       
         <div>

@@ -9,7 +9,7 @@
   <body class="font-poppins bg-gray-100">
 
     <main class="w-full md:max-w-3xl mx-auto mt-20 p-4 bg-white shadow-lg rounded-xl">
-      <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center">Portal Bidan Praktik Mandiri</h1>
+      <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center uppercase">Portal sistem rekam medis elektronik Bidan Praktik Mandiri</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-10">
         
         <div>

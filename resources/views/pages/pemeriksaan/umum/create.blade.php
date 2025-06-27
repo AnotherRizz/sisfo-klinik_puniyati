@@ -4,6 +4,12 @@
 
 @section('content')
     <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan Umum</h1>
+    <div class="mb-6">
+        <a href="{{ route('umum.index') }}"
+            class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+    </div>
     <div class="mb-5 flex justify-end">
 
         <a href="{{ route('umum.index') }}"
@@ -103,12 +109,6 @@
                     <label for="riw_alergi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat
                         Alergi</label>
                     <input type="text" name="riw_alergi" id="riw_alergi"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-                </div>
-                <div>
-                    <label for="riw_imunisasi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat
-                        Imunisasi</label>
-                    <input type="text" name="riw_imunisasi" id="riw_imunisasi"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div>

@@ -81,7 +81,7 @@ public function store(Request $request)
 
     // Generate no_rm secara otomatis
     $lastNoRm = DB::table('pasien')->max('no_rm'); // Ambil nilai tertinggi no_rm
-    $newNoRm = str_pad(($lastNoRm ? $lastNoRm + 1 : 1), 8, '0', STR_PAD_LEFT); // Format menjadi 8 digit
+    $newNoRm = str_pad(($lastNoRm ? $lastNoRm + 1 : 1), 6, '0', STR_PAD_LEFT); // Format menjadi 8 digit
 
     // Buat data baru dengan no_rm yang di-generate
    $pasien = Pasien::create([
@@ -90,6 +90,7 @@ public function store(Request $request)
         'nama_pasien' => $request->nama_pasien,
         'tempt_lahir' => $request->tempt_lahir,
         'tgl_lahir' => $request->tgl_lahir,
+        'umur' => $request->umur,
         'jenis_kelamin' => $request->jenis_kelamin,
         'alamat' => $request->alamat,
         'agama' => $request->agama,
@@ -132,7 +133,7 @@ public function store(Request $request)
     public function update(Request $request, $id)
 {
     $request->validate([
-            'no_rm' => 'required|size:8',
+            'no_rm' => 'required|size:6',
         'nik_pasien' => 'required|numeric',
         'nama_pasien' => 'required|string|max:255',
         'tempt_lahir' => 'required|string|max:100',
@@ -156,6 +157,7 @@ public function store(Request $request)
         'nama_pasien' => $request->nama_pasien,
         'tempt_lahir' => $request->tempt_lahir,
         'tgl_lahir' => $request->tgl_lahir,
+        'umur' => $request->umur,
           'jenis_kelamin' => $request->jenis_kelamin,
         'alamat' => $request->alamat,
         'agama' => $request->agama,

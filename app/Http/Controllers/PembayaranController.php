@@ -4,181 +4,159 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pembayaran;
-use App\Models\Pasien;
-use App\Models\Pemeriksaan;
-use App\Models\Bidan;
 use App\Models\Obat;
-use App\Models\Pendaftaran;
+use App\Models\PemeriksaanUmum;
+use App\Models\PemeriksaanKb;
+use App\Models\PemeriksaanKiaIbuHamil;
+use App\Models\PemeriksaanKiaAnak;
+use App\Models\PemeriksaanIbuNifas;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PembayaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-public function index(Request $request)
-{
-    $query = Pembayaran::with([
-        'pemeriksaan.pendaftaran.pasien', // Pastikan relasi ini ada di model
-        'pemeriksaan.pendaftaran.bidan',
-    ]);
+    public function index(Request $request)
+    {
+        $query = Pembayaran::with('pemeriksaanable.pendaftaran.pasien');
 
-     if ($search = $request->get('search')) {
-        $query->where(function ($q) use ($search) {
-            $q->where('kd_bayar', 'like', '%' . $search . '%')
-              ->orWhereHas('pemeriksaan.pendaftaran.pasien', function ($pasienQuery) use ($search) {
-                  $pasienQuery->where('nama_pasien', 'like', '%' . $search . '%');
-                             
-              });
-        });
+        if ($search = $request->get('search')) {
+            $query->where('kd_bayar', 'like', "%$search%")
+                  ->orWhereHas('pemeriksaanable.pendaftaran.pasien', function ($q) use ($search) {
+                      $q->where('nama_pasien', 'like', "%$search%");
+                  });
+        }
+
+        $pembayarans = $query->paginate($request->get('per_page', 5));
+
+        return view('pages.pembayaran.index', compact('pembayarans'));
     }
-
-    $perPage = $request->get('per_page', 5); // Default per_page to 5
-    $pembayarans = $query->paginate($perPage);
-
-    return view('pages.pembayaran.index', compact('pembayarans'));
-}
-
-public function export()
+public function create()
 {
-    // Ambil data pembayaran dengan relasi lengkap
-    $pembayaran = Pembayaran::with([
-        'pemeriksaan.pendaftaran.pasien',
-        'pemeriksaan.pendaftaran.bidan',
-        'pemeriksaan.obat' // Relasi pivot untuk obat
-    ])->get();
-
-    // Buat PDF menggunakan view
-    $pdf = Pdf::loadView('pages.export.pembayaran', compact('pembayaran'))
-              ->setPaper('A4', 'landscape'); // Ubah orientasi jika diperlukan
-
-    return $pdf->stream('data_pembayaran.pdf');
-}
-
-
-public function bukti($id)
-{
-    $pembayaran = Pembayaran::with([
-        'pemeriksaan.pendaftaran.pasien',
-        'pemeriksaan.pendaftaran.bidan',
-        'pemeriksaan.obat'
-    ])->findOrFail($id);
-
-    $pdf = Pdf::loadView('pages.export.bukti-bayar', compact('pembayaran'))
-        ->setPaper('A5', 'portrait'); // Ukuran mirip struk
-
-    return $pdf->stream('bukti_pembayaran.pdf');
-}
-
-
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
- public function create()
-{
-    // Ambil pemeriksaan yang belum memiliki pembayaran, bersama relasi penting saja
-    $pemeriksaans = Pemeriksaan::doesntHave('pembayaran')
-        ->with(['pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan', 'obat'])
-        ->get();
+    $pemeriksaans = collect()
+        ->merge(PemeriksaanUmum::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan', 'obatPemeriksaan.obat')
+            ->whereDoesntHave('pembayaran')->get())
+        ->merge(PemeriksaanKb::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan', 'obatPemeriksaan.obat')
+            ->whereDoesntHave('pembayaran')->get())
+        ->merge(PemeriksaanKiaIbuHamil::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan', 'obatPemeriksaan.obat')
+            ->whereDoesntHave('pembayaran')->get())
+        ->merge(PemeriksaanKiaAnak::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan', 'obatPemeriksaan.obat')
+            ->whereDoesntHave('pembayaran')->get())
+        ->merge(PemeriksaanIbuNifas::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan', 'obatPemeriksaan.obat')
+            ->whereDoesntHave('pembayaran')->get())
+        ->sortByDesc('created_at')
+        ->values();
 
     return view('pages.pembayaran.create', [
         'pemeriksaans' => $pemeriksaans,
-        // Data tambahan, jika diperlukan
         'obats' => Obat::all(),
     ]);
 }
 
 
 
-  public function store(Request $request)
+    public function store(Request $request)
+    {
+        $request->merge([
+            'biaya_konsultasi' => str_replace('.', '', $request->biaya_konsultasi),
+            'biaya_administrasi' => str_replace('.', '', $request->biaya_administrasi),
+            'biaya_tindakan' => str_replace('.', '', $request->biaya_tindakan),
+        ]);
+
+        $data = $request->validate([
+            'pemeriksaanable_id' => 'required|string',
+            'pemeriksaanable_type' => 'required|string|in:PemeriksaanUmum,PemeriksaanKb,PemeriksaanKiaIbuHamil,PemeriksaanKiaAnak,PemeriksaanIbuNifas',
+            'tgl_bayar' => 'required|date',
+            'administrasi' => 'nullable|string',
+            'biaya_administrasi' => 'nullable|numeric',
+            'biaya_konsultasi' => 'nullable|numeric',
+            'tindakan' => 'nullable|string',
+            'biaya_tindakan' => 'nullable|numeric',
+            'jenis_bayar' => 'required|in:Tunai,Transfer',
+        ]);
+
+        $fullType = 'App\\Models\\' . $data['pemeriksaanable_type'];
+        $pemeriksaan = $fullType::where('nomor_periksa', $data['pemeriksaanable_id'])->with('obat')->firstOrFail();
+
+        $data['pemeriksaanable_id'] = $pemeriksaan->id;
+        $data['pemeriksaanable_type'] = $fullType;
+
+        foreach ($pemeriksaan->obat as $obat) {
+            if ($obat->stok_obat < 1) {
+                return redirect()->back()->with('error', "Stok obat {$obat->nama_obat} tidak mencukupi.");
+            }
+            $obat->decrement('stok_obat');
+        }
+
+        $last = Pembayaran::orderBy('kd_bayar', 'desc')->first();
+        $nextNumber = $last && preg_match('/TRX(\d+)/', $last->kd_bayar, $matches) ? ((int)$matches[1] + 1) : 1;
+        $data['kd_bayar'] = 'TRX' . str_pad($nextNumber, 7, '0', STR_PAD_LEFT);
+
+        $pembayaran = Pembayaran::create($data);
+
+        return redirect()->route('pembayaran.show', $pembayaran->id)
+                         ->with('success', 'Pembayaran berhasil disimpan.');
+    }
+
+    public function show(Pembayaran $pembayaran)
+    {
+        $pemeriksaan = $pembayaran->pemeriksaanable;
+       
+
+        return view('pages.pembayaran.detail', compact('pembayaran', 'pemeriksaan'));
+    }
+
+    public function export()
+    {
+        $pembayaran = Pembayaran::with('pemeriksaanable.pendaftaran.pasien', 'pemeriksaanable.obat')->get();
+        $pdf = Pdf::loadView('pages.export.pembayaran', compact('pembayaran'))->setPaper('A4', 'landscape');
+        return $pdf->stream('data_pembayaran.pdf');
+    }
+
+    public function bukti($id)
+    {
+        $pembayaran = Pembayaran::with('pemeriksaanable.pendaftaran.pasien', 'pemeriksaanable.obat')->findOrFail($id);
+        $pdf = Pdf::loadView('pages.export.bukti-bayar', compact('pembayaran'))->setPaper('A5', 'portrait');
+        return $pdf->stream('bukti_pembayaran.pdf');
+    }
+
+    public function edit($id)
 {
+   $pembayarans = Pembayaran::with([
+    'pemeriksaanable.pendaftaran.pasien',
+    'pemeriksaanable.pendaftaran.bidan',
+    'pemeriksaanable.pendaftaran.pelayanan',
+    'pemeriksaanable.obat'
+])->findOrFail($id);
+
+
+    // Ambil semua pemeriksaan dari berbagai jenis
+   $pemeriksaans = collect()
+    ->merge(PemeriksaanUmum::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')->get()->each(fn($p) => $p->obat))
+    ->merge(PemeriksaanKb::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')->get()->each(fn($p) => $p->obat))
+    ->merge(PemeriksaanKiaIbuHamil::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')->get()->each(fn($p) => $p->obat))
+    ->merge(PemeriksaanKiaAnak::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')->get()->each(fn($p) => $p->obat))
+    ->merge(PemeriksaanIbuNifas::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')->get()->each(fn($p) => $p->obat))
+    ->sortByDesc('created_at')
+    ->values();
+
+
+    return view('pages.pembayaran.edit', compact('pembayarans', 'pemeriksaans'));
+}
+
+
+  public function update(Request $request, $id)
+{
+    // Bersihkan format biaya dari tanda titik
     $request->merge([
         'biaya_konsultasi' => str_replace('.', '', $request->biaya_konsultasi),
         'biaya_administrasi' => str_replace('.', '', $request->biaya_administrasi),
         'biaya_tindakan' => str_replace('.', '', $request->biaya_tindakan),
     ]);
-    $data = $request->validate([
-        'pemeriksaan_id' => 'required|exists:pemeriksaan,id',
-        'tgl_bayar' => 'required|date',
-        'administrasi' => 'nullable|string',
-        'biaya_administrasi' => 'nullable|numeric',
-        'tindakan' => 'nullable|string',
-        'biaya_tindakan' => 'nullable|numeric',
-        'biaya_konsultasi' => 'nullable|numeric',
-        'jenis_bayar' => 'required|in:Tunai,Transfer',
-    ]);
 
-    // Ambil data pemeriksaan dan relasi obat
-    $pemeriksaan = Pemeriksaan::with('obat')->findOrFail($data['pemeriksaan_id']);
-    
-    foreach ($pemeriksaan->obat as $obat) {
-        if ($obat->stok_obat < 1) {
-            return redirect()->back()->with('error', "Stok obat {$obat->nama_obat} tidak mencukupi.");
-        }
-
-        // Kurangi stok obat
-        $obat->decrement('stok_obat');
-    }
-
-    // Generate kode pembayaran
-    $last = Pembayaran::orderBy('kd_bayar', 'desc')->first();
-    if ($last && preg_match('/TRX(\d+)/', $last->kd_bayar, $matches)) {
-        $lastNumber = (int)$matches[1];
-        $nextNumber = $lastNumber + 1;
-    } else {
-        $nextNumber = 1;
-    }
-
-    $data['kd_bayar'] = 'TRX' . str_pad($nextNumber, 7, '0', STR_PAD_LEFT);
-
-    // Simpan ke database
-    $pembayaran= Pembayaran::create($data);
-
- return redirect()->route('pembayaran.show', $pembayaran->id)
-                     ->with('success', 'Pembayaran berhasil disimpan dan stok obat diperbarui.');
-}
-
-
-
-    /**
-     * Display the specified resource.
-     */
-   public function show(Pembayaran $pembayaran)
-{
-    $pembayaran->load([
-        'pemeriksaan.pendaftaran.pasien',
-        'pemeriksaan.pendaftaran.bidan',
-        'pemeriksaan.obat' // Relasi obat dengan data pivot
-    ]);
-
-    return view('pages.pembayaran.detail', compact('pembayaran'));
-}
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-        public function edit(string $id)
-    {
-        $pembayarans = Pembayaran::findOrFail($id);
-        $pasiens = Pasien::all();
-        $bidans = Bidan::all();
-         $pemeriksaans = Pemeriksaan::all();
-        $obats = Obat::all();
-
-        return view('pages.pembayaran.edit', compact('pembayarans','pemeriksaans',    'pasiens', 'bidans', 'obats'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-     public function update(Request $request, string $id)
-{
+    // Validasi request
     $validated = $request->validate([
-        'pemeriksaan_id' => 'required|exists:pemeriksaan,id',
+        'pemeriksaanable_type' => 'required|string|in:PemeriksaanUmum,PemeriksaanKb,PemeriksaanKiaIbuHamil,PemeriksaanKiaAnak,PemeriksaanIbuNifas',
+        'pemeriksaanable_id' => 'required|integer',
+ // akan diperbaiki dinamis di bawah
         'tgl_bayar' => 'required|date',
         'administrasi' => 'nullable|string',
         'biaya_administrasi' => 'nullable|numeric',
@@ -188,42 +166,60 @@ public function bukti($id)
         'jenis_bayar' => 'required|in:Tunai,Transfer',
     ]);
 
-    $pembayaran = Pembayaran::with('pemeriksaan.obat')->findOrFail($id);
+    // Ambil data pembayaran lama
+    $pembayaran = Pembayaran::with('pemeriksaanable.obat')->findOrFail($id);
 
-    // Ambil pemeriksaan baru
-    $newPemeriksaan = Pemeriksaan::with('obat')->findOrFail($validated['pemeriksaan_id']);
-
-    // Kembalikan stok obat dari pemeriksaan lama
-    foreach ($pembayaran->pemeriksaan->obat as $obat) {
+    // Kembalikan stok obat dari pemeriksaan sebelumnya
+    foreach ($pembayaran->pemeriksaanable->obat as $obat) {
         $obat->increment('stok_obat');
     }
 
-    // Kurangi stok obat dari pemeriksaan baru
+   $fullType = 'App\\Models\\' . $validated['pemeriksaanable_type'];
+
+if (!class_exists($fullType)) {
+    return redirect()->back()->with('error', 'Jenis pemeriksaan tidak dikenali.');
+}
+
+$newPemeriksaan = $fullType::with('obat')->find($validated['pemeriksaanable_id']);
+
+if (!$newPemeriksaan) {
+    return redirect()->back()->with('error', 'Data pemeriksaan tidak ditemukan.');
+}
+
+
+    // Cek stok obat untuk pemeriksaan baru
     foreach ($newPemeriksaan->obat as $obat) {
         if ($obat->stok_obat < 1) {
             return redirect()->back()->with('error', "Stok obat {$obat->nama_obat} tidak mencukupi.");
         }
+    }
+
+    // Kurangi stok obat berdasarkan pemeriksaan baru
+    foreach ($newPemeriksaan->obat as $obat) {
         $obat->decrement('stok_obat');
     }
 
     // Update data pembayaran
-    $pembayaran->update($validated + ['updated_at' => now()]);
+    $pembayaran->update([
+        'pemeriksaanable_type' => $fullType,
+        'pemeriksaanable_id' => $newPemeriksaan->id,
+        'tgl_bayar' => $validated['tgl_bayar'],
+        'administrasi' => $validated['administrasi'],
+        'biaya_administrasi' => $validated['biaya_administrasi'],
+        'biaya_konsultasi' => $validated['biaya_konsultasi'],
+        'tindakan' => $validated['tindakan'],
+        'biaya_tindakan' => $validated['biaya_tindakan'],
+        'jenis_bayar' => $validated['jenis_bayar'],
+    ]);
 
     return redirect()->route('pembayaran.index')->with('success', 'Data pembayaran berhasil diperbarui.');
 }
 
 
-    /**
-     * Remove the specified resource from storage.
-     */
-     public function destroy(string $id)
+    public function destroy($id)
     {
-       $pembayaran = Pembayaran::findOrFail($id);
-    $pembayaran->delete();
-
-    return redirect()->route('pembayaran.index')->with('success', 'Data pembayaran berhasil dihapus');
+        $pembayaran = Pembayaran::findOrFail($id);
+        $pembayaran->delete();
+        return redirect()->route('pembayaran.index')->with('success', 'Pembayaran berhasil dihapus.');
     }
-
-
-
 }

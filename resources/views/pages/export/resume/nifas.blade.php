@@ -159,8 +159,8 @@
             <td>{{ $pemeriksaan->frek_kunjungan }} Hari</td>
         </tr>
         <tr>
-            <td class="left">Riwayat Alegi</td>
-            <td>{{ $pemeriksaan->riw_alergi }}</td>
+            <td class="left">Alegi</td>
+            <td>{{ $pemeriksaan->alergi }}</td>
         </tr>
         <tr>
             <td class="left">Tensi Darah (mm/Hg)</td>
@@ -196,27 +196,27 @@
         </tr>
         <tr>
             <td class="left">Luka Jahit</td>
-            <td>{{ $pemeriksaan->luka_jahit }} </td>
+            <td>{{ $pemeriksaan->lukajahit }} </td>
         </tr>
         <tr>
             <td class="left">Tanggal Lahir Bayi</td>
-            <td>{{ \Carbon\Carbon::parse($pemeriksaan->tgl_lahir)->locale('id')->translatedFormat('d F Y') }} </td>
+            <td>{{ \Carbon\Carbon::parse($pemeriksaan->tgllahir)->locale('id')->translatedFormat('d F Y') }} </td>
         </tr>
         <tr>
             <td class="left">Tempat Persalinan</td>
-            <td>{{ $pemeriksaan->tmpt_persalinan }} </td>
+            <td>{{ $pemeriksaan->tmptpersalinan }} </td>
         </tr>
         <tr>
             <td class="left">Bantuan Persalinan</td>
-            <td>{{ $pemeriksaan->bantu_persalinan }} </td>
+            <td>{{ $pemeriksaan->bantupersalinan }} </td>
         </tr>
         <tr>
             <td class="left">Jenis Persalinan</td>
-            <td>{{ $pemeriksaan->jns_persalinan }} </td>
+            <td>{{ $pemeriksaan->jnspersalinan }} </td>
         </tr>
         <tr>
             <td class="left">Besar Rahim</td>
-            <td>{{ $pemeriksaan->besar_rahim }}</td>
+            <td>{{ $pemeriksaan->besarrahim }}</td>
         </tr>
         <tr>
             <td class="left">Infeksi / komplikasi</td>
@@ -258,11 +258,11 @@
         </tr>
 
         <tr>
-            <td class="left">Obat dan Dosis</td>
+           <td class="left">Obat dan Dosis</td>
             <td>
-                @forelse ($pemeriksaan->obat as $o)
+                @forelse ($pemeriksaan->obatPemeriksaan as $o)
                     <div>
-                        {{ $o->nama_obat }} ({{ $o->pivot->dosis_carkai ?? '-' }})
+                        {{ $o->obat->nama_obat }} ({{ $o->dosis_carkai ?? '-' }})
                     </div>
                 @empty
                     Tidak ada obat

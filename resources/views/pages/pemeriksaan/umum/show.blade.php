@@ -24,7 +24,7 @@
                 Informasi Umum
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
-                <x-detail-card label="No Registrasi" :value="$pemeriksaan->no_periksa" />
+                <x-detail-card label="No Pemeriksaan" :value="$pemeriksaan->nomor_periksa" />
                 <x-detail-card label="No Rekam Medis" :value="$pemeriksaan->pendaftaran->pasien->no_rm ?? '-'" />
                 <x-detail-card label="Nama Pasien" :value="$pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-'" />
                 <x-detail-card label="Kode Bidan" :value="$pemeriksaan->pendaftaran->bidan->kd_bidan ?? '-'" />
@@ -45,7 +45,6 @@
                 <x-detail-card label="Keluhan" :value="$pemeriksaan->keluhan ?? '-'" />
                 <x-detail-card label="Diagnosa" :value="$pemeriksaan->diagnosa ?? '-'" />
                 <x-detail-card label="Riwayat Penyakit" :value="$pemeriksaan->riw_penyakit ?? '-'" />
-                <x-detail-card label="Riwayat Imunisasi" :value="$pemeriksaan->riw_imunisasi ?? '-'" />
             </div>
 
             {{-- Vital Sign --}}
@@ -73,12 +72,16 @@
 
                 Detail Obat</h2>
             <div class="space-y-4 mb-6">
-                @foreach ($pemeriksaan->obat as $o)
+                @foreach ($pemeriksaan->obatPemeriksaan as $o)
                     <div class="flex gap-7">
-                        <x-detail-section label="Kode Obat" :value="$o->kd_obat" />
-                        <x-detail-section label="Nama Obat dan Dosis" :value="$o->nama_obat . ' - ' . $o->pivot->dosis_carkai" />
+                        {{-- Kode Obat --}}
+                        <x-detail-section label="Kode Obat" :value="$o->obat->kd_obat ?? 'Tidak ada kode'" />
+
+                        {{-- Nama Obat dan Dosis --}}
+                        <x-detail-section label="Nama Obat dan Dosis" :value="$o->obat->nama_obat . ' - ' . $o->dosis_carkai" />
                     </div>
                 @endforeach
+
             </div>
 
             {{-- Tindakan dan Tindak Lanjut --}}

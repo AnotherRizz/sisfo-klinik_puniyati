@@ -7,7 +7,7 @@
 
     <div class="flex w-full gap-2 justify-end items-center ">
         <a href="{{ route('all.export', ['nama_pelayanan' => 'Ibu Nifas']) }}" target="_blank"
-            class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Export
+            class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Cetak
             Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -43,11 +43,11 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No </th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No Pemeriksaan</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No Periksa</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No RM</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Pasien</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Bidan</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Pelayanan</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Diagnosa</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Kembali</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
                 </tr>
@@ -59,13 +59,13 @@
 
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $i + 1 }}</td>
 
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->no_periksa }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->nomor_periksa }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pendaftaran->pasien->no_rm ?? '-' }}
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}
                         </td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ $item->pendaftaran->pelayanan->nama_pelayanan ?? '-' }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->diagnosa ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ \Carbon\Carbon::parse($item->tgl_kembali)->locale('id')->translatedFormat('d F Y') }}
 
@@ -73,8 +73,8 @@
 
 
 
-                        <td class="px-4 py-2 text-sm text-gray-900 flex flex-col gap-1">
-                            <div>
+                        <td class="px-4 py-2 text-sm text-gray-900 flex flex-row gap-1">
+                           
 
                                 <a href="{{ route('nifas.edit', $item->id) }}"
                                     class="px-3 py-1 text-white bg-yellow-500 rounded text-xs hover:bg-yellow-600">Edit</a>
@@ -94,7 +94,7 @@
                                     class="px-3 py-1 text-white bg-sky-500 rounded text-xs hover:bg-sky-600">Detail</a>
                                 <a href="{{ route('nifas.resume', $item->id) }}" target="_blank"
                                     class="px-3 py-1 text-white bg-teal-500 rounded text-xs hover:bg-teal-600">Resume</a>
-                            </div>
+                           
                         </td>
                     </tr>
                 @empty

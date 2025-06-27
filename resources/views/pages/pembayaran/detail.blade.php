@@ -4,10 +4,11 @@
 
 @section('content')
     <div class="max-w-2xl mx-auto px-4 py-6">
-       <a href="{{ route('pembayaran.index') }}"
-                    class="inline-block bg-gray-200 mb-3 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded shadow-sm">
-                    ← Kembali ke daftar
-                </a>
+        <a href="{{ route('pembayaran.index') }}"
+            class="inline-block bg-gray-200 mb-3 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+
         <div class="bg-white shadow-md rounded-xl p-6">
             <div class="flex justify-center mb-6">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-20 h-20 mr-4">
@@ -26,27 +27,33 @@
             <table class="w-full text-sm mb-4">
                 <tr>
                     <td>No. RM</td>
-                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->no_rm ?? '-' }}</td>
+                    <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->no_rm ?? '-' }}</td>
                     <td>No. Registrasi</td>
-                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->noreg ?? '-' }}</td>
+                    <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->noreg ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td>Nama Pasien</td>
-                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                    <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
                     <td>Tanggal Pemeriksaan</td>
-                    <td>: {{ $pembayaran->pemeriksaan->created_at ? \Carbon\Carbon::parse($pembayaran->pemeriksaan->created_at)->format('d-m-Y') : '-' }}</td>
+                    <td>:
+                        {{ \Carbon\Carbon::parse($pembayaran->pemeriksaanable->pendaftaran->pasien->tgl_lahir)->format('d-m-Y') }}
+                    </td>
                 </tr>
+
                 <tr>
                     <td>Alamat</td>
-                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->alamat ?? '-' }}</td>
+                    <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->alamat ?? '-' }}</td>
                     <td>Tanggal Cetak</td>
                     <td>: {{ now()->format('d-m-Y') }}</td>
                 </tr>
+                
                 <tr>
                     <td>Tanggal Lahir</td>
-                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->pasien->tgl_lahir ? \Carbon\Carbon::parse($pembayaran->pemeriksaan->pendaftaran->pasien->tgl_lahir)->format('d-m-Y') : '-' }}</td>
+                    <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->tgl_lahir?->format('d-m-Y') ?? '-' }}
+
+                    </td>
                     <td>Nama Bidan</td>
-                    <td>: {{ $pembayaran->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
+                    <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
                 </tr>
             </table>
 
@@ -61,7 +68,8 @@
                 <tbody>
                     <tr>
                         <td class="border px-4 py-2">ADMINISTRASI</td>
-                        <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
+                        <td class="border px-4 py-2">Rp
+                            {{ number_format($pembayaran->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td class="border px-4 py-2 font-semibold">TINDAKAN DAN LAYANAN MEDIS</td>
@@ -69,26 +77,30 @@
                     </tr>
                     <tr>
                         <td class="border px-4 py-2">{{ $pembayaran->tindakan ?? '-' }}</td>
-                        <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
+                        <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}
+                        </td>
                     </tr>
-                    @foreach ($pembayaran->pemeriksaan->obat as $obat)
+                    @foreach ($pembayaran->pemeriksaanable->obat as $obat)
                         <tr>
-                            <td class="border px-4 py-2">{{ $obat->nama_obat }} ({{ $obat->pivot->dosis_carkai ?? '-' }})</td>
+                            <td class="border px-4 py-2">{{ $obat->nama_obat }} ({{ $obat->pivot->dosis_carkai ?? '-' }})
+                            </td>
                             <td class="border px-4 py-2">Rp {{ number_format($obat->harga_jual ?? 0, 0, ',', '.') }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td class="border px-4 py-2">KONSULTASI</td>
-                        <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
+                        <td class="border px-4 py-2">Rp
+                            {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
                     </tr>
                     <tr class="bg-gray-100 font-bold">
                         <td class="border px-4 py-2">TOTAL</td>
                         <td class="border px-4 py-2">
                             @php
-                                $total = ($pembayaran->biaya_administrasi ?? 0) +
-                                         ($pembayaran->biaya_tindakan ?? 0) +
-                                         $pembayaran->pemeriksaan->obat->sum('harga_jual') +
-                                         ($pembayaran->biaya_konsultasi ?? 0);
+                                $total =
+                                    ($pembayaran->biaya_administrasi ?? 0) +
+                                    ($pembayaran->biaya_tindakan ?? 0) +
+                                    $pembayaran->pemeriksaanable->obat->sum('harga_jual') +
+                                    ($pembayaran->biaya_konsultasi ?? 0);
                             @endphp
                             Rp {{ number_format($total, 0, ',', '.') }}
                         </td>
@@ -96,13 +108,17 @@
                 </tbody>
             </table>
 
-            {{-- Tombol Kembali --}}
+            {{-- Tombol Cetak --}}
             <div class="mt-6 text-center">
-                 <a href="{{ route('pmb.bukti-bayar', $pembayaran->id) }}" target="_blank"
-                                    class="px-3 py-1 text-white flex gap-2 items-center justify-center text-center bg-teal-500 rounded text-sm hover:bg-teal-600">Cetak Bukti<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
-</svg>
-</a>
+                <a href="{{ route('pmb.bukti-bayar', $pembayaran->id) }}" target="_blank"
+                    class="px-3 py-1 text-white flex gap-2 items-center justify-center text-center bg-teal-500 rounded text-sm hover:bg-teal-600">
+                    Cetak Bukti
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                    </svg>
+                </a>
             </div>
         </div>
     </div>

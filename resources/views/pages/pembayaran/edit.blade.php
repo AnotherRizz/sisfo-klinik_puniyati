@@ -18,86 +18,81 @@
         <form action="{{ route('pembayaran.update', $pembayarans->id) }}" method="POST">
             @csrf
             @method('PUT')
-<h1 class=" mt-2 mb-7 text-blue-500 text-xl">Data </h1>
+            <h1 class="mt-2 mb-7 text-blue-500 text-xl">Data Pemeriksaan</h1>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 {{-- Kode Bayar --}}
                 <div>
-                    <label for="kd_bayar" class="block text-sm font-medium text-gray-700 mb-1">Kode Bayar<span
-                            class="text-xs text-gray-500"></span></label>
+                    <label for="kd_bayar" class="block text-sm font-medium text-gray-700 mb-1">Kode Bayar</label>
                     <input type="text" id="kd_bayar" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100"
                         value="{{ old('kd_bayar', $pembayarans->kd_bayar) }}" readonly>
                 </div>
 
-                {{-- No Registrasi --}}
-               <div>
-   <x-select2 id="no_periksa" name="pemeriksaan_id" label="No Pemeriksaan" 
-    :options="$pemeriksaans->mapWithKeys(
-        fn($p) => [
-            $p->id => [
-                'label' => $p->no_periksa . ' - ' . ($p->pendaftaran->pasien->nama_pasien ?? 'Tidak Diketahui'),
-                'data-pasien-nama' => $p->pendaftaran->pasien->nama_pasien ?? '',
-                'data-obat-nama' => $p->obat ? $p->obat->pluck('nama_obat')->join(', ') : '',
-                'data-pelayanan-nama' => $p->pendaftaran->pelayanan->nama_pelayanan ?? '-',
-                'data-bidan-nama' => $p->pendaftaran->bidan->nama_bidan ?? '',
-            ],
-        ]
-    )"
-    :selected="$pembayarans->pemeriksaan_id"
-/>
+                {{-- No Pemeriksaan --}}
+                <div>
+                    {{-- Perbaikan select pemeriksaan --}}
+                    <label for="no_periksa" class="block text-sm font-medium text-gray-700 mb-1">No Pemeriksaan</label>
+                    <select id="no_periksa" name="pemeriksaanable_id"
+                        class="select2 w-full border border-gray-300 rounded px-3 py-2">
+                        @foreach ($pemeriksaans as $p)
+                            <option value="{{ $p->id }}"
+                                data-pasien-nama="{{ $p->pendaftaran->pasien->nama_pasien ?? '' }}"
+                                data-obat-nama="{{ $p->obatPemeriksaan->pluck('obat.nama_obat')->join(', ') ?? '' }}"
+                                data-pelayanan-nama="{{ $p->pendaftaran->pelayanan->nama_pelayanan ?? '' }}"
+                                data-bidan-nama="{{ $p->pendaftaran->bidan->nama_bidan ?? '' }}"
+                                data-pemeriksaan-type="{{ class_basename(get_class($p)) }}"
+                                {{ old('pemeriksaanable_id', $pembayarans->pemeriksaanable_id) == $p->id ? 'selected' : '' }}>
+                                {{ $p->nomor_periksa }} - {{ $p->pendaftaran->pasien->nama_pasien ?? 'Tidak Diketahui' }}
+                            </option>
+                        @endforeach
+                    </select>
 
-</div>
-
-
+                </div>
 
                 {{-- Nama Pasien --}}
                 <div>
-                    <label for="pasien_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Pasien <span
-                            class="text-xs text-gray-500">(otomatis terisi berdasar No Pemeriksaan)</span></label>
+                    <label for="pasien_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Pasien</label>
                     <input type="text" id="pasien_nama" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100"
-                        value="{{ $pembayarans->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '' }}" readonly>
+                        readonly>
                 </div>
-
 
                 {{-- Nama Bidan --}}
                 <div>
-                    <label for="bidan_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Bidan <span
-                            class="text-xs text-gray-500">(otomatis terisi berdasar No Pemeriksaan)</span></label>
+                    <label for="bidan_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Bidan</label>
                     <input type="text" id="bidan_nama" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100"
                         readonly>
                 </div>
 
-
-
                 {{-- Nama Obat --}}
                 <div>
-                    <label for="obat_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Obat <span
-                            class="text-xs text-gray-500">(otomatis terisi berdasar No Pemeriksaan)</span></label>
+                    <label for="obat_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Obat</label>
                     <input type="text" id="obat_nama" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100"
-                        value="{{ $pembayarans->pemeriksaan->obat->pluck('nama_obat')->join(', ') ?? '' }}" readonly>
+                        readonly>
                 </div>
 
-                {{-- Nama pelayanan --}}
+                {{-- Nama Pelayanan --}}
                 <div>
-                    <label for="nama_pelayanan" class="block text-sm font-medium text-gray-700 mb-1">Nama Pelayanan <span
-                            class="text-xs text-gray-500">(otomatis terisi berdasar No Pemeriksaan)</span></label>
+                    <label for="nama_pelayanan" class="block text-sm font-medium text-gray-700 mb-1">Nama Pelayanan</label>
                     <input type="text" id="nama_pelayanan"
                         class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100" readonly>
                 </div>
-                </div>
-            <h1 class=" mt-10 mb-7 text-orange-500 text-xl">Pembayaran</h1>
+            </div>
+
+            <h1 class="mt-10 mb-7 text-orange-500 text-xl">Pembayaran</h1>
             <div class="grid gap-6 mb-6 md:grid-cols-2">
-
-
-
-
-                {{-- administrasi --}}
+                {{-- Administrasi --}}
                 <div>
                     <label for="administrasi" class="block text-sm font-medium text-gray-700 mb-1">Administrasi</label>
                     <input type="text" name="administrasi" id="administrasi"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('administrasi', $pembayarans->administrasi) }}" required>
                 </div>
-                {{-- biaya administrasi --}}
+                {{-- Tambahkan ini di dalam <form> --}}
+                <input type="hidden" name="pemeriksaanable_type" id="pemeriksaanable_type"
+                    value="{{ old('pemeriksaanable_type', class_basename($pembayarans->pemeriksaanable_type)) }}">
+                <input type="hidden" name="nomor_periksa" id="nomor_periksa"
+                    value="{{ old('nomor_periksa', class_basename($pembayarans->nomor_periksa)) }}">
+
+                {{-- Biaya Administrasi --}}
                 <div>
                     <label for="biaya_administrasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
                         Administrasi</label>
@@ -105,7 +100,7 @@
                         class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('biaya_administrasi', $pembayarans->biaya_administrasi) }}" required>
                 </div>
-                {{-- biaya konsultasi --}}
+                {{-- Biaya Konsultasi --}}
                 <div>
                     <label for="biaya_konsultasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
                         Konsultasi</label>
@@ -113,28 +108,27 @@
                         class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('biaya_konsultasi', $pembayarans->biaya_konsultasi) }}" required>
                 </div>
-                {{-- tindakan --}}
+                {{-- Tindakan --}}
                 <div>
                     <label for="tindakan" class="block text-sm font-medium text-gray-700 mb-1">Tindakan</label>
                     <input type="text" name="tindakan" id="tindakan" class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('tindakan', $pembayarans->tindakan) }}" required>
                 </div>
+                {{-- Biaya Tindakan --}}
                 <div>
                     <label for="biaya_tindakan" class="block text-sm font-medium text-gray-700 mb-1">Biaya Tindakan</label>
                     <input type="number" name="biaya_tindakan" id="biaya_tindakan"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('biaya_tindakan', $pembayarans->biaya_tindakan) }}" required>
                 </div>
-                {{-- Tanggal Daftar --}}
+                {{-- Tanggal Bayar --}}
                 <div>
                     <label for="tgl_bayar" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Bayar</label>
                     <input type="date" name="tgl_bayar" id="tgl_bayar"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('tgl_bayar', $pembayarans->tgl_bayar) }}" required>
                 </div>
-
-
-                {{-- Jenis Kunjungan --}}
+                {{-- Jenis Bayar --}}
                 <div>
                     <label for="jenis_bayar" class="block text-sm font-medium text-gray-700 mb-1">Jenis Bayar</label>
                     <select id="jenis_bayar" name="jenis_bayar" class="w-full border-gray-300 rounded-lg shadow-sm">
@@ -146,20 +140,15 @@
                         </option>
                     </select>
                 </div>
-
             </div>
 
-            <div class=" flex gap-4">
-
+            <div class="flex gap-4">
                 <button type="submit"
-                    class="text-white cursor-pointer bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
-                    Perbarui
-                </button>
+                    class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Perbarui</button>
                 <a href="{{ route('pembayaran.index') }}">
                     <button type="button"
-                        class="text-white cursor-pointer bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
-                        batal
-                    </button></a>
+                        class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Batal</button>
+                </a>
             </div>
         </form>
     </div>
@@ -167,29 +156,25 @@
 
 @push('scripts')
     <script>
-      $(document).ready(function() {
-    const noPeriksaSelect = $('#no_periksa');
-    const pasienNama = $('#pasien_nama');
-    const bidanNama = $('#bidan_nama');
-    const obatNama = $('#obat_nama');
-    const pelayananNama = $('#nama_pelayanan');
+        $(document).ready(function() {
+            const noPeriksaSelect = $('#no_periksa');
+            const pasienNama = $('#pasien_nama');
+            const bidanNama = $('#bidan_nama');
+            const obatNama = $('#obat_nama');
+            const pelayananNama = $('#nama_pelayanan');
+            const pemeriksaanTypeInput = $('#pemeriksaanable_type');
 
-    // Fungsi untuk memperbarui informasi berdasarkan pilihan
- function updateInfo() {
-    const selected = noPeriksaSelect.find(':selected');
-    console.log(selected.data());
-    pasienNama.val(selected.data('pasien-nama') || '');
-    bidanNama.val(selected.data('bidan-nama') || '');
-    obatNama.val(selected.data('obat-nama') || '');
-    pelayananNama.val(selected.data('pelayanan-nama') || '');
-}
+            function updateInfo() {
+                const selected = noPeriksaSelect.find(':selected');
+                pasienNama.val(selected.data('pasien-nama') || '');
+                bidanNama.val(selected.data('bidan-nama') || '');
+                obatNama.val(selected.data('obat-nama') || '');
+                pelayananNama.val(selected.data('pelayanan-nama') || '');
+                pemeriksaanTypeInput.val(selected.data('pemeriksaan-type') || '');
+            }
 
-    // Event listener untuk perubahan pada Select2
-    noPeriksaSelect.on('change', updateInfo);
-
-    // Set value awal saat halaman dimuat
-    updateInfo();
-});
-
+            noPeriksaSelect.on('change', updateInfo);
+            updateInfo();
+        });
     </script>
 @endpush

@@ -41,7 +41,23 @@ class Pendaftaran extends Model
     {
         return $this->belongsTo(Pelayanan::class);
     }
-     public function pemeriksaan(): HasOne
+     public function pemeriksaanUmum(): HasOne
+    {
+        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
+    }
+     public function pemeriksaanIbuNifas(): HasOne
+    {
+        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
+    }
+     public function pemeriksaanKb(): HasOne
+    {
+        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
+    }
+     public function pemeriksaanKiaAnak(): HasOne
+    {
+        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
+    }
+     public function pemeriksaanKiaIbuHamil(): HasOne
     {
         return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
     }

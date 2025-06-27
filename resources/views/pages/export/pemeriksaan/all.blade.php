@@ -124,7 +124,7 @@
             @foreach ($pemeriksaan as $index => $item)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->no_periksa }}</td>
+                    <td>{{ $item->nomor_periksa }}</td>
                     <td>{{ $item->pendaftaran->noreg ?? '-' }}</td>
                     <td>{{ $item->pendaftaran->pasien->no_rm ?? '-' }}</td>
                     <td>{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>

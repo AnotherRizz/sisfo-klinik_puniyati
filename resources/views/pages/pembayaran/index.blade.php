@@ -6,7 +6,7 @@
     <h1 class="text-xl font-semibold mb-4">Data Pembayaran</h1>
     <div class="flex w-full gap-2 justify-end items-center ">
         <a href="{{ route('pmb.export') }}"target="_blank"
-            class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Export
+            class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Cetak
             Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -57,9 +57,9 @@
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $i + 1 }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->kd_bayar }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
-                            {{ $item->pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                            {{ $item->pemeriksaanable->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
-                            {{ $item->pemeriksaan->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
+                            {{ $item->pemeriksaanable->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->biaya_administrasi ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->jenis_bayar ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">

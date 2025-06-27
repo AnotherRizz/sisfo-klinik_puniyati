@@ -3,10 +3,16 @@
 @section('title', 'Create Pemeriksaan Umum')
 
 @section('content')
-    <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan Kia</h1>
+    <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan KIA ANAK</h1>
+    <div class="mb-6">
+        <a href="{{ route('kia-anak.index') }}"
+            class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+    </div>
     <div class="mb-5 flex justify-end">
 
-        <a href="{{ route('kia.index') }}"
+        <a href="{{ route('kia-anak.index') }}"
             class="text-white cursor-pointer flex items-center gap-2 bg-slate-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-1.5 text-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 class="size-6">
@@ -26,14 +32,14 @@
             </div>
         @endif
 
-        <form action="{{ route('kia.store') }}" method="POST">
+        <form action="{{ route('kia-anak.store') }}" method="POST">
             @csrf
             <div class="grid gap-6 mb-8 md:grid-cols-2">
 
                 {{-- No reg --}}
                 {{-- No Registrasi --}}
                 <div>
-                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan KIA)"
+                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan KIA Anak)"
                         :options="$pendaftarans->mapWithKeys(
                             fn($p) => [
                                 $p->id => [
@@ -87,17 +93,51 @@
                 </div>
 
 
-
-
-
-               
                 <div>
-                  <label for="lab" class="block text-sm font-medium text-gray-700 mb-1">Hasil Lab</label>
-                   <textarea name="lab" class="w-full border-gray-300 rounded-lg shadow-sm" id="" cols="30" rows="2"></textarea>
+                    <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-1">Keluhan</label>
+                    <input type="text" name="keluhan" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
                 </div>
                 <div>
-                  <label for="resti" class="block text-sm font-medium text-gray-700 mb-1">keterangan Resiko Tinggi</label>
-                   <textarea name="resti" class="w-full border-gray-300 rounded-lg shadow-sm" id="" cols="30" rows="2"></textarea>
+                    <label for="riw_penyakit" class="block text-sm font-medium text-gray-700 mb-1">Riwayat Penyakit</label>
+                    <input type="text" name="riw_penyakit" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
+                <div>
+                    <label for="riw_imunisasi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat
+                        Imunisasi</label>
+                    <input type="text" name="riw_imunisasi" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
+                <div>
+                    <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan Bayi<span
+                            class="text-red-500 text-xs"> (Kg)</span></label>
+                    <input type="text" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
+                <div>
+                    <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan Bayi<span
+                            class="text-red-500 text-xs"> (Cm)</span></label>
+                    <input type="text" name="tb" id="tb" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
+                <div>
+                    <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
+                            class="text-red-500 text-xs"> (°C)</span> </label>
+                    <input type="text" name="suhu" id="suhu" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
+                 <div>
+                    <label for="pb" class="block text-sm font-medium text-gray-700 mb-1">Panjang Badan Bayi <span
+                            class="text-red-500 text-xs">(Cm)</span></label>
+                    <input type="text" name="pb" id="pb" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
+                 <div>
+                    <label for="lk" class="block text-sm font-medium text-gray-700 mb-1">Lingkar Kepala Bayi <span
+                            class="text-red-500 text-xs">(Cm)</span></label>
+                    <input type="text" name="lk" id="lk" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
                 </div>
                 <div>
                     <label for="diagnosa" class="block text-sm font-medium text-gray-700 mb-1">Diagnosa</label>
@@ -111,7 +151,7 @@
                 </div>
 
 
-                
+
                 <div>
                     <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                         Kembali</label>
@@ -123,14 +163,14 @@
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
                     <select id="tindak_lnjt" name="tindak_lnjt" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
-                       
+
                         <option value="Puskesmas" {{ old('tindak_lnjt') == 'Puskesmas' ? 'selected' : '' }}>Rujukan
                             Puskesmas</option>
                         <option value="Klinik" {{ old('tindak_lnjt') == 'Klinik' ? 'selected' : '' }}>Rujukan Klinik
                         </option>
                         <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
                             Rumah Sakit</option>
-                             <option value="Tidak Dirujuk" {{ old('tindak_lnjt') == 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
+                        <option value="Tidak Dirujuk" {{ old('tindak_lnjt') == 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
                             Dirujuk</option>
                     </select>
                 </div>

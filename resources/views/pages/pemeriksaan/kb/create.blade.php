@@ -4,6 +4,12 @@
 
 @section('content')
     <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan KB</h1>
+    <div class="mb-6">
+        <a href="{{ route('kb.index') }}"
+            class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+    </div>
     <div class="mb-5 flex justify-end">
 
         <a href="{{ route('kb.index') }}"
@@ -133,31 +139,36 @@
 
 
                 <div>
+                    <label for="alergi" class="block text-sm font-medium text-gray-700 mb-1">Alergi</label>
+                    <input type="text" name="alergi" id="alergi"
+                        class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" value="" required>
+                </div>
+                <div>
                     <label for="hpht" class="block text-sm font-medium text-gray-700 mb-1">Hari Pertama Haid</label>
                     <input type="date" name="hpht" id="hpht"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" value="" required>
                 </div>
                 <div>
-                    <label for="jmlh_anak" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Anak</label>
-                    <input type="text" name="jmlh_anak" id="jmlh_anak"
+                    <label for="jmlhanak" class="block text-sm font-medium text-gray-700 mb-1">Jumlah Anak</label>
+                    <input type="text" name="jmlhanak" id="jmlhanak"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
                 <div>
-                    <label for="tgl_pasang" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pasang</label>
-                    <input type="date" name="tgl_pasang" id="tgl_pasang"
+                    <label for="tglpasang" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pasang</label>
+                    <input type="date" name="tglpasang" id="tglpasang"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" value="" required>
                 </div>
                 <div class="mb-6">
-                    <label for="metode_KB" class="block text-sm font-medium text-gray-700 mb-1">Metode KB</label>
-                    <select id="metode_KB" name="metode_KB"
+                    <label for="metode_kb" class="block text-sm font-medium text-gray-700 mb-1">Metode KB</label>
+                    <select id="metode_kb" name="metode_kb"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
-                        <option value="Pil" {{ old('metode_KB') == 'Pil' ? 'selected' : '' }}>Pil</option>
-                        <option value="Suntik" {{ old('metode_KB') == 'Suntik' ? 'selected' : '' }}>Suntik</option>
-                        <option value="Implan" {{ old('metode_KB') == 'Implan' ? 'selected' : '' }}>Implan</option>
-                        <option value="IUD" {{ old('metode_KB') == 'IUD' ? 'selected' : '' }}>IUD</option>
-                        <option value="Kondom" {{ old('metode_KB') == 'Kondom' ? 'selected' : '' }}>Kondom</option>
-                        <option value="MOW/MOP" {{ old('metode_KB') == 'MOW/MOP' ? 'selected' : '' }}>MOW/MOP</option>
+                        <option value="Pil" {{ old('metode_kb') == 'Pil' ? 'selected' : '' }}>Pil</option>
+                        <option value="Suntik" {{ old('metode_kb') == 'Suntik' ? 'selected' : '' }}>Suntik</option>
+                        <option value="Implan" {{ old('metode_kb') == 'Implan' ? 'selected' : '' }}>Implan</option>
+                        <option value="IUD" {{ old('metode_kb') == 'IUD' ? 'selected' : '' }}>IUD</option>
+                        <option value="Kondom" {{ old('metode_kb') == 'Kondom' ? 'selected' : '' }}>Kondom</option>
+                        <option value="MOW/MOP" {{ old('metode_kb') == 'MOW/MOP' ? 'selected' : '' }}>MOW/MOP</option>
                     </select>
                 </div>
                 <div>

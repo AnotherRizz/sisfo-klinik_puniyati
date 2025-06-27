@@ -4,6 +4,12 @@
 
 @section('content')
     <h1 class="text-xl font-semibold mb-4">Tambah Data Pasien</h1>
+    <div class="mb-6">
+        <a href="{{ route('pasien.index') }}"
+            class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+    </div>
     <div class="p-7 bg-white rounded shadow">
         @if ($errors->any())
             <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
@@ -29,17 +35,23 @@
                     <label for="nama_pasien" class="block mb-2 text-sm font-medium text-gray-900">Nama Pasien</label>
                     <input type="text" id="nama_pasien" name="nama_pasien" value="{{ old('nama_pasien') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                        placeholder="cth : Risqi" required />
+                        placeholder="cth : zainuba" required />
                 </div>
                 <div>
                     <label for="tempt_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tempat Lahir</label>
                     <input type="text" id="tempt_lahir" name="tempt_lahir" value="{{ old('tempt_lahir') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                        placeholder="cth : Boyolali" required />
+                        placeholder="cth : Sukoharjo" required />
                 </div>
                 <div>
                     <label for="tgl_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Lahir</label>
                     <input type="date" id="tgl_lahir" name="tgl_lahir" value="{{ old('tgl_lahir') }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                        required />
+                </div>
+                <div>
+                    <label for="umur" class="block mb-2 text-sm font-medium text-gray-900">Umur</label>
+                    <input type="text" id="umur" name="umur" value="{{ old('umur') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
@@ -108,7 +120,8 @@
                 <div>
                     <label for="penanggungjawab" class="block mb-2 text-sm font-medium text-gray-900">Penanggung
                         Jawab</label>
-                    <input type="text" id="penanggungjawab" name="penanggungjawab" value="{{ old('penanggungjawab') }}"
+                    <input type="text" id="penanggungjawab" name="penanggungjawab"
+                        value="{{ old('penanggungjawab') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
@@ -129,7 +142,7 @@
                     <label for="no_tlp" class="block mb-2 text-sm font-medium text-gray-900">No Telepon</label>
                     <input type="text" id="no_tlp" name="no_tlp" value="{{ old('no_tlp') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                        required  />
+                        required />
                 </div>
             </div>
             <button type="submit"

@@ -79,7 +79,7 @@
 <h3 class="title">Laporan Pemeriksaan - {{ \Carbon\Carbon::createFromDate($tahun, $bulan)->locale('id')->translatedFormat('F Y') }}</h3>
 <p style="font-size: 15px; margin-bottom: 10px;">Jenis Pelayanan: <strong>{{ $namaPelayanan }}</strong></p>
 
-<table class="table">
+<table class="table table-bordered text-xs">
     <thead>
         <tr>
             <th>No</th>
@@ -102,36 +102,29 @@
     </thead>
     <tbody>
         @foreach ($pemeriksaans as $i => $item)
+            @php
+                $obatPemeriksaan = $item->obatPemeriksaan ?? collect();
+                $kdObat = $obatPemeriksaan->map(fn($o) => $o->obat->kd_obat ?? '-')->join(', ');
+                $namaObat = $obatPemeriksaan->map(fn($o) => $o->obat->nama_obat ?? '-')->join(', ');
+                $dosisCarkai = $obatPemeriksaan->map(fn($o) => $o->dosis_carkai ?? '-')->join(', ');
+            @endphp
             <tr>
                 <td>{{ $i + 1 }}</td>
-                <td>{{ $item->no_periksa ?? '-' }}</td>
+                <td>{{ $item->nomor_periksa ?? '-' }}</td>
                 <td>{{ $item->pendaftaran->noreg ?? '-' }}</td>
                 <td>{{ $item->pendaftaran->pasien->no_rm ?? '-' }}</td>
                 <td>{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
-                <td>{{ \Carbon\Carbon::parse($item->pendaftaran->tgl_daftar)->format('d-m-Y') }}</td>
+                <td>{{ optional($item->pendaftaran->tgl_daftar)->format('d-m-Y') ?? '-' }}</td>
                 <td>{{ $item->pendaftaran->bidan->kd_bidan ?? '-' }}</td>
                 <td>{{ $item->pendaftaran->pelayanan->kodpel ?? '-' }}</td>
                 <td>{{ $item->keluhan ?? '-' }}</td>
                 <td>{{ $item->riw_penyakit ?? '-' }}</td>
                 <td>{{ $item->diagnosa ?? '-' }}</td>
                 <td>{{ $item->tindakan ?? '-' }}</td>
-                
-                {{-- Kode Obat --}}
-                <td>
-                    {{ $item->obat->pluck('kd_obat')->join(', ') ?? '-' }}
-                </td>
-                
-                {{-- Nama Obat --}}
-                <td>
-                    {{ $item->obat->pluck('nama_obat')->join(', ') ?? '-' }}
-                </td>
-                
-                {{-- Dosis Carkai --}}
-                <td>
-                    {{ $item->obat->map(fn($o) => $o->pivot->dosis_carkai)->join(', ') ?? '-' }}
-                </td>
-                
-                <td>{{ $item->tgl_kembali ? \Carbon\Carbon::parse($item->tgl_kembali)->format('d-m-Y') : '-' }}</td>
+                <td>{{ $kdObat ?: '-' }}</td>
+                <td>{{ $namaObat ?: '-' }}</td>
+                <td>{{ $dosisCarkai ?: '-' }}</td>
+                <td>{{ optional($item->tgl_kembali)->format('d-m-Y') ?? '-' }}</td>
             </tr>
         @endforeach
     </tbody>

@@ -19,7 +19,7 @@
         <label for="{{ $id }}" class="block text-sm font-medium text-gray-700 mb-1">{{ $label }}</label>
     @endif
     <select id="{{ $id }}" name="{{ $nameAttr }}"
-        {{ $attributes->merge(['class' => 'select2 w-full border border-gray-300 rounded px-3 py-2']) }}
+        {{ $attributes->merge(['class' => 'select2 w-full max-h-10 border border-gray-300 rounded px-3 py-2 overflow-y-auto']) }}
         {{ $isMultiple }}>
         @if (!$multiple)
             <option value="">{{ $placeholder }}</option>

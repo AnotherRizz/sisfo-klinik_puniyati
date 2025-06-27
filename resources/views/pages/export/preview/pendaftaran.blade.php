@@ -17,7 +17,7 @@
             </a>
             <a href="{{ route('laporan.pendaftaran', ['bulan' => "$tahun-$bulan", 'jenis_pelayanan' => request('jenis_pelayanan')]) }}"
                 class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
-                Download PDF
+                Unduh PDF
             </a>
 
         </div>

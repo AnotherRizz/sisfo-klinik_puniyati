@@ -10,6 +10,8 @@ use App\Http\Controllers\MasterData\PasienController;
 use App\Http\Controllers\MasterData\PelayananController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\Pemeriksaan\IbuNifasController;
+use App\Http\Controllers\Pemeriksaan\KiaAnakController;
+use App\Http\Controllers\Pemeriksaan\KiaIbuHamilController;
 use App\Http\Controllers\Pemeriksaan\PasienKbController;
 use App\Http\Controllers\Pemeriksaan\PasienKiaController;
 use App\Http\Controllers\Pemeriksaan\PasienUmumController;
@@ -70,8 +72,10 @@ Route::get('/laporan/pembayaran/preview', [LaporanController::class, 'previewPem
         Route::resource('umum', PasienUmumController::class);
         Route::get('/umum/{id}/resume', [PasienUmumController::class, 'resume'])->name('umum.resume');
     
-        Route::resource('kia', PasienKiaController::class);
-        Route::get('/kia/{id}/resume', [PasienKiaController::class, 'resume'])->name('kia.resume');
+        Route::resource('kia-anak', KiaAnakController::class);
+        Route::get('/kia-anak/{id}/resume', [KiaAnakController::class, 'resume'])->name('kia-anak.resume');
+        Route::resource('kia-ibu-hamil', KiaIbuHamilController::class);
+        Route::get('/kia-ibu-hamil/{id}/resume', [KiaIbuHamilController::class, 'resume'])->name('kia-ibu-hamil.resume');
         Route::resource('nifas', IbuNifasController::class);
         Route::get('/nifas/{id}/resume', [IbuNifasController::class, 'resume'])->name('nifas.resume');
         Route::resource('kb', PasienKbController::class);

@@ -4,6 +4,12 @@
 
 @section('content')
 <h1 class="text-xl font-semibold mb-4">Tambah Data Obat</h1>
+<div class="mb-6">
+        <a href="{{ route('obat.index') }}"
+            class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+    </div>
 <div class="p-7 bg-white rounded shadow">
    @if ($errors->any())
     <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">

@@ -8,9 +8,14 @@ class Pasien extends Model
 {
     protected $table = 'pasien';
     protected $fillable = [
-        'no_rm', 'nik_pasien', 'nama_pasien', 'tempt_lahir', 'tgl_lahir','jenis_kelamin', 'alamat',
+        'no_rm', 'nik_pasien', 'nama_pasien', 'tempt_lahir', 'tgl_lahir','umur','jenis_kelamin', 'alamat',
         'agama', 'pendidikan', 'new_column', 'pekerjaan', 'penanggungjawab', 'golda', 'no_tlp'
     ];
+    // App\Models\Pasien.php
+protected $casts = [
+    'tgl_lahir' => 'date',
+];
+
 
     public function pendaftaran() {
         return $this->hasMany(Pendaftaran::class, 'pasien_id');

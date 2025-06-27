@@ -3,11 +3,11 @@
 @section('title', 'Data Pemeriksaan')
 
 @section('content')
-    <h1 class="text-xl font-semibold mb-4">Data Pemeriksaan KIA</h1>
+    <h1 class="text-xl font-semibold mb-4">Data Pemeriksaan KIA IBU HAMIL</h1>
 
     <div class="flex w-full gap-2 justify-end items-center ">
-      <a  href="{{ route('all.export', ['nama_pelayanan' => 'KIA']) }}" target="_blank"
-            class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Export
+      <a  href="{{ route('all.export', ['nama_pelayanan' => 'KIA Ibu Hamil']) }}" target="_blank"
+            class="px-3 py-1.5 text-white flex items-center justify-center mt-2 gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Cetak
             Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -15,7 +15,7 @@
             </svg>
         </a>
 
-        <a href="{{ route('kia.create') }}"
+        <a href="{{ route('kia-ibu-hamil.create') }}"
             class="px-3 py-1.5 text-white flex items-center gap-2 mt-2 cursor-pointer bg-sky-500 hover:bg-sky-600 rounded mb-4 text-sm">
             Tambah Pemeriksaan
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -33,9 +33,9 @@
         <div class="w-full flex justify-between">
 
             <div class="mb-4 basis-1/2">
-                <x-search-input :action="route('kia.index')" name="search" placeholder="Cari nama / no periksa..." />
+                <x-search-input :action="route('kia-ibu-hamil.index')" name="search" placeholder="Cari nama / no periksa..." />
             </div>
-            <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('kia.index')" />
+            <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('kia-ibu-hamil.index')" />
 
         </div>
 
@@ -43,11 +43,11 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No Pemeriksaan</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No Periksa</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No RM</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Pasien</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Bidan</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Pelayanan</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Diagnosa</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Kembali</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
                 </tr>
@@ -58,13 +58,13 @@
                         x-show="{{ json_encode(strtolower($item->pasien->nama_pasien ?? '')) }}.includes(search.toLowerCase())">
 
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $i+1 }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->no_periksa }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->nomor_periksa }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pendaftaran->pasien->no_rm ?? '-' }}
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}
                         </td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pendaftaran->bidan->nama_bidan ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ $item->pendaftaran->pelayanan->nama_pelayanan ?? '-' }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->diagnosa ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ \Carbon\Carbon::parse($item->tgl_kembali)->locale('id')->translatedFormat('d F Y') }}
 
@@ -72,10 +72,9 @@
 
 
 
-                        <td class="px-4 py-2 text-sm text-gray-900 flex flex-col gap-1">
-                            <div>
+                        <td class="px-4 py-2 text-sm text-gray-900 flex flex-row gap-1">
 
-                                <a href="{{ route('kia.edit', $item->id) }}"
+                                <a href="{{ route('kia-ibu-hamil.edit', $item->id) }}"
                                     class="px-3 py-1 text-white bg-yellow-500 rounded text-xs hover:bg-yellow-600">Edit</a>
                                 {{-- <form id="delete-form-{{ $item->id }}"
                                     action="{{ route('pemeriksaan.destroy', $item->id) }}" method="POST" class="inline">
@@ -89,11 +88,10 @@
 
                             <div> --}}
 
-                                <a href="{{ route('kia.show', $item->id) }}"
+                                <a href="{{ route('kia-ibu-hamil.show', $item->id) }}"
                                     class="px-3 py-1 text-white bg-sky-500 rounded text-xs hover:bg-sky-600">Detail</a>
-                                <a href="{{ route('kia.resume', $item->id) }}" target="_blank"
+                                <a href="{{ route('kia-ibu-hamil.resume', $item->id) }}" target="_blank"
                                     class="px-3 py-1 text-white bg-teal-500 rounded text-xs hover:bg-teal-600">Resume</a>
-                            </div>
                         </td>
                     </tr>
                 @empty

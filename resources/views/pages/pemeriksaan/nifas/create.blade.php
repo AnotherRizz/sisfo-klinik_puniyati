@@ -4,6 +4,12 @@
 
 @section('content')
     <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan Ibu Nifas</h1>
+    <div class="mb-6">
+        <a href="{{ route('nifas.index') }}"
+            class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
+            ← Kembali ke daftar
+        </a>
+    </div>
     <div class="mb-5 flex justify-end">
 
         <a href="{{ route('nifas.index') }}"
@@ -138,8 +144,8 @@
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div>
-                    <label for="riw_alergi" class="block text-sm font-medium text-gray-700 mb-1">Alergi </label>
-                    <input type="text" name="riw_alergi" id="riw_alergi"
+                    <label for="alergi" class="block text-sm font-medium text-gray-700 mb-1">Alergi </label>
+                    <input type="text" name="alergi" id="alergi"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div>
@@ -160,52 +166,52 @@
                         placeholder="Keterangan tentang payudara apakah mengalami pembengkakan, puting lecet, asi keluar atau tidak)"></textarea>
                 </div>
                 <div>
-                    <label for="luka_jahit" class="block text-sm font-medium text-gray-700 mb-1">Luka Jahit</span></label>
-                    <textarea name="luka_jahit" class="w-full border-gray-300  text-xs  rounded-lg shadow-sm" id=""
+                    <label for="lukajahit" class="block text-sm font-medium text-gray-700 mb-1">Luka Jahit</span></label>
+                    <textarea name="lukajahit" class="w-full border-gray-300  text-xs  rounded-lg shadow-sm" id=""
                         cols="30" rows="2" placeholder="Keterangan kondisi luka jahit apabila ada"></textarea>
                 </div>
                 <div>
-                    <label for="tgl_lahir" class="block text-sm font-medium text-gray-500 mb-1">Tanggal
+                    <label for="tgllahir" class="block text-sm font-medium text-gray-500 mb-1">Tanggal
                         Lahir Bayi</label>
-                    <input type="date" name="tgl_lahir" id="tgl_lahir"
+                    <input type="date" name="tgllahir" id="tgllahir"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div>
-                    <label for="tmpt_persalinan" class="block text-sm font-medium text-gray-700 mb-1">Tempat Persalinan
+                    <label for="tmptpersalinan" class="block text-sm font-medium text-gray-700 mb-1">Tempat Persalinan
                         </span></label>
-                    <input type="text" name="tmpt_persalinan" id="tmpt_persalinan"
+                    <input type="text" name="tmptpersalinan" id="tmptpersalinan"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div class="mb-6">
-                    <label for="bantu_persalinan" class="block text-sm font-medium text-gray-700 mb-1">Penolong
+                    <label for="bantupersalinan" class="block text-sm font-medium text-gray-700 mb-1">Penolong
                         Persalinan</label>
-                    <select id="bantu_persalinan" name="bantu_persalinan"
+                    <select id="bantupersalinan" name="bantupersalinan"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
 
-                        <option value="Bidan" {{ old('bantu_persalinan') == 'Bidan' ? 'selected' : '' }}>Bidan</option>
-                        <option value="Dokter" {{ old('bantu_persalinan') == 'Dokter' ? 'selected' : '' }}>Dokter
+                        <option value="Bidan" {{ old('bantupersalinan') == 'Bidan' ? 'selected' : '' }}>Bidan</option>
+                        <option value="Dokter" {{ old('bantupersalinan') == 'Dokter' ? 'selected' : '' }}>Dokter
                         </option>
                     </select>
                 </div>
                 <div class="mb-6">
-                    <label for="jns_persalinan" class="block text-sm font-medium text-gray-700 mb-1">Jenis
+                    <label for="jnspersalinan" class="block text-sm font-medium text-gray-700 mb-1">Jenis
                         Persalinan</label>
-                    <select id="jns_persalinan" name="jns_persalinan"
+                    <select id="jnspersalinan" name="jnspersalinan"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
 
-                        <option value="Spontan" {{ old('jns_persalinan') == 'Spontan' ? 'selected' : '' }}>Spontan</option>
-                        <option value="Cesar" {{ old('jns_persalinan') == 'Cesar' ? 'selected' : '' }}>Cesar</option>
-                        <option value="Vakum" {{ old('jns_persalinan') == 'Vakum' ? 'selected' : '' }}>Vakum
+                        <option value="Spontan" {{ old('jnspersalinan') == 'Spontan' ? 'selected' : '' }}>Spontan</option>
+                        <option value="Cesar" {{ old('jnspersalinan') == 'Cesar' ? 'selected' : '' }}>Cesar</option>
+                        <option value="Vakum" {{ old('jnspersalinan') == 'Vakum' ? 'selected' : '' }}>Vakum
                         </option>
                     </select>
                 </div>
 
 
                 <div>
-                    <label for="besar_rahim" class="block text-sm font-medium text-gray-700 mb-1">Besar Rahim</label>
-                    <input type="text" name="besar_rahim" id="besar_rahim"
+                    <label for="besarrahim" class="block text-sm font-medium text-gray-700 mb-1">Besar Rahim</label>
+                    <input type="text" name="besarrahim" id="besarrahim"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
                 <div>

@@ -169,21 +169,22 @@
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
                     <select id="tindak_lnjt" name="tindak_lnjt" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
-                        
+
                         <option value="Puskesmas"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Puskesmas' ? 'selected' : '' }}>Rujukan 
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Puskesmas' ? 'selected' : '' }}>Rujukan
                             Puskesmas
                         </option>
                         <option value="Klinik"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Klinik' ? 'selected' : '' }}>Rujukan 
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Klinik' ? 'selected' : '' }}>Rujukan
                             Klinik
                         </option>
                         <option value="Rumah Sakit"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rumah Sakit' ? 'selected' : '' }}>Rujukan 
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
                             Rumah Sakit
                         </option>
                         <option value="Tidak Dirujuk"
-                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak Dirujuk
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
+                            Dirujuk
                         </option>
                     </select>
                 </div>
@@ -191,19 +192,18 @@
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
                     <div id="obat-wrapper">
-                        @forelse ($pemeriksaan->obat as $pivotObat)
+                        @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
                             <div class="flex gap-2 mb-2">
                                 <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" required>
                                     <option value="">-- Pilih Obat --</option>
                                     @foreach ($obats as $obat)
                                         <option value="{{ $obat->id }}"
-                                            {{ $obat->id == $pivotObat->id ? 'selected' : '' }}>
+                                            {{ $obat->id == $pivotObat->obat_id ? 'selected' : '' }}>
                                             {{ $obat->nama_obat }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <input type="text" name="dosis_carkai[]"
-                                    value="{{ $pivotObat->pivot->dosis_carkai }}"
+                                <input type="text" name="dosis_carkai[]" value="{{ $pivotObat->dosis_carkai }}"
                                     class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
                             </div>
                         @empty
