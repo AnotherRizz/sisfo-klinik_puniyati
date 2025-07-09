@@ -13,30 +13,62 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PasienKbController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = PemeriksaanKb::with([
-            'pendaftaran.pasien',
-            'pendaftaran.pelayanan',
-        ])->whereHas('pendaftaran.pelayanan', function ($query) {
-            $query->where('nama_pelayanan', 'KB');
-        });
 
-        if ($search = $request->get('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->orWhereHas('pendaftaran.pasien', function ($q) use ($search) {
-                    $q->where('nama_pasien', 'like', '%' . $search . '%');
-                });
-            });
-        }
+ public function index(Request $request)
+{
+    // Query untuk Pemeriksaan KB
+    $query = PemeriksaanKb::with([
+        'pendaftaran.pasien',
+        'pendaftaran.pelayanan',
+    ]);
 
-        $perPage = $request->get('per_page', 5);
-        $pemeriksaans = $query->paginate($perPage);
+    // Query untuk Pendaftaran yang belum diperiksa
+    $pendaftaranBelumDiperiksa = Pendaftaran::with(['pasien', 'pelayanan'])
+        ->where('pelayanan_id', 5) // id_pelayanan untuk KB
+        ->whereDoesntHave('PemeriksaanKb');
 
-        return view('pages.pemeriksaan.kb.index', compact('pemeriksaans'));
+    // ✅ Set default filter ke 'hari_ini' jika tidak ada
+    $filterTanggal = $request->get('filter_tanggal', 'hari_ini');
+
+    if ($filterTanggal === 'hari_ini') {
+        $query->whereHas('pendaftaran', fn($q) =>
+            $q->whereDate('tgl_daftar', now()->toDateString()));
+        $pendaftaranBelumDiperiksa->whereDate('tgl_daftar', now()->toDateString());
     }
 
-    public function create()
+    // Pencarian
+    if ($search = $request->get('search')) {
+        $query->whereHas('pendaftaran.pasien', fn($q) =>
+            $q->where('nama_pasien', 'like', '%' . $search . '%')
+              ->orWhere('no_rm', 'like', '%' . $search . '%'));
+
+        $pendaftaranBelumDiperiksa->whereHas('pasien', fn($q) =>
+            $q->where('nama_pasien', 'like', '%' . $search . '%')
+              ->orWhere('no_rm', 'like', '%' . $search . '%'));
+    }
+
+    // Gabungkan Data
+    $PemeriksaanKb = $query->get();
+    $belumDiperiksa = $pendaftaranBelumDiperiksa->get();
+    $dataGabungan = $PemeriksaanKb->merge($belumDiperiksa);
+
+    // Pagination Manual
+    $perPage = $request->get('per_page', 5);
+    $currentPage = $request->get('page', 1);
+    $data = $dataGabungan->forPage($currentPage, $perPage);
+    $paginatedData = new \Illuminate\Pagination\LengthAwarePaginator(
+        $data,
+        $dataGabungan->count(),
+        $perPage,
+        $currentPage,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    return view('pages.pemeriksaan.kb.index', compact('paginatedData', 'filterTanggal', 'search'));
+}
+
+
+public function create(Request $request) 
     {
         return view('pages.pemeriksaan.kb.create', [
             'pasiens' => Pasien::all(),
@@ -47,35 +79,28 @@ class PasienKbController extends Controller
                 ->with(['pasien', 'bidan', 'pelayanan'])
                 ->get(),
             'bidans' => Bidan::all(),
-            'obats' => Obat::all()
+            'obats' => Obat::all(),
+            'pendaftaran_id' => $request->pendaftaran_id,
         ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'pendaftaran_id' => 'required|exists:pendaftaran,id',
+             'pendaftaran_id' => 'required|exists:pendaftaran,id',
             'keluhan' => 'required|string',
             'riw_penyakit' => 'required|string',
-            'td' => 'required',
-            'bb' => 'required|numeric',
-            'tb' => 'required|numeric',
-            'suhu' => 'required|numeric',
-            'saturasiOx' => 'required|numeric',
+            'td' => 'nullable',
+            'bb' => 'nullable',
             'alergi' => 'required',
             'hpht' => 'nullable|date',
             'jmlhanak' => 'nullable|numeric',
             'tglpasang' => 'nullable|date',
-            'metode_kb' => 'nullable|in:pil,Suntik,Implan,IUD,Kondom,MOW/MOP',
+            'metode_kb' => 'nullable|in:Pil,Suntik,Implan,IUD,Kondom',
             'edukasi' => 'nullable|string',
             'intervensi' => 'nullable|string',
-            'efek_samping' => 'nullable|string',
             'tindak_lnjt' => 'required',
-            'tgl_kembali' => 'required|date',
-            'obat_id' => 'required|array',
-            'obat_id.*' => 'exists:obat,id',
-            'dosis_carkai' => 'required|array',
-            'dosis_carkai.*' => 'required|string',
+            'tgl_kembali' => 'nullable|date',
         ]);
 
         // generate nomor_periksa otomatis
@@ -88,12 +113,19 @@ class PasienKbController extends Controller
 
         $pemeriksaan = PemeriksaanKb::create($data);
 
-        foreach ($request->obat_id as $index => $obatId) {
-            $pemeriksaan->obatPemeriksaan()->create([
-                'obat_id' => $obatId,
-                'dosis_carkai' => $request->dosis_carkai[$index],
-            ]);
-        }
+       if ($request->has('obat_id') && is_array($request->obat_id)) {
+    foreach ($request->obat_id as $i => $obat_id) {
+        // Lewati jika tidak ada obat yang dipilih ("" atau null)
+        if (empty($obat_id)) continue;
+
+        $dosis = $request->dosis_carkai[$i] ?? null;
+
+        $pemeriksaan->obatPemeriksaan()->create([
+            'obat_id' => $obat_id,
+            'dosis_carkai' => $dosis,
+        ]);
+    }
+}
 
         return redirect()->route('kb.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
     }
@@ -129,37 +161,37 @@ class PasienKbController extends Controller
             'pendaftaran_id' => 'required|exists:pendaftaran,id',
             'keluhan' => 'required|string',
             'riw_penyakit' => 'required|string',
-            'td' => 'required',
-            'bb' => 'required|numeric',
-            'tb' => 'required|numeric',
-            'suhu' => 'required|numeric',
-            'saturasiOx' => 'required|numeric',
+            'td' => 'nullable',
+            'bb' => 'nullable',
             'alergi' => 'required',
             'hpht' => 'nullable|date',
             'jmlhanak' => 'nullable|numeric',
             'tglpasang' => 'nullable|date',
-            'metode_kb' => 'nullable|in:pil,Suntik,Implan,IUD,Kondom,MOW/MOP',
+            'metode_kb' => 'nullable|in:Pil,Suntik,Implan,IUD,Kondom',
             'edukasi' => 'nullable|string',
             'intervensi' => 'nullable|string',
-            'efek_samping' => 'nullable|string',
             'tindak_lnjt' => 'required',
-            'tgl_kembali' => 'required|date',
-            'obat_id' => 'required|array',
-            'obat_id.*' => 'exists:obat,id',
-            'dosis_carkai' => 'required|array',
-            'dosis_carkai.*' => 'required|string',
+            'tgl_kembali' => 'nullable|date',
+           
         ]);
 
         $pemeriksaan = PemeriksaanKb::findOrFail($id);
         $pemeriksaan->update($validated);
 
         $pemeriksaan->obatPemeriksaan()->delete();
-        foreach ($request->obat_id as $index => $obatId) {
-            $pemeriksaan->obatPemeriksaan()->create([
-                'obat_id' => $obatId,
-                'dosis_carkai' => $request->dosis_carkai[$index],
-            ]);
-        }
+        if ($request->has('obat_id') && is_array($request->obat_id)) {
+    foreach ($request->obat_id as $i => $obat_id) {
+        // Lewati jika tidak ada obat yang dipilih ("" atau null)
+        if (empty($obat_id)) continue;
+
+        $dosis = $request->dosis_carkai[$i] ?? null;
+
+        $pemeriksaan->obatPemeriksaan()->create([
+            'obat_id' => $obat_id,
+            'dosis_carkai' => $dosis,
+        ]);
+    }
+}
 
         return redirect()->route('kb.index')->with('success', 'Data berhasil diperbarui.');
     }

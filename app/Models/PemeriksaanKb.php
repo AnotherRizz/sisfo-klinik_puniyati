@@ -13,9 +13,9 @@ class PemeriksaanKb extends Model
 
     protected $fillable = [
         'pendaftaran_id','nomor_periksa',
-        'keluhan', 'riw_penyakit', 'td', 'bb', 'tb', 'suhu', 'saturasiOx',
+        'keluhan', 'riw_penyakit', 'td', 'bb', 
         'alergi', 'hpht', 'jmlhanak', 'tglpasang',
-        'metode_kb', 'edukasi', 'intervensi', 'efek_samping',
+        'metode_kb', 'edukasi', 'intervensi', 
         'tindak_lnjt', 'tgl_kembali'
     ];
 

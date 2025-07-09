@@ -92,7 +92,6 @@
             <th>Nama Obat</th>
             <th>Jenis Obat</th>
             <th>Stok Obat</th>
-            <th>Harga Beli</th>
             <th>Harga Jual</th>
            
            
@@ -106,7 +105,6 @@
                 <td>{{ $item->nama_obat ?? '-' }}</td>
                 <td>{{ $item->jenis_obat ?? '-' }}</td>
                 <td>{{ $item->stok_obat ?? '-' }}</td>
-                <td>{{ number_format($item->harga_beli, 0, ',', '.') }}</td>
                 <td>{{ number_format($item->harga_jual, 0, ',', '.') }}</td>
                
             </tr>

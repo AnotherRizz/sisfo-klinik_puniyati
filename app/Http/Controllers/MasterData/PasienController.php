@@ -17,9 +17,11 @@ public function index(Request $request)
 
     // Cek apakah parameter 'search' ada dalam request
     if ($search = $request->get('search')) {
-        // Cari berdasarkan 'nama_pasien' atau 'no_rm'
+        // Cari berdasarkan 'nama_pasien' atau 'no_rm' (pencarian berdasarkan....)
         $query->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%');
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%')
+              ->orWhere('tgl_lahir', 'like', '%' . $search . '%');
     }
   $perPage = $request->get('per_page', 5);
     // Ambil data dengan paginasi
@@ -99,6 +101,7 @@ public function store(Request $request)
         'penanggungjawab' => $request->penanggungjawab,
         'golda' => $request->golda,
         'no_tlp' => $request->no_tlp,
+        'nama_kk' => $request->nama_kk,
     ]);
 
      if ($request->source_form == 'pasien') {
@@ -166,6 +169,7 @@ public function store(Request $request)
         'penanggungjawab' => $request->penanggungjawab,
         'golda' => $request->golda,
         'no_tlp' => $request->no_tlp,
+        'nama_kk' => $request->nama_kk,
     ]);
 
     return redirect()->route('pasien.index')->with('success', 'Data pasien berhasil diperbarui.');

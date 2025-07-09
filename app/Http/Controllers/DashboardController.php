@@ -4,19 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pasien;
-use App\Models\Pemeriksaan;
+use App\Models\PemeriksaanUmum;
+use App\Models\PemeriksaanKb;
+use App\Models\PemeriksaanKiaIbuHamil;
+use App\Models\PemeriksaanKiaAnak;
+use App\Models\PemeriksaanIbuNifas;
 
 class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $pasien = Pasien::count();
-        $pemeriksaan = Pemeriksaan::count();
-        return view('pages.dashboard', compact('pasien', 'pemeriksaan'));
-    }
+   public function index()
+{
+    $pasien = Pasien::count();
+
+    $pemeriksaan = 
+        PemeriksaanUmum::count() +
+        PemeriksaanKb::count() +
+        PemeriksaanKiaIbuHamil::count() +
+        PemeriksaanKiaAnak::count() +
+        PemeriksaanIbuNifas::count();
+
+    return view('pages.dashboard', compact('pasien', 'pemeriksaan'));
+}
 
     /**
      * Show the form for creating a new resource.

@@ -15,43 +15,86 @@ use Barryvdh\DomPDF\Facade\Pdf;
  
 class PasienUmumController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = PemeriksaanUmum::with([
-            'pendaftaran.pasien',
-            'pendaftaran.pelayanan',
-        ])->whereHas('pendaftaran.pelayanan', function ($query) {
-            $query->where('nama_pelayanan', 'Umum');
+public function index(Request $request)
+{
+    // Set default filter_tanggal ke "hari_ini" jika tidak ada di request
+    $filterTanggal = $request->get('filter_tanggal', 'hari_ini');
+
+    // Query untuk pemeriksaan umum
+    $query = PemeriksaanUmum::with([
+        'pendaftaran.pasien',
+        'pendaftaran.pelayanan',
+    ]);
+
+    $pendaftaranBelumDiperiksa = Pendaftaran::with(['pasien', 'pelayanan'])
+        ->where('pelayanan_id', 1)
+        ->whereDoesntHave('pemeriksaanUmum');
+
+    // Filter berdasarkan tanggal
+    if ($filterTanggal === 'hari_ini') {
+        $query->whereHas('pendaftaran', function ($q) {
+            $q->whereDate('tgl_daftar', now()->toDateString());
         });
 
-        if ($search = $request->get('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->orWhereHas('pendaftaran.pasien', function ($q) use ($search) {
-                    $q->where('nama_pasien', 'like', '%' . $search . '%');
-                });
-            });
-        }
-
-        $perPage = $request->get('per_page', 5);
-        $pemeriksaans = $query->paginate($perPage);
-
-        return view('pages.pemeriksaan.umum.index', compact('pemeriksaans'));
+        $pendaftaranBelumDiperiksa->whereDate('tgl_daftar', now()->toDateString());
     }
 
-    public function create()
-    {
-        return view('pages.pemeriksaan.umum.create', [
-            'pasiens' => Pasien::all(),
-            'pendaftarans' => Pendaftaran::doesntHave('pemeriksaanUmum')
-                ->whereHas('pelayanan', function ($query) {
-                    $query->where('nama_pelayanan', 'Umum');
-                })
-                ->with(['pasien', 'bidan', 'pelayanan'])
-                ->get(),
-            'bidans' => Bidan::all(),
-            'obats' => Obat::all()
-        ]);
+    // Filter pencarian
+    if ($search = $request->get('search')) {
+        $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
+            $q->where('nama_pasien', 'like', '%' . $search . '%')
+              ->orWhere('no_rm', 'like', '%' . $search . '%');
+        });
+
+        $pendaftaranBelumDiperiksa->whereHas('pasien', function ($q) use ($search) {
+            $q->where('nama_pasien', 'like', '%' . $search . '%')
+              ->orWhere('no_rm', 'like', '%' . $search . '%');
+        });
     }
+
+    // Gabungkan hasil
+    $pemeriksaanUmum = $query->get();
+    $belumDiperiksa = $pendaftaranBelumDiperiksa->get();
+    $dataGabungan = $pemeriksaanUmum->merge($belumDiperiksa);
+
+    // Pagination manual
+    $perPage = $request->get('per_page', 5);
+    $currentPage = $request->get('page', 1);
+    $data = $dataGabungan->forPage($currentPage, $perPage);
+    $paginatedData = new \Illuminate\Pagination\LengthAwarePaginator(
+        $data,
+        $dataGabungan->count(),
+        $perPage,
+        $currentPage,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    return view('pages.pemeriksaan.umum.index', compact('paginatedData', 'filterTanggal', 'search'));
+}
+
+
+
+
+public function create(Request $request)
+{
+
+    // Debugging
+ 
+    return view('pages.pemeriksaan.umum.create', [
+        'pasiens' => Pasien::all(),
+        'pendaftarans' => Pendaftaran::doesntHave('pemeriksaanUmum')
+            ->whereHas('pelayanan', function ($query) {
+                $query->where('nama_pelayanan', 'Umum');
+            })
+            ->with(['pasien', 'bidan', 'pelayanan'])
+            ->get(),
+        'bidans' => Bidan::all(),
+        'obats' => Obat::all(),
+        'pendaftaran_id' => $request->pendaftaran_id, // Pastikan variabel ini diteruskan
+    ]);
+}
+
+
 
    public function store(Request $request)
 {
@@ -59,21 +102,22 @@ class PasienUmumController extends Controller
         'pendaftaran_id' => 'required|exists:pendaftaran,id',
         // 'nomor_periksa' => 'required|string',
         'keluhan' => 'required|string',
+        'pemeriksaan_penunjang' => 'required|string',
         'riw_penyakit' => 'required|string',
         'riw_alergi' => 'nullable|string',
-        'td' => 'required',
-        'bb' => 'required|numeric',
-        'tb' => 'required|numeric',
-        'suhu' => 'required|numeric',
-        'saturasiOx' => 'required|numeric',
+        'td' => 'nullable',
+        'bb' => 'nullable|numeric',
+        'tb' => 'nullable|numeric',
+        'suhu' => 'nullable|numeric',
+        'saturasiOx' => 'nullable|numeric',
         'diagnosa' => 'required|string',
         'tindakan' => 'required|string',
         'tindak_lnjt' => 'required',
-        'tgl_kembali' => 'required|date',
-        'obat_id' => 'required|array',
-        'obat_id.*' => 'exists:obat,id',
-        'dosis_carkai' => 'required|array',
-        'dosis_carkai.*' => 'required|string',
+        'tgl_kembali' => 'nullable|date',
+       // Ubah validasi obat jadi optional
+        'obat_id' => 'nullable|array',
+    'obat_id.*' => 'nullable|exists:obat,id',
+    'dosis_carkai' => 'nullable|array',
     ]);
 
     // 🟢 Generate nomor_periksa
@@ -86,13 +130,20 @@ class PasienUmumController extends Controller
 
     $pemeriksaan = PemeriksaanUmum::create($data);
 
-    // Simpan obat yang dipakai
-    foreach ($request->obat_id as $index => $obatId) {
+   if ($request->has('obat_id') && is_array($request->obat_id)) {
+    foreach ($request->obat_id as $i => $obat_id) {
+        // Lewati jika tidak ada obat yang dipilih ("" atau null)
+        if (empty($obat_id)) continue;
+
+        $dosis = $request->dosis_carkai[$i] ?? null;
+
         $pemeriksaan->obatPemeriksaan()->create([
-            'obat_id' => $obatId,
-            'dosis_carkai' => $request->dosis_carkai[$index],
+            'obat_id' => $obat_id,
+            'dosis_carkai' => $dosis,
         ]);
     }
+}
+
 
     return redirect()->route('umum.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
 }
@@ -128,21 +179,22 @@ class PasienUmumController extends Controller
         $validated = $request->validate([
             'pendaftaran_id' => 'required|exists:pendaftaran,id',
             'keluhan' => 'required|string',
+            'pemeriksaan_penunjang' => 'required|string',
             'riw_penyakit' => 'required|string',
             'riw_alergi' => 'nullable|string',
-            'td' => 'required',
-            'bb' => 'required|numeric',
-            'tb' => 'required|numeric',
-            'suhu' => 'required|numeric',
-            'saturasiOx' => 'required|numeric',
+            'td' => 'nullable',
+            'bb' => 'nullable|numeric',
+            'tb' => 'nullable|numeric',
+            'suhu' => 'nullable|numeric',
+            'saturasiOx' => 'nullable|numeric',
             'diagnosa' => 'required|string',
             'tindakan' => 'required|string',
             'tindak_lnjt' => 'required',
-            'tgl_kembali' => 'required|date',
-            'obat_id' => 'required|array',
-            'obat_id.*' => 'exists:obat,id',
-            'dosis_carkai' => 'required|array',
-            'dosis_carkai.*' => 'required|string',
+            'tgl_kembali' => 'nullable|date',
+             // Ubah validasi obat jadi optional
+        'obat_id' => 'nullable|array',
+        'obat_id.*' => 'nullable|exists:obat,id',
+        'dosis_carkai' => 'nullable|array',
         ]);
 
         $pemeriksaan = PemeriksaanUmum::findOrFail($id);
@@ -151,12 +203,21 @@ class PasienUmumController extends Controller
         // Hapus & buat ulang data obat pemeriksaan
         $pemeriksaan->obatPemeriksaan()->delete();
 
-        foreach ($request->obat_id as $index => $obatId) {
-            $pemeriksaan->obatPemeriksaan()->create([
-                'obat_id' => $obatId,
-                'dosis_carkai' => $request->dosis_carkai[$index],
-            ]);
-        }
+        // Tambahkan data obat baru jika ada
+    if ($request->has('obat_id') && is_array($request->obat_id)) {
+    foreach ($request->obat_id as $i => $obat_id) {
+        // Lewati jika tidak ada obat yang dipilih ("" atau null)
+        if (empty($obat_id)) continue;
+
+        $dosis = $request->dosis_carkai[$i] ?? null;
+
+        $pemeriksaan->obatPemeriksaan()->create([
+            'obat_id' => $obat_id,
+            'dosis_carkai' => $dosis,
+        ]);
+    }
+}
+
 
         return redirect()->route('umum.index')->with('success', 'Data berhasil diperbarui.');
     }

@@ -52,11 +52,11 @@
                 @endphp
 
                 <ul id="dropdown-example" class="{{ $activeMaster ? '' : 'hidden' }} py-2 space-y-2">
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('bidan.index') }}"
                             class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('bidan.*') ? 'bg-gray-700 text-white' : 'text-white hover:bg-gray-700' }}">Data
                             Bidan</a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{ route('pasien.index') }}"
                             class="flex items-center w-full p-2 pl-11 text-sm rounded-lg transition duration-75 group
@@ -70,13 +70,16 @@
                             class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('pelayanan.*') ? 'bg-gray-700 text-white' : 'text-white hover:bg-gray-700' }}">Data
                             Pelayanan</a>
                     </li>
+                     @role('bidan')
                     <li>
                         <a href="{{ route('obat.index') }}"
                             class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('obat.*') ? 'bg-gray-700 text-white' : 'text-white hover:bg-gray-700' }}">Data
                             Obat</a>
                     </li>
+                    @endrole
                 </ul>
             </li>
+           
             <li>
                 <a href="{{ route('pendaftaran.index') }}"
                     class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  {{ request()->routeIs('pendaftaran.*') ? 'bg-gray-700 text-white' : 'text-white hover:bg-gray-700' }}">
@@ -91,7 +94,8 @@
 
                 </a>
             </li>
-
+          
+ @role('bidan')
             <li>
                 <button type="button"
                     class="flex items-center w-full p-2 text-base transition duration-75 rounded-lg group cursor-pointer text-white hover:bg-gray-700"
@@ -175,6 +179,7 @@
                     <span class="flex-1 ms-3 text-sm whitespace-nowrap">Laporan</span>
                 </a>
             </li>
+              @endrole
             <span class="block w-full border-t border-gray-600 my-3"></span>
             <li>
                 <a href="{{ route('setting.index') }}"

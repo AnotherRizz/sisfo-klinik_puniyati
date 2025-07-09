@@ -35,7 +35,7 @@
             <div class="border-t-2 border-black my-2"></div>
 
             <div class="flex justify-start items-center mb-4">
-                <h2 class="text-base font-semibold uppercase">Laporan Data Pemeriksaan</h2>
+                <h2 class="text-base font-semibold uppercase">Laporan Data Pemeriksaan {{ $jenisPelayanan }}</h2>
             </div>
 
             {{-- Tabel --}}

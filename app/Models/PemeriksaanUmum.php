@@ -13,7 +13,7 @@ class PemeriksaanUmum extends Model
 
     protected $fillable = [
         'pendaftaran_id','nomor_periksa',
-        'keluhan', 'riw_penyakit', 'riw_alergi',
+        'keluhan', 'riw_penyakit', 'riw_alergi','pemeriksaan_penunjang',
         'td', 'bb', 'tb', 'suhu', 'saturasiOx',
         'diagnosa', 'tindakan', 'tindak_lnjt', 'tgl_kembali'
     ];

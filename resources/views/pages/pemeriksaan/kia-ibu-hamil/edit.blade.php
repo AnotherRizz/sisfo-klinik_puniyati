@@ -89,58 +89,76 @@
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm" value="" required readonly>
                 </div>
 
-                <div>
-                    <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-1">Keluhan</label>
-                    <input type="text" name="keluhan" class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('keluhan', $pemeriksaan->keluhan) }}"
-                        required>
-                </div>
+               
                 <div>
                     <label for="riw_penyakit" class="block text-sm font-medium text-gray-700 mb-1">Riwayat Penyakit</label>
                     <input type="text" name="riw_penyakit" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('riw_penyakit', $pemeriksaan->riw_penyakit) }}" required>
+                </div>
+                 <div>
+                    <label for="riwayat_TT" class="block text-sm font-medium text-gray-700 mb-1">Riwayat TT (riw. Imunisasi
+                        Tetanus Toksoid)</label>
+                    <input type="text" name="riwayat_TT" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('riwayat_TT', $pemeriksaan->riwayat_TT) }}" required>
                 </div>
 
                 <div>
                     <label for="td" class="block text-sm font-medium text-gray-700 mb-1">Tensi Darah <span
                             class="text-red-500 text-xs"> (mmHg)</span></label>
                     <input type="text" name="td" id="td" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('td', $pemeriksaan->td) }}" required>
+                        value="{{ old('td', $pemeriksaan->td) }}" >
+                </div>
+                 <div>
+                    <label for="nadi" class="block text-sm font-medium text-gray-700 mb-1">Denyut Nadi Ibu
+                        Hamil</label>
+                    <input type="text" name="nadi" id="nadi"
+                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('nadi', $pemeriksaan->nadi) }}" >
                 </div>
                 <div>
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan <span
                             class="text-red-500 text-xs"> (Kg)</span></label>
                     <input type="text" name="bb" id="bb" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('bb', $pemeriksaan->bb) }}" required>
+                        value="{{ old('bb', $pemeriksaan->bb) }}" >
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan <span
                             class="text-red-500 text-xs"> (Cm)</span></label>
                     <input type="text" name="tb" id="tb" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('tb', $pemeriksaan->tb) }}" required>
+                        value="{{ old('tb', $pemeriksaan->tb) }}" >
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
                     <input type="text" name="suhu" id="suhu"
-                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('suhu', $pemeriksaan->suhu) }}" required>
+                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('suhu', $pemeriksaan->suhu) }}" >
                 </div>
                 <div>
                     <label for="saturasiOx" class="block text-sm font-medium text-gray-700 mb-1">Saturasi Oksigen<span
                             class="text-red-500 text-xs"> (%)</span> </label>
                     <input type="text" name="saturasiOx" id="saturasiOx"
-                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('saturasiOx', $pemeriksaan->saturasiOx) }}" required>
+                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('saturasiOx', $pemeriksaan->saturasiOx) }}" >
                 </div>
-                <div>
-                    <label for="nadi" class="block text-sm font-medium text-gray-700 mb-1">Denyut Nadi Ibu
-                        Hamil</label>
-                    <input type="text" name="nadi" id="nadi"
-                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('nadi', $pemeriksaan->nadi) }}" required>
-                </div>
+               
                 <div>
                     <label for="lila" class="block text-sm font-medium text-gray-700 mb-1">Lingkar Lengan Atas<span
                             class="text-red-500 text-xs">(Cm)</span></label>
                     <input type="text" name="lila" id="lila"
                         class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('lila', $pemeriksaan->lila) }}" required>
+                </div>
+                  <div>
+                    <label for="tablet_tambah_darah" class="block text-sm font-medium text-gray-700 mb-1">Tablet Tambah Darah</label>
+                    <input type="text" name="tablet_tambah_darah" id="tablet_tambah_darah"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('tablet_tambah_darah', $pemeriksaan->tablet_tambah_darah) }}" required>
+                </div>
+                <div>
+                    <label for="vitamin_mineral" class="block text-sm font-medium text-gray-700 mb-1">Vitamin Mineral</label>
+                    <input type="text" name="vitamin_mineral" id="vitamin_mineral"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('vitamin_mineral', $pemeriksaan->vitamin_mineral) }}" required>
+                </div>
+                <div>
+                    <label for="asam_folat" class="block text-sm font-medium text-gray-700 mb-1">Asam Folat</label>
+                    <input type="text" name="asam_folat" id="asam_folat"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('asam_folat', $pemeriksaan->asam_folat) }}" required>
                 </div>
                 <div>
                     <label for="hpht" class="block text-sm font-medium text-gray-700 mb-1">Hari Pertama Haid Ibu
@@ -179,14 +197,7 @@
                     <input type="text" name="umr_hamil" id="umr_hamil" value="{{ old('umr_hamil', $pemeriksaan->umr_hamil) }}"
                         class="w-full  border-gray-300 rounded-lg shadow-sm text-gray-500" required>
                 </div>
-                <div>
-                    <label for="ling_perut" class="block text-sm font-medium text-gray-700 mb-1">Lingkar Perut Ibu
-                        Hamil
-
-                    </label>
-                    <input type="text" name="ling_perut" id="ling_perut" value="{{ old('ling_perut', $pemeriksaan->ling_perut) }}"
-                        class="w-full  border-gray-300 rounded-lg shadow-sm text-gray-500" required>
-                </div>
+           
                 <div>
                     <label for="tifu" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Fundus
                         <span class="text-red-500 text-xs">(Cm)</span>
@@ -238,6 +249,11 @@
                     <textarea name="lab" id="lab" class="w-full text-gray-500 border-gray-300  rounded-lg shadow-sm"
                         cols="30" rows="2">{{ old('lab', $pemeriksaan->lab) }}</textarea>
                 </div>
+                 <div>
+                    <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-1">Keluhan</label>
+                    <input type="text" name="keluhan" class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('keluhan', $pemeriksaan->keluhan) }}"
+                        required>
+                </div>
                 <div>
                     <label for="resti" class="block text-sm font-medium text-gray-700 mb-1">Keterangan Resiko
                         Tinggi</label>
@@ -265,7 +281,7 @@
                         Kembali</label>
                     <input type="date" name="tgl_kembali" id="tgl_kembali"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
-                        value="{{ old('tindakan', $pemeriksaan->tgl_kembali) }}" required>
+                        value="{{ old('tindakan', $pemeriksaan->tgl_kembali) }}" >
                 </div>
                 <div class="mb-6">
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
@@ -284,6 +300,10 @@
                             {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
                             Rumah Sakit
                         </option>
+                        <option value="Rujuk Dokter Spesialis Obsygin"
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rujuk Dokter Spesialis Obsygin' ? 'selected' : '' }}>
+                            Rujuk Dokter Spesialis Obsygin
+                        </option>
                         <option value="Tidak Dirujuk"
                             {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
                             Dirujuk
@@ -294,36 +314,31 @@
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
                     <div id="obat-wrapper">
-                        @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
+                       @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
                             <div class="flex gap-2 mb-2">
-                                <select name="obat_id[]" class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm"
-                                    required>
+                                <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" required>
                                     <option value="">-- Pilih Obat --</option>
-                                      @foreach ($obats as $obat)
+                                    @foreach ($obats as $obat)
                                         <option value="{{ $obat->id }}"
                                             {{ $obat->id == $pivotObat->obat_id ? 'selected' : '' }}>
                                             {{ $obat->nama_obat }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <input type="text" name="dosis_carkai[]"
-                                    value="{{ $pivotObat->dosis_carkai }}"
-                                    class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm" placeholder="Dosis"
-                                    required />
+                                <input type="text" name="dosis_carkai[]" value="{{ $pivotObat->dosis_carkai }}"
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
                             </div>
                         @empty
                             {{-- Jika belum ada data obat --}}
                             <div class="flex gap-2 mb-2">
-                                <select name="obat_id[]" class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm"
-                                    required>
+                                <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" >
                                     <option value="">-- Pilih Obat --</option>
                                     @foreach ($obats as $obat)
                                         <option value="{{ $obat->id }}">{{ $obat->nama_obat }}</option>
                                     @endforeach
                                 </select>
                                 <input type="text" name="dosis_carkai[]"
-                                    class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm" placeholder="Dosis"
-                                    required />
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis"  />
                             </div>
                         @endforelse
                     </div>

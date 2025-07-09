@@ -28,21 +28,30 @@
 
                 {{-- No Pemeriksaan --}}
                 <div>
-                    <label for="pemeriksaanable_id" class="block text-sm font-medium text-gray-700 mb-1">No Pemeriksaan</label>
+                    <label for="pemeriksaanable_id" class="block text-sm font-medium text-gray-700 mb-1">No
+                        Pemeriksaan</label>
+                    @php
+                        $selectedNomor = request('nomor_periksa');
+                    @endphp
+
                     <select id="pemeriksaanable_id" name="pemeriksaanable_id"
                         class="select2 w-full border border-gray-300 rounded px-3 py-2" required>
                         <option value="">-- Pilih Pemeriksaan --</option>
                         @foreach ($pemeriksaans as $p)
                             <option value="{{ $p->nomor_periksa }}"
-                                data-pemeriksaanable-type="{{ class_basename($p) }}"
+                                data-pemeriksaanable-type="{{ class_basename(get_class($p)) }}"
+                                data-pasien-nama="{{ $p->pendaftaran->pasien->nama_pasien ?? '' }}"
                                 data-pasien-nama="{{ $p->pendaftaran->pasien->nama_pasien ?? '' }}"
                                 data-bidan-nama="{{ $p->pendaftaran->bidan->nama_bidan ?? '' }}"
                                 data-pelayanan-nama="{{ $p->pendaftaran->pelayanan->nama_pelayanan ?? '' }}"
-                                data-obat-nama="{{ $p->obatPemeriksaan->pluck('obat.nama_obat')->join(', ') ?? '' }}">
+                                data-obat-nama="{{ $p->obatPemeriksaan->pluck('obat.nama_obat')->join(', ') ?? '' }}"
+                                {{ $selectedNomor == $p->nomor_periksa ? 'selected' : '' }}>
                                 {{ $p->nomor_periksa }} - {{ $p->pendaftaran->pasien->nama_pasien ?? 'Tidak Diketahui' }}
                             </option>
                         @endforeach
                     </select>
+
+
                 </div>
 
                 {{-- Hidden input untuk menentukan tipe polymorphic --}}
@@ -51,15 +60,15 @@
                 {{-- Nama Pasien --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pasien</label>
-                    <input type="text" id="pasien_nama"
-                        class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100" readonly>
+                    <input type="text" id="pasien_nama" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100"
+                        readonly>
                 </div>
 
                 {{-- Nama Bidan --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Bidan</label>
-                    <input type="text" id="bidan_nama"
-                        class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100" readonly>
+                    <input type="text" id="bidan_nama" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100"
+                        readonly>
                 </div>
 
                 {{-- Nama Pelayanan --}}
@@ -72,15 +81,15 @@
                 {{-- Obat --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama Obat</label>
-                    <input type="text" id="obat_nama"
-                        class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100" readonly>
+                    <input type="text" id="obat_nama" class="w-full border-gray-300 rounded-lg shadow-sm bg-gray-100"
+                        readonly>
                 </div>
 
                 {{-- Tindakan --}}
                 <div>
                     <label for="tindakan" class="block text-sm font-medium text-gray-700 mb-1">Tindakan</label>
-                    <input type="text" name="tindakan" id="tindakan"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('tindakan') }}" required>
+                    <input type="text" name="tindakan" id="tindakan" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('tindakan') }}" required>
                 </div>
             </div>
 
@@ -96,14 +105,17 @@
 
                 {{-- Biaya Administrasi --}}
                 <div>
-                    <label for="biaya_administrasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya Administrasi</label>
+                    <label for="biaya_administrasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
+                        Administrasi</label>
                     <input type="text" name="biaya_administrasi" id="biaya_administrasi"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('biaya_administrasi') }}" required>
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('biaya_administrasi') }}"
+                        required>
                 </div>
 
                 {{-- Biaya Konsultasi --}}
                 <div>
-                    <label for="biaya_konsultasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya Konsultasi</label>
+                    <label for="biaya_konsultasi" class="block text-sm font-medium text-gray-700 mb-1">Biaya
+                        Konsultasi</label>
                     <input type="text" name="biaya_konsultasi" id="biaya_konsultasi"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('biaya_konsultasi') }}" required>
                 </div>
@@ -126,8 +138,8 @@
                 {{-- Jenis Pembayaran --}}
                 <div>
                     <label for="jenis_bayar" class="block text-sm font-medium text-gray-700 mb-1">Jenis Bayar</label>
-                    <select name="jenis_bayar" id="jenis_bayar"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" required>
+                    <select name="jenis_bayar" id="jenis_bayar" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        required>
                         <option value="">-- Pilih Jenis --</option>
                         <option value="Tunai" {{ old('jenis_bayar') == 'Tunai' ? 'selected' : '' }}>Tunai</option>
                         <option value="Transfer" {{ old('jenis_bayar') == 'Transfer' ? 'selected' : '' }}>Transfer</option>
@@ -145,53 +157,61 @@
     </div>
 @endsection
 @push('styles')
-<style>
-    .select2-dropdown.select2-dropdown-scroll {
-        max-height: 300px;
-        overflow-y: auto;
-    }
-</style>
+    <style>
+        .select2-dropdown.select2-dropdown-scroll {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
 @endpush
 
 
 @push('scripts')
-<script>
-    $(document).ready(function () {
-        $('#pemeriksaanable_id').select2({
-            placeholder: 'Pilih No Pemeriksaan...',
-            allowClear: true,
-            width: '100%',
-            dropdownCssClass: 'select2-dropdown-scroll'
-        });
-
-        function updateInfo() {
-            const selected = $('#pemeriksaanable_id option:selected');
-            $('#pasien_nama').val(selected.data('pasien-nama') || '');
-            $('#bidan_nama').val(selected.data('bidan-nama') || '');
-            $('#nama_pelayanan').val(selected.data('pelayanan-nama') || '');
-            $('#obat_nama').val(selected.data('obat-nama') || '');
-            $('#pemeriksaanable_type').val(selected.data('pemeriksaanable-type') || '');
-        }
-
-        $('#pemeriksaanable_id').on('change select2:select', updateInfo);
-        updateInfo(); // inisialisasi awal
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const fields = ['biaya_konsultasi', 'biaya_administrasi', 'biaya_tindakan'];
-
-        fields.forEach(id => {
-            const input = document.getElementById(id);
-            input.addEventListener('input', function () {
-                let value = this.value.replace(/[^0-9]/g, '');
-                if (value) value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                this.value = value;
+    <script>
+        $(document).ready(function() {
+            $('#pemeriksaanable_id').select2({
+                placeholder: 'Pilih No Pemeriksaan...',
+                allowClear: true,
+                width: '100%',
+                dropdownCssClass: 'select2-dropdown-scroll'
             });
 
-            input.addEventListener('blur', function () {
-                this.value = this.value.replace(/\./g, '');
+            function updateInfo() {
+                const selected = $('#pemeriksaanable_id option:selected');
+                $('#pasien_nama').val(selected.data('pasien-nama') || '');
+                $('#bidan_nama').val(selected.data('bidan-nama') || '');
+                $('#nama_pelayanan').val(selected.data('pelayanan-nama') || '');
+                $('#obat_nama').val(selected.data('obat-nama') || '');
+                $('#pemeriksaanable_type').val(selected.data('pemeriksaanable-type') || '');
+            }
+
+            $('#pemeriksaanable_id').on('change select2:select', updateInfo);
+
+            updateInfo(); // inisialisasi
+
+            // ✅ Tambahkan ini
+            const hasPreselected = $('#pemeriksaanable_id').val();
+            if (hasPreselected) {
+                $('#pemeriksaanable_id').trigger('change');
+            }
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const fields = ['biaya_konsultasi', 'biaya_administrasi', 'biaya_tindakan'];
+
+            fields.forEach(id => {
+                const input = document.getElementById(id);
+                input.addEventListener('input', function() {
+                    let value = this.value.replace(/[^0-9]/g, '');
+                    if (value) value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                    this.value = value;
+                });
+
+                input.addEventListener('blur', function() {
+                    this.value = this.value.replace(/\./g, '');
+                });
             });
         });
-    });
-</script>
+    </script>
 @endpush

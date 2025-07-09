@@ -13,7 +13,7 @@ class PemeriksaanKiaAnak extends Model
 
     protected $fillable = [
         'pendaftaran_id','nomor_periksa',
-        'keluhan', 'riw_penyakit', 'riw_imunisasi',
+        'keluhan', 'riw_penyakit', 'riw_imunisasi','alergi_obat',
         'bb', 'tb', 'suhu', 'pb', 'lk',
         'diagnosa', 'intervensi', 'tindak_lnjt', 'tgl_kembali'
     ];

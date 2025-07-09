@@ -54,9 +54,11 @@
             word-wrap: break-word;
             text-align: center;
         }
-        .table th {
-            background-color: #f0f0f0;
-        }
+      .table th {
+    background-color: #f0f0f0;
+    text-transform: uppercase;
+}
+
         .footer {
             margin-top: 25px;
             font-size: 11px;
@@ -87,20 +89,22 @@
 <table class="table">
     <thead>
         <tr>
-            <th>No</th>
-            <th>No.Rm</th>
-            <th>NIK</th>
-            <th>Nama Pasien</th>
-            <th>Tempat Lahir</th>
-            <th>Tanggal Lahir</th>
-            <th>Umur</th>
-            <th>Alamat</th>
-            <th>Agama</th>
-            <th>Pendidikan</th>
-            <th>Pekerjaan</th>
-            <th>Gol.Dar</th>
-            <th>PJ</th>
-            <th>No.Telp</th>
+            <th class="uppercase">No</th>
+            <th class="uppercase">Nama KK</th>
+            <th class="uppercase">No.Rm</th>
+            <th class="uppercase">Nama Pasien</th>
+            <th class="uppercase">NIK</th>
+            <th class="uppercase">Umur</th>
+            <th class="uppercase">Tempat Lahir</th>
+            <th class="uppercase">Tanggal Lahir</th>
+            <th class="uppercase">Alamat</th>
+            <th class="uppercase">Agama</th>
+            <th class="uppercase">Jenkel</th>
+            <th class="uppercase">Pendidikan</th>
+            <th class="uppercase">Pekerjaan</th>
+            <th class="uppercase">Gol.Dar</th>
+            <th class="uppercase">PJ</th>
+            <th class="uppercase">No.Hp</th>
            
         </tr>
     </thead>
@@ -108,14 +112,16 @@
         @foreach ($pasien  as $i => $item)
             <tr>
                 <td>{{ $i + 1 }}</td>
+                <td>{{ $item->nama_kk ?? '-' }}</td>
                 <td>{{ $item->no_rm ?? '-' }}</td>
-                <td>{{ $item->nik_pasien ?? '-' }}</td>
                 <td>{{ $item->nama_pasien ?? '-' }}</td>
+                <td>{{ $item->nik_pasien ?? '-' }}</td>
+                <td>{{ $item->umur ?? '-' }}</td>
                 <td>{{ $item->tempt_lahir ?? '-' }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y') }}</td>
-                <td>{{ $item->umur ?? '-' }}</td>
                 <td>{{ $item->alamat ?? '-' }}</td>
                 <td>{{ $item->agama ?? '-' }}</td>
+                <td>{{ $item->jenis_kelamin ?? '-' }}</td>
                 <td>{{ $item->pendidikan ?? '-' }}</td>
                 <td>{{ $item->pekerjaan ?? '-' }}</td>
                 <td>{{ $item->golda ?? '-' }}</td>

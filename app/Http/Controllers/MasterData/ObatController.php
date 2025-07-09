@@ -58,33 +58,43 @@ public function export()
 
 
     public function store(Request $request)
-    {
-        $last = Obat::latest('id')->first();
-        $newCode = 'OB001';
-        if ($last) {
-            $num = (int)substr($last->kd_obat, 1) + 1;
-            $newCode = 'OB' . str_pad($num, 3, '0', STR_PAD_LEFT);
-        }
+{
+    // Ambil kode terakhir berdasarkan urutan kd_obat (bukan id)
+    $lastObat = Obat::orderBy('kd_obat', 'desc')->first();
 
-        $request->validate([
-            'nama_obat' => 'required',
-            'jenis_obat' => 'required',
-            'stok_obat' => 'required|integer',
-            'harga_beli' => 'required|integer',
-            'harga_jual' => 'required|integer',
-        ]);
-
-        Obat::create([
-            'kd_obat' => $newCode,
-            'nama_obat' => $request->nama_obat,
-            'jenis_obat' => $request->jenis_obat,
-            'stok_obat' => $request->stok_obat,
-            'harga_beli' => $request->harga_beli,
-            'harga_jual' => $request->harga_jual,
-        ]);
-
-        return redirect()->route('obat.index')->with('success', 'Data Obat berhasil ditambahkan');
+    if ($lastObat) {
+        // Ambil angka dari kd_obat terakhir, misal dari OB012 ambil 12
+        $lastNumber = (int) substr($lastObat->kd_obat, 2);
+        $newNumber = $lastNumber + 1;
+    } else {
+        $newNumber = 1;
     }
+
+    // Format ke OB001, OB002, ...
+    $newCode = 'OB' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+
+    $request->merge([
+        'harga_jual' => str_replace('.', '', $request->harga_jual),
+    ]);
+
+    $request->validate([
+        'nama_obat' => 'required',
+        'jenis_obat' => 'required',
+        'stok_obat' => 'required|integer',
+        'harga_jual' => 'required|numeric',
+    ]);
+
+    Obat::create([
+        'kd_obat' => $newCode,
+        'nama_obat' => $request->nama_obat,
+        'jenis_obat' => $request->jenis_obat,
+        'stok_obat' => $request->stok_obat,
+        'harga_jual' => $request->harga_jual,
+    ]);
+
+    return redirect()->route('obat.index')->with('success', 'Data Obat berhasil ditambahkan');
+}
+
 
     public function edit($id)
 {
@@ -98,7 +108,6 @@ public function export()
             'nama_obat' => 'required',
             'jenis_obat' => 'required',
             'stok_obat' => 'required|integer',
-            'harga_beli' => 'required|integer',
             'harga_jual' => 'required|integer',
         ]);
 

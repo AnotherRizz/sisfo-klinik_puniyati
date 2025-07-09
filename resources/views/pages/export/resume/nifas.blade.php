@@ -145,132 +145,133 @@
     </div>
     <hr>
     <h4 style="margin-top: 10px;">PEMERIKSAAN</h4>
-    <table class="bordered">
-        <tr>
-            <td class="left">Keluhan</td>
-            <td>{{ $pemeriksaan->keluhan }}</td>
-        </tr>
-        <tr>
-            <td class="left">Riwayat Penyakit</td>
-            <td>{{ $pemeriksaan->riw_penyakit }}</td>
-        </tr>
-        <tr>
-            <td class="left">frekuensi Kunjungan</td>
-            <td>{{ $pemeriksaan->frek_kunjungan }} Hari</td>
-        </tr>
-        <tr>
-            <td class="left">Alegi</td>
-            <td>{{ $pemeriksaan->alergi }}</td>
-        </tr>
-        <tr>
-            <td class="left">Tensi Darah (mm/Hg)</td>
-            <td>{{ $pemeriksaan->td }} mmHg</td>
-        </tr>
-        <tr>
-            <td class="left">Berat Badan (Kg)</td>
-            <td>{{ $pemeriksaan->bb }} Kg</td>
-        </tr>
-        <tr>
-            <td class="left">Tinggi Badan (Cm)</td>
-            <td>{{ $pemeriksaan->tb }} Cm</td>
-        </tr>
-        <tr>
-            <td class="left">Suhu (Celcius)</td>
-            <td>{{ $pemeriksaan->suhu }} °C</td>
-        </tr>
-        <tr>
-            <td class="left">Saturasi Oksigen</td>
-            <td>{{ $pemeriksaan->saturasiOx }} %</td>
-        </tr>
-        <tr>
-            <td class="left">Tinggi Fundus (Cm)</td>
-            <td>{{ $pemeriksaan->tifu }} Cm</td>
-        </tr>
-        <tr>
-            <td class="left">Lochea</td>
-            <td>{{ $pemeriksaan->lochea }}</td>
-        </tr>
-        <tr>
-            <td class="left">Payudara</td>
-            <td>{{ $pemeriksaan->payudara }} </td>
-        </tr>
-        <tr>
-            <td class="left">Luka Jahit</td>
-            <td>{{ $pemeriksaan->lukajahit }} </td>
-        </tr>
-        <tr>
-            <td class="left">Tanggal Lahir Bayi</td>
-            <td>{{ \Carbon\Carbon::parse($pemeriksaan->tgllahir)->locale('id')->translatedFormat('d F Y') }} </td>
-        </tr>
-        <tr>
-            <td class="left">Tempat Persalinan</td>
-            <td>{{ $pemeriksaan->tmptpersalinan }} </td>
-        </tr>
-        <tr>
-            <td class="left">Bantuan Persalinan</td>
-            <td>{{ $pemeriksaan->bantupersalinan }} </td>
-        </tr>
-        <tr>
-            <td class="left">Jenis Persalinan</td>
-            <td>{{ $pemeriksaan->jnspersalinan }} </td>
-        </tr>
-        <tr>
-            <td class="left">Besar Rahim</td>
-            <td>{{ $pemeriksaan->besarrahim }}</td>
-        </tr>
-        <tr>
-            <td class="left">Infeksi / komplikasi</td>
-            <td>{{ $pemeriksaan->infeksi_kompli }}</td>
-        </tr>
-        <tr>
-            <td class="left">Edukasi</td>
-            <td>{{ $pemeriksaan->edukasi }}</td>
-        </tr>
-        <tr>
-            <td class="left">Intervensi</td>
-            <td>{{ $pemeriksaan->intervensi }}</td>
-        </tr>
-        <tr>
-            <td class="left">Diagnosa</td>
-            <td>{{ $pemeriksaan->diagnosa }}</td>
-        </tr>
-       
-        <tr>
-            <td class="left">Tindak Lanjut</td>
-               <td>
-                @if ($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk')
-                    Tidak dirujuk
-                @elseif ($pemeriksaan->tindak_lnjt === 'Puskesmas')
-                    Rujukan ke Puskesmas
-                @elseif ($pemeriksaan->tindak_lnjt === 'Klinik')
-                    Rujukan ke Klinik
-                @elseif ($pemeriksaan->tindak_lnjt === 'Rumah Sakit')
-                    Rujukan ke Rumah Sakit
-                @else
-                    -
-                @endif
-            </td>
-        </tr>
-       
-        <tr>
-            <td class="left">Tanggal Kembali</td>
-            <td>{{ \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->locale('id')->translatedFormat('d F Y') }}</td>
-        </tr>
+   <table class="bordered">
+    <tr>
+        <td class="left">Keluhan</td>
+        <td>{{ $pemeriksaan->keluhan ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Riwayat Penyakit</td>
+        <td>{{ $pemeriksaan->riw_penyakit ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Frekuensi Kunjungan</td>
+        <td>{{ $pemeriksaan->frek_kunjungan ? $pemeriksaan->frek_kunjungan . ' Hari' : '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Alergi</td>
+        <td>{{ $pemeriksaan->alergi ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Tensi Darah (mm/Hg)</td>
+        <td>{{ $pemeriksaan->td ? $pemeriksaan->td . ' mmHg' : '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Berat Badan (Kg)</td>
+        <td>{{ $pemeriksaan->bb ? $pemeriksaan->bb . ' Kg' : '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Tinggi Badan (Cm)</td>
+        <td>{{ $pemeriksaan->tb ? $pemeriksaan->tb . ' Cm' : '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Suhu (Celcius)</td>
+        <td>{{ $pemeriksaan->suhu ? $pemeriksaan->suhu . ' °C' : '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Saturasi Oksigen</td>
+        <td>{{ $pemeriksaan->saturasiOx ? $pemeriksaan->saturasiOx . ' %' : '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Tinggi Fundus (Cm)</td>
+        <td>{{ $pemeriksaan->tifu ? $pemeriksaan->tifu . ' Cm' : '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Lochea</td>
+        <td>{{ $pemeriksaan->lochea ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Payudara</td>
+        <td>{{ $pemeriksaan->payudara ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Luka Jahit</td>
+        <td>{{ $pemeriksaan->lukajahit ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Tanggal Lahir Bayi</td>
+        <td>{{ $pemeriksaan->tgllahir 
+            ? \Carbon\Carbon::parse($pemeriksaan->tgllahir)->locale('id')->translatedFormat('d F Y') 
+            : '-' }}
+        </td>
+    </tr>
+    <tr>
+        <td class="left">Tempat Persalinan</td>
+        <td>{{ $pemeriksaan->tmptpersalinan ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Bantuan Persalinan</td>
+        <td>{{ $pemeriksaan->bantupersalinan ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Jenis Persalinan</td>
+        <td>{{ $pemeriksaan->jnspersalinan ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Infeksi / Komplikasi</td>
+        <td>{{ $pemeriksaan->infeksi_kompli ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Edukasi</td>
+        <td>{{ $pemeriksaan->edukasi ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Intervensi</td>
+        <td>{{ $pemeriksaan->intervensi ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Diagnosa</td>
+        <td>{{ $pemeriksaan->diagnosa ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="left">Tindak Lanjut</td>
+        <td>
+            @if ($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk')
+                Tidak dirujuk
+            @elseif ($pemeriksaan->tindak_lnjt === 'Puskesmas')
+                Rujukan ke Puskesmas
+            @elseif ($pemeriksaan->tindak_lnjt === 'Klinik')
+                Rujukan ke Klinik
+            @elseif ($pemeriksaan->tindak_lnjt === 'Rumah Sakit')
+                Rujukan ke Rumah Sakit
+            @elseif ($pemeriksaan->tindak_lnjt === 'Rujuk Spesialis Obsgyn')
+                Rujuk Spesialis Obsgyn
+            @else
+                -
+            @endif
+        </td>
+    </tr>
+    <tr>
+        <td class="left">Tanggal Kembali</td>
+        <td>{{ $pemeriksaan->tgl_kembali 
+            ? \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->locale('id')->translatedFormat('d F Y') 
+            : '-' }}
+        </td>
+    </tr>
+    <tr>
+        <td class="left">Obat dan Dosis</td>
+        <td>
+            @forelse ($pemeriksaan->obatPemeriksaan as $o)
+                <div>
+                    {{ $o->obat->nama_obat ?? '-' }} ({{ $o->dosis_carkai ?? '-' }})
+                </div>
+            @empty
+                Tidak ada obat
+            @endforelse
+        </td>
+    </tr>
+</table>
 
-        <tr>
-           <td class="left">Obat dan Dosis</td>
-            <td>
-                @forelse ($pemeriksaan->obatPemeriksaan as $o)
-                    <div>
-                        {{ $o->obat->nama_obat }} ({{ $o->dosis_carkai ?? '-' }})
-                    </div>
-                @empty
-                    Tidak ada obat
-                @endforelse
-            </td>
-        </tr>
-
-    </table>
 </body>
 
 </html>

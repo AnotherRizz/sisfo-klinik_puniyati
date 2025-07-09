@@ -16,8 +16,18 @@ class PendaftaranController extends Controller
      */
 public function index(Request $request)
 {
-    $query = Pendaftaran::with(['pasien', 'bidan', 'pelayanan']);
+    $pemeriksaanRelations = [
+        'pemeriksaanUmum.pembayaran',
+        'pemeriksaanIbuNifas.pembayaran',
+        'pemeriksaanKb.pembayaran',
+        'pemeriksaanKiaAnak.pembayaran',
+        'pemeriksaanKiaIbuHamil.pembayaran',
+    ];
 
+    // Build query awal dengan eager loading
+    $query = Pendaftaran::with(array_merge(['pasien', 'bidan', 'pelayanan'], $pemeriksaanRelations));
+
+    // Pencarian
     if ($search = $request->get('search')) {
         $query->where(function ($q) use ($search) {
             $q->whereHas('pasien', function ($pasienQuery) use ($search) {
@@ -26,10 +36,29 @@ public function index(Request $request)
             })->orWhere('jenis_kunjungan', 'like', '%' . $search . '%');
         });
     }
-$perPage = $request->get('per_page', 5);
-    $pendaftarans = $query->paginate($perPage); 
-    return view('pages.pendaftaran.index', compact('pendaftarans'));
+
+    // ✅ Filter Tanggal: default ke "hari_ini"
+    $filterTanggal = $request->get('filter_tanggal', 'hari_ini');
+    if ($filterTanggal === 'hari_ini') {
+        $query->whereDate('tgl_daftar', now()->toDateString());
+    }
+
+    // Pagination
+    $perPage = $request->get('per_page', 5);
+    $pendaftarans = $query->paginate($perPage);
+
+    // Optional: logging jika diperlukan
+    // foreach ($pendaftarans as $pendaftaran) {
+    //     logger($pendaftaran->pemeriksaanUmum?->pembayaran);
+    // }
+
+    return view('pages.pendaftaran.index', compact('pendaftarans', 'filterTanggal', 'search'));
 }
+
+
+
+
+
 
 
 
@@ -50,7 +79,7 @@ $perPage = $request->get('per_page', 5);
     /**
      * Store a newly created resource in storage.
      */
- public function store(Request $request)
+public function store(Request $request)
 {
     $request->validate([
         'pasien_id' => 'required',
@@ -69,10 +98,33 @@ $perPage = $request->get('per_page', 5);
     $data = $request->all();
     $data['noreg'] = $noreg;
 
-    Pendaftaran::create($data);
+    // Simpan data ke database
+    $pendaftaran = Pendaftaran::create($data);
 
-    return redirect()->route('pendaftaran.index')->with('success', 'Data berhasil ditambahkan');
+    // Redirect berdasarkan pelayanan_id
+    switch ($pendaftaran->pelayanan_id) {
+        case 1: // Pelayanan Umum
+           return redirect()->route('umum.index')
+    ->with('success', 'Data berhasil ditambahkan ke pelayanan Umum');
+
+        case 2: // Pelayanan KIA Ibu Hamil
+            return redirect()->route('kia-ibu-hamil.index')
+                ->with('success', 'Data berhasil ditambahkan ke pelayanan KIA Ibu Hamil');
+        case 3: // Pelayanan KIA Anak
+            return redirect()->route('kia-anak.index')
+                ->with('success', 'Data berhasil ditambahkan ke pelayanan KIA Anak');
+        case 4: // Pelayanan Ibu Nifas
+            return redirect()->route('nifas.index')
+                ->with('success', 'Data berhasil ditambahkan ke pelayanan Ibu Nifas');
+        case 5: // Pelayanan KB
+            return redirect()->route('kb.index')
+                ->with('success', 'Data berhasil ditambahkan ke pelayanan KB');
+        default:
+            return redirect()->route('pendaftaran.index')
+                ->with('error', 'Jenis pelayanan tidak ditemukan');
+    }
 }
+
 
 public function export()
 {

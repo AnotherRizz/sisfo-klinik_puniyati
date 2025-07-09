@@ -30,72 +30,70 @@ class LaporanController extends Controller
     /**
      * Export laporan pendaftaran to PDF.
      */
- public function exportPendaftaran(Request $request)
+public function exportPendaftaran(Request $request)
 {
-    $bulanInput = $request->input('bulan'); // ex: "2025-06"
-    [$tahun, $bulan] = explode('-', $bulanInput);
+    $request->validate([
+        'bulan' => 'required|date_format:Y-m',
+    ]);
 
-    $jenisPelayanan = $request->input('jenis_pelayanan');
+    [$tahun, $bulan] = explode('-', $request->bulan);
 
     $pendaftarans = Pendaftaran::with(['pasien', 'bidan', 'pelayanan'])
-        ->where('pelayanan_id', $jenisPelayanan)
         ->whereMonth('tgl_daftar', $bulan)
         ->whereYear('tgl_daftar', $tahun)
         ->orderBy('tgl_daftar')
         ->get();
 
-    $namaPelayanan = optional($pendaftarans->first()->pelayanan)->nama_pelayanan ?? '-';
-    // ✅ Cek apakah data kosong
     if ($pendaftarans->isEmpty()) {
-        return redirect()->back()->with('error', `Data pendaftaran tidak ditemukan untuk bulan {$bulan} dan pelayanan {$namaPelayanan} yang dipilih.`);
+        $namaBulan = \Carbon\Carbon::createFromFormat('Y-m', $request->bulan)->locale('id')->translatedFormat('F Y');
+        return redirect()->back()->with('error', "Data pendaftaran untuk bulan $namaBulan tidak ditemukan.");
     }
 
-    $namaPelayanan = optional($pendaftarans->first()->pelayanan)->nama_pelayanan ?? '-';
+    // Group by jenis pelayanan
+    $pendaftaransByPelayanan = $pendaftarans->groupBy(fn($item) => $item->pelayanan->nama_pelayanan ?? 'Lainnya');
 
-    $pdf = Pdf::loadView('pages.export.laporan_pendaftaran', compact(
-        'pendaftarans',
-        'bulan',
-        'tahun',
-        'namaPelayanan'
-    ));
+    $pdf = Pdf::loadView('pages.export.laporan_pendaftaran', [
+        'pendaftaransByPelayanan' => $pendaftaransByPelayanan,
+        'bulan' => $bulan,
+        'tahun' => $tahun
+    ])->setPaper('a4', 'landscape');
 
-    $namaBulanTahun = Carbon::createFromDate($tahun, $bulan)->translatedFormat('F_Y');
+    $namaBulanTahun = \Carbon\Carbon::createFromDate($tahun, $bulan)->translatedFormat('F_Y');
 
-   return $pdf->download("laporan_pendaftaran_{$namaPelayanan}_{$namaBulanTahun}.pdf");
+    return $pdf->stream("laporan_pendaftaran{$namaBulanTahun}.pdf");
 }
+
 
 //preview pendaftaran
 public function previewPendaftaran(Request $request)
 {
-    $bulanInput = $request->input('bulan'); // ex: "2025-06"
-    [$tahun, $bulan] = explode('-', $bulanInput);
+    $request->validate([
+        'bulan' => 'required|date_format:Y-m',
+    ]);
 
-    $jenisPelayanan = $request->input('jenis_pelayanan');
+    [$tahun, $bulan] = explode('-', $request->bulan);
 
     $pendaftarans = Pendaftaran::with(['pasien', 'bidan', 'pelayanan'])
-        ->where('pelayanan_id', $jenisPelayanan)
         ->whereMonth('tgl_daftar', $bulan)
         ->whereYear('tgl_daftar', $tahun)
         ->orderBy('tgl_daftar')
         ->get();
 
-    // Ambil nama pelayanan dari tabel Pelayanan berdasarkan ID
-    $namaPelayanan = Pelayanan::find($jenisPelayanan)?->nama_pelayanan ?? '-';
-
     if ($pendaftarans->isEmpty()) {
-        // Konversi bulan ke format nama bulan Indonesia
         $namaBulan = Carbon::createFromFormat('Y-m', $request->bulan)->locale('id')->translatedFormat('F Y');
-
-        return redirect()->back()->with('error', "Data pendaftaran untuk bulan $namaBulan dan pelayanan $namaPelayanan tidak ditemukan.");
+        return redirect()->back()->with('error', "Data pendaftaran untuk bulan $namaBulan tidak ditemukan.");
     }
 
-    return view('pages.export.preview.pendaftaran', compact(
-        'pendaftarans',
-        'bulan',
-        'tahun',
-        'namaPelayanan'
-    ));
+    // Kelompokkan berdasarkan jenis pelayanan (nama)
+    $pendaftaransByPelayanan = $pendaftarans->groupBy(fn($item) => $item->pelayanan->nama_pelayanan ?? 'Lainnya');
+
+    return view('pages.export.preview.pendaftaran', [
+        'pendaftaransByPelayanan' => $pendaftaransByPelayanan,
+        'bulan' => $bulan,
+        'tahun' => $tahun
+    ]);
 }
+
 
 // // export pemeriksaan berdasarkan pelayanan
 // public function export(Request $request)
@@ -133,21 +131,45 @@ public function exportPemeriksaan(Request $request)
     [$tahun, $bulan] = explode('-', $request->input('bulan'));
     $jenisPelayanan = $request->input('jenis_pelayanan');
 
-    $pemeriksaans = $this->getAllPemeriksaanFiltered($bulan, $tahun, $jenisPelayanan);
+    $pemeriksaans = $this->getPemeriksaanByJenisPelayanan($jenisPelayanan, $bulan, $tahun);
 
     if ($pemeriksaans->isEmpty()) {
         return back()->with('error', 'Data tidak ditemukan untuk bulan dan jenis pelayanan yang dipilih.');
     }
 
-    $namaPelayanan = Pelayanan::find($jenisPelayanan)?->nama_pelayanan ?? '-';
+    $namaPelayanan = ucwords(str_replace('_', ' ', $jenisPelayanan));
     $namaBulanTahun = Carbon::createFromDate($tahun, $bulan)->translatedFormat('F_Y');
 
-    $pdf = Pdf::loadView('pages.export.laporan_pemeriksaan', compact(
-        'pemeriksaans', 'bulan', 'tahun', 'namaPelayanan'
-    ))->setPaper('a4', 'landscape');
+    // Tentukan view berdasarkan jenis pelayanan
+    switch (strtolower($jenisPelayanan)) {
+        case 'umum':
+            $view = 'pages.export.pdf.umum';
+            break;
+        case 'kb':
+            $view = 'pages.export.pdf.kb';
+            break;
+        case 'kia_ibu_hamil':
+            $view = 'pages.export.pdf.kia_ibu_hamil';
+            break;
+        case 'kia_anak':
+            $view = 'pages.export.pdf.kia_anak';
+            break;
+        case 'ibu_nifas':
+            $view = 'pages.export.pdf.ibu_nifas';
+            break;
+        default:
+            $view = 'pages.export.pdf.default'; // fallback jika ada kesalahan
+            break;
+    }
 
-    return $pdf->download("laporan_pemeriksaan_{$namaPelayanan}_{$namaBulanTahun}.pdf");
+    // Generate PDF dari view yang sesuai
+    $pdf = Pdf::loadView($view, compact('pemeriksaans', 'bulan', 'tahun', 'namaPelayanan', 'namaBulanTahun'))
+        ->setPaper('f4', 'landscape');
+
+    return $pdf->stream("laporan_pemeriksaan_{$namaPelayanan}_{$namaBulanTahun}.pdf");
 }
+
+
 
 
 public function previewPemeriksaan(Request $request)
@@ -155,19 +177,40 @@ public function previewPemeriksaan(Request $request)
     [$tahun, $bulan] = explode('-', $request->input('bulan'));
     $jenisPelayanan = $request->input('jenis_pelayanan');
 
-    $pemeriksaans = $this->getAllPemeriksaanFiltered($bulan, $tahun, $jenisPelayanan);
-
-    $namaPelayanan = Pelayanan::find($jenisPelayanan)?->nama_pelayanan ?? '-';
+    $pemeriksaans = $this->getPemeriksaanByJenisPelayanan($jenisPelayanan, $bulan, $tahun);
 
     if ($pemeriksaans->isEmpty()) {
         $namaBulan = Carbon::createFromFormat('Y-m', $request->input('bulan'))->translatedFormat('F Y');
-        return back()->with('error', "Data pemeriksaan untuk bulan $namaBulan dan pelayanan $namaPelayanan tidak ditemukan.");
+        return back()->with('error', "Data pemeriksaan untuk bulan $namaBulan dan pelayanan $jenisPelayanan tidak ditemukan.");
+    }
+     $namaBulan = Carbon::createFromFormat('Y-m', $request->input('bulan'))->translatedFormat('F Y');
+
+    // Tentukan view berdasarkan jenis pelayanan
+    switch (strtolower($jenisPelayanan)) {
+        case 'umum':
+            $view = 'pages.export.preview.umum';
+            break;
+        case 'kb':
+            $view = 'pages.export.preview.kb';
+            break;
+        case 'kia_ibu_hamil':
+            $view = 'pages.export.preview.kia_ibu_hamil';
+            break;
+        case 'kia_anak':
+            $view = 'pages.export.preview.kia_anak';
+            break;
+        case 'ibu_nifas':
+            $view = 'pages.export.preview.ibu_nifas';
+            break;
+        default:
+            $view = 'pages.export.preview.pemeriksaan'; // fallback default
+            break;
     }
 
-    return view('pages.export.preview.pemeriksaan', compact(
-        'pemeriksaans', 'bulan', 'tahun', 'namaPelayanan'
-    ));
+    return view($view, compact('pemeriksaans', 'bulan', 'tahun', 'jenisPelayanan','namaBulan'));
 }
+
+
 
 
 private function getAllPemeriksaanFiltered($bulan, $tahun, $jenisPelayanan)
@@ -212,56 +255,11 @@ public function exportPembayaran(Request $request)
 {
     $request->validate([
         'bulan' => 'required|date_format:Y-m',
-        'jenis_pelayanan' => 'required|exists:pelayanan,id',
     ]);
 
     [$tahun, $bulan] = explode('-', $request->input('bulan'));
-    $jenisPelayanan = $request->input('jenis_pelayanan');
 
-    $pembayarans = Pembayaran::with([
-        'pemeriksaanable.pendaftaran.pasien',
-        'pemeriksaanable.pendaftaran.bidan',
-        'pemeriksaanable.pendaftaran.pelayanan',
-        'pemeriksaanable.obat'
-    ])
-    ->whereMonth('created_at', $bulan)
-    ->whereYear('created_at', $tahun)
-    ->orderBy('created_at')
-    ->get()
-    ->filter(function ($item) use ($jenisPelayanan) {
-        return optional($item->pemeriksaanable->pendaftaran)->pelayanan_id == $jenisPelayanan;
-    })
-    ->values(); // reset index array
-
-    if ($pembayarans->isEmpty()) {
-        return back()->with('error', 'Data tidak ditemukan untuk bulan dan jenis pelayanan yang dipilih.');
-    }
-
-    $namaPelayanan = optional($pembayarans->first()->pemeriksaanable->pendaftaran->pelayanan)->nama_pelayanan ?? 'Umum';
-
-    Carbon::setLocale('id');
-    $namaBulanTahun = Carbon::createFromDate($tahun, $bulan)->translatedFormat('F_Y');
-
-    $pdf = Pdf::loadView('pages.export.laporan_pembayaran', compact(
-        'pembayarans',
-        'bulan',
-        'tahun',
-        'namaPelayanan'
-    ))->setPaper('a4', 'landscape');
-
-    return $pdf->download("laporan_pembayaran_{$namaPelayanan}_{$namaBulanTahun}.pdf");
-}
-
-
-
-
-//preview pembayaran
-public function previewpembayaran(Request $request)
-{
-    [$tahun, $bulan] = explode('-', $request->input('bulan'));
-    $jenisPelayanan = $request->input('jenis_pelayanan');
-
-    // Ambil semua pembayaran dalam bulan & tahun
+    // Ambil semua pembayaran bulan-tahun tsb
     $pembayarans = Pembayaran::with([
         'pemeriksaanable.pendaftaran.pasien',
         'pemeriksaanable.pendaftaran.bidan',
@@ -273,26 +271,116 @@ public function previewpembayaran(Request $request)
     ->orderBy('created_at')
     ->get();
 
-    // Filter manual berdasarkan jenis_pelayanan
-    $pembayarans = $pembayarans->filter(function ($pembayaran) use ($jenisPelayanan) {
-        return optional($pembayaran->pemeriksaanable->pendaftaran)->pelayanan_id == $jenisPelayanan;
+    if ($pembayarans->isEmpty()) {
+        return back()->with('error', 'Data pembayaran tidak ditemukan untuk bulan yang dipilih.');
+    }
+
+    // Kelompokkan data berdasarkan nama_pelayanan (untuk dipisah di tabel nanti)
+    $pembayaransByPelayanan = $pembayarans->groupBy(function ($item) {
+        return optional($item->pemeriksaanable->pendaftaran->pelayanan)->nama_pelayanan ?? 'Tidak Diketahui';
     });
 
-    $namaPelayanan = Pelayanan::find($jenisPelayanan)?->nama_pelayanan ?? '-';
+    Carbon::setLocale('id');
+    $namaBulanTahun = Carbon::createFromDate($tahun, $bulan)->translatedFormat('F_Y');
+
+    $pdf = Pdf::loadView('pages.export.laporan_pembayaran', compact(
+        'pembayaransByPelayanan',
+        'bulan',
+        'tahun',
+        'namaBulanTahun'
+    ))->setPaper('a4', 'landscape');
+
+    return $pdf->stream("laporan_pembayaran_{$namaBulanTahun}.pdf");
+}
+
+
+private function getPemeriksaanByJenisPelayanan($jenisPelayanan, $bulan, $tahun)
+{
+    switch ($jenisPelayanan) {
+        case 'umum':
+            return PemeriksaanUmum::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')
+                ->whereMonth('created_at', $bulan)
+                ->whereYear('created_at', $tahun)
+                ->get();
+
+        case 'kia_ibu_hamil':
+            return PemeriksaanKiaIbuHamil::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')
+                ->whereMonth('created_at', $bulan)
+                ->whereYear('created_at', $tahun)
+                ->get();
+
+        case 'kia_anak':
+            return PemeriksaanKiaAnak::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')
+                ->whereMonth('created_at', $bulan)
+                ->whereYear('created_at', $tahun)
+                ->get();
+
+        case 'ibu_nifas':
+            return PemeriksaanIbuNifas::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')
+                ->whereMonth('created_at', $bulan)
+                ->whereYear('created_at', $tahun)
+                ->get();
+
+        case 'kb':
+            return PemeriksaanKb::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan')
+                ->whereMonth('created_at', $bulan)
+                ->whereYear('created_at', $tahun)
+                ->get();
+
+        default:
+            return collect(); // Jika jenis tidak dikenali, kembalikan koleksi kosong
+    }
+}
+
+
+
+
+//preview pembayaran
+public function previewPembayaran(Request $request)
+{
+    [$tahun, $bulan] = explode('-', $request->input('bulan'));
+
+    // Ambil semua pembayaran di bulan & tahun tertentu
+    $pembayarans = Pembayaran::with([
+        'pemeriksaanable.pendaftaran.pasien',
+        'pemeriksaanable.pendaftaran.bidan',
+        'pemeriksaanable.pendaftaran.pelayanan',
+        'pemeriksaanable.obat'
+    ])
+    ->whereMonth('created_at', $bulan)
+    ->whereYear('created_at', $tahun)
+    ->get();
 
     if ($pembayarans->isEmpty()) {
         $namaBulan = \Carbon\Carbon::createFromFormat('Y-m', $request->bulan)
             ->locale('id')->translatedFormat('F Y');
-        return back()->with('error', "Data pembayaran untuk bulan $namaBulan dan pelayanan $namaPelayanan tidak ditemukan.");
+        return back()->with('error', "Data pembayaran untuk bulan $namaBulan tidak ditemukan.");
     }
 
+    // Urutan jenis pelayanan
+    $urutanPelayanan = [
+        'Umum',
+        'KIA Ibu Hamil',
+        'KIA Anak',
+        'Ibu Nifas',
+        'KB',
+    ];
+
+    // Group berdasarkan nama pelayanan
+    $pembayaransByPelayanan = $pembayarans
+        ->groupBy(fn($p) => optional($p->pemeriksaanable->pendaftaran->pelayanan)->nama_pelayanan ?? 'Lainnya')
+        ->sortBy(fn($group, $key) => array_search($key, $urutanPelayanan) !== false ? array_search($key, $urutanPelayanan) : 999);
+
+    $namaBulan = \Carbon\Carbon::createFromFormat('Y-m', $request->bulan)->locale('id')->translatedFormat('F Y');
+
     return view('pages.export.preview.pembayaran', compact(
-        'pembayarans',
+        'pembayaransByPelayanan',
         'bulan',
         'tahun',
-        'namaPelayanan'
+        'namaBulan'
     ));
 }
+
 
 
 public function export(Request $request)

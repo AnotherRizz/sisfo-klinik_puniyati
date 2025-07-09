@@ -49,8 +49,7 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Obat
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Beli
-                    </th>
+                   
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Jual
                     </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -69,7 +68,6 @@
                             {{ $obat->stok_obat }}
                         </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($obat->harga_beli) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($obat->harga_jual) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <a href="{{ route('obat.edit', $obat->id) }}"
@@ -106,7 +104,7 @@
                                             <label for="jumlah-{{ $obat->id }}" class="block mb-1 text-sm">Jumlah stok
                                                 yang ingin
                                                 ditambahkan:</label>
-                                            <input type="number" name="jumlah" id="jumlah-{{ $obat->id }}" required
+                                            <input type="text" name="jumlah" id="jumlah-{{ $obat->id }}" required
                                                 min="1" class="w-full border border-gray-300 px-3 py-2 rounded">
                                         </div>
                                         <div class="flex justify-end space-x-2">

@@ -10,14 +10,14 @@
             <div>
 
                 <h2 class="text-xl font-semibold text-gray-800">Selamat Datang, {{ Auth::user()->name ?? 'Admin' }}</h2>
-                <p class="text-sm text-gray-600 mt-1">Sistem Rekam Medis Elektronik Bidan Praktik Mandiri Puniyati A.Md Keb Mojolaban</p>
+                <p class="text-sm text-gray-600 mt-1">Sistem Rekam Medis Elektronik Bidan Praktik Mandiri Puniyati Amd. Keb Mojolaban</p>
             </div>
             <img src="{{ asset('images/logo.png') }}" class="w-24 mt-4" alt="">
         </div>
         <div class="p-4 bg-blue-50 rounded shadow flex items-center">
             <img src="{{ asset('images/pp.jpg') }}" class="w-16 h-16 rounded-full object-cover border border-blue-300 mr-4" alt="Profil">
             <div>
-                <h3 class="font-bold text-blue-800">{{ Auth::user()->name ?? 'Admin' }}</h3>
+                <h3 class="font-bold text-blue-800">Puniyati Amd. Keb</h3>
                 <p class="text-sm text-gray-600">Administrator</p>
             </div>
         </div>
@@ -28,13 +28,14 @@
         <div class="p-6 bg-white rounded shadow">
             <h3 class="text-lg font-bold text-gray-800 mb-2">Informasi Praktik Bidan</h3>
             <p class="text-gray-700 text-sm leading-relaxed">
-                Bidan Praktik Mandiri Puniyati A.Md Keb terletak di Dusun Kalipelang RT01/RW 07, Desa Demakan, Kecamatan Mojolaban, Kabupaten Sukoharjo. Sejak tahun 2019 dengan SIPB: <strong class="text-blue-800">0026/SIPB/33.11/VI/2019</strong>, memberikan layanan sebagai berikut:
+                Bidan Praktik Mandiri Puniyati Amd. Keb terletak di Dusun Kalipelang RT01/RW 07, Desa Demakan, Kecamatan Mojolaban, Kabupaten Sukoharjo. Sejak tahun 2019 dengan SIPB: <strong class="text-blue-800">0026/SIPB/33.11/VI/2019</strong>, memberikan layanan sebagai berikut:
             </p>
             <div class="flex flex-wrap gap-2 mt-3">
-                <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan KIA</span>
+                <span class="bg-purple-100 text-purple-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan Umum</span>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan KIA Ibu Hamil</span>
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan KIA Anak</span>
                 <span class="bg-pink-100 text-pink-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan Ibu Nifas</span>
                 <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan KB</span>
-                <span class="bg-purple-100 text-purple-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan Umum</span>
             </div>
             <div class="mt-4 text-sm text-gray-700">
                 <p><strong>Jam Praktik:</strong></p>

@@ -14,7 +14,7 @@ class PemeriksaanKiaIbuHamil extends Model
     protected $fillable = [
         'pendaftaran_id','nomor_periksa',
         'keluhan', 'riw_penyakit', 'td', 'bb', 'tb', 'suhu', 'saturasiOx', 'nadi', 'lila',
-        'hpht', 'hpl', 'gpa', 'riwayatkehamilankesehatan', 'umr_hamil', 'ling_perut',
+        'hpht', 'hpl', 'gpa', 'riwayatkehamilankesehatan', 'umr_hamil', 'riwayat_TT', 'tablet_tambah_darah', 'vitamin_mineral', 'asam_folat', 
         'tifu', 'djj', 'ltkjanin', 'ktrkuterus', 'refla', 'lab', 'resti', 'diagnosa',
         'intervensi', 'tindak_lnjt', 'tgl_kembali'
     ];

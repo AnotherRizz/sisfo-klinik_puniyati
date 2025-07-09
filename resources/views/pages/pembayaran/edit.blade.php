@@ -117,7 +117,7 @@
                 {{-- Biaya Tindakan --}}
                 <div>
                     <label for="biaya_tindakan" class="block text-sm font-medium text-gray-700 mb-1">Biaya Tindakan</label>
-                    <input type="number" name="biaya_tindakan" id="biaya_tindakan"
+                    <input type="text" name="biaya_tindakan" id="biaya_tindakan"
                         class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('biaya_tindakan', $pembayarans->biaya_tindakan) }}" required>
                 </div>

@@ -27,9 +27,9 @@
                 <input type="hidden" name="source_form" value="pasien">
                 <div>
                     <label for="nik_pasien" class="block mb-2 text-sm font-medium text-gray-900">NIK Pasien</label>
-                    <input type="number" id="nik_pasien" name="nik_pasien" value="{{ old('nik_pasien') }}"
+                    <input type="text" id="nik_pasien" name="nik_pasien" value="{{ old('nik_pasien') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                        placeholder="cth : 3674567893567835" required />
+                        placeholder="cth : 3674567893567835" maxlength="16" required />
                 </div>
                 <div>
                     <label for="nama_pasien" class="block mb-2 text-sm font-medium text-gray-900">Nama Pasien</label>
@@ -52,6 +52,18 @@
                 <div>
                     <label for="umur" class="block mb-2 text-sm font-medium text-gray-900">Umur</label>
                     <input type="text" id="umur" name="umur" value="{{ old('umur') }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                        required />
+                </div>
+                <div>
+                    <label for="no_tlp" class="block mb-2 text-sm font-medium text-gray-900">No Telepon</label>
+                    <input type="text" id="no_tlp" name="no_tlp" value="{{ old('no_tlp') }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                        required />
+                </div>
+                <div>
+                    <label for="nama_kk" class="block mb-2 text-sm font-medium text-gray-900">Nama KK </label>
+                    <input type="text" id="nama_kk" name="nama_kk" value="{{ old('nama_kk') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
@@ -138,12 +150,7 @@
                         <option value="O">O</option>
                     </select>
                 </div>
-                <div>
-                    <label for="no_tlp" class="block mb-2 text-sm font-medium text-gray-900">No Telepon</label>
-                    <input type="text" id="no_tlp" name="no_tlp" value="{{ old('no_tlp') }}"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                        required />
-                </div>
+                
             </div>
             <button type="submit"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
@@ -152,5 +159,31 @@
         </form>
     </div>
 
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tglLahirInput = document.getElementById('tgl_lahir');
+        const umurInput = document.getElementById('umur');
+
+        tglLahirInput.addEventListener('change', function () {
+            const tglLahir = new Date(this.value);
+            const today = new Date();
+
+            let umur = today.getFullYear() - tglLahir.getFullYear();
+            const m = today.getMonth() - tglLahir.getMonth();
+
+            if (m < 0 || (m === 0 && today.getDate() < tglLahir.getDate())) {
+                umur--;
+            }
+
+            if (!isNaN(umur)) {
+                umurInput.value = umur + " Tahun";
+            } else {
+                umurInput.value = '';
+            }
+        });
+    });
+</script>
+@endpush
 
 @endsection

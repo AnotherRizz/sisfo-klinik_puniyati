@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Pendaftaran extends Model
 {
@@ -25,6 +26,11 @@ class Pendaftaran extends Model
     {
         return $this->belongsTo(Pasien::class, 'pasien_id', 'id');
     }
+    public function pembayaran()
+{
+    return $this->hasOne(Pembayaran::class, 'pendaftaran_id');
+}
+
     public function obat(): BelongsTo
     {
         return $this->belongsTo(Obat::class);
@@ -41,24 +47,35 @@ class Pendaftaran extends Model
     {
         return $this->belongsTo(Pelayanan::class);
     }
-     public function pemeriksaanUmum(): HasOne
-    {
-        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
-    }
-     public function pemeriksaanIbuNifas(): HasOne
-    {
-        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
-    }
-     public function pemeriksaanKb(): HasOne
-    {
-        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
-    }
-     public function pemeriksaanKiaAnak(): HasOne
-    {
-        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
-    }
-     public function pemeriksaanKiaIbuHamil(): HasOne
-    {
-        return $this->hasOne(Pemeriksaan::class, 'pendaftaran_id');
-    }
+    public function pemeriksaanUmum(): HasOne
+{
+    return $this->hasOne(PemeriksaanUmum::class, 'pendaftaran_id');
+}
+
+public function pemeriksaanIbuNifas(): HasOne
+{
+    return $this->hasOne(PemeriksaanIbuNifas::class, 'pendaftaran_id');
+}
+
+public function pemeriksaanKb(): HasOne
+{
+    return $this->hasOne(PemeriksaanKb::class, 'pendaftaran_id');
+}
+
+public function pemeriksaanKiaAnak(): HasOne
+{
+    return $this->hasOne(PemeriksaanKiaAnak::class, 'pendaftaran_id');
+}
+
+public function pemeriksaanKiaIbuHamil(): HasOne
+{
+    return $this->hasOne(PemeriksaanKiaIbuHamil::class, 'pendaftaran_id');
+}
+
+public function pemeriksaan(): MorphTo
+{
+    return $this->morphTo();
+}
+
+
 }

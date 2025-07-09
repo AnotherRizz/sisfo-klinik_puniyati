@@ -17,19 +17,13 @@
                 <h2 class="text-lg font-semibold text-gray-700">Laporan Pendaftaran</h2>
                 <p class="text-sm text-gray-500">Mencetak laporan pendaftaran sesuai jenis pelayanan per bulan.</p>
                 <form action="{{ route('laporan.pendaftaran.preview') }}" method="GET" class="mt-4">
-                    <input type="month" name="bulan" class="border-gray-300 rounded w-full p-2 text-sm mb-2"
+                    <input type="month" name="bulan" class="border-gray-300 rounded w-full p-2 text-sm mb-4"
                         value="{{ old('bulan', date('Y-m')) }}" required>
-
-                    <select name="jenis_pelayanan" class="border-gray-300 rounded w-full p-2 text-sm mb-4" required>
-                        <option value="">Pilih Pelayanan</option>
-                        @foreach ($pelayanans as $item)
-                            <option value="{{ $item->id }}">{{ $item->nama_pelayanan }}</option>
-                        @endforeach
-                    </select>
-                    <button type="submit"
-                        class="w-full bg-blue-500 cursor-pointer hover:bg-blue-600 text-white py-2 rounded text-sm">Cetak
-                        PDF</button>
+                    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded text-sm">
+                        Lihat Laporan
+                    </button>
                 </form>
+
             </div>
         </div>
 
@@ -49,10 +43,13 @@
 
                     <select name="jenis_pelayanan" class="border-gray-300 rounded w-full p-2 text-sm mb-4" required>
                         <option value="">Pilih Pelayanan</option>
-                        @foreach ($pelayanans as $item)
-                            <option value="{{ $item->id }}">{{ $item->nama_pelayanan }}</option>
-                        @endforeach
+                        <option value="umum">Umum</option>
+                        <option value="kia_ibu_hamil">KIA Ibu Hamil</option>
+                        <option value="kia_anak">KIA Anak</option>
+                        <option value="ibu_nifas">Ibu Nifas</option>
+                        <option value="kb">KB</option>
                     </select>
+
                     <button type="submit"
                         class="w-full bg-green-500 cursor-pointer hover:bg-green-600 text-white py-2 rounded text-sm">Cetak
                         PDF</button>
@@ -70,25 +67,19 @@
 
             <div class="p-4">
                 <h2 class="text-lg font-semibold text-gray-700">Laporan Pembayaran</h2>
-                <p class="text-sm text-gray-500">Mencetak laporan pembayaran sesuai jenis pelayanan per bulan.</p>
+                <p class="text-sm text-gray-500">Mencetak laporan pembayaran semua jenis pelayanan per bulan.</p>
+
                 <form action="{{ route('laporan.pembayaran.preview') }}" method="GET" class="mt-4">
-                    <input type="month" name="bulan" class="border-gray-300 rounded w-full p-2 text-sm mb-2"
+                    <input type="month" name="bulan" class="border-gray-300 rounded w-full p-2 text-sm mb-4"
                         value="{{ old('bulan', date('Y-m')) }}" required>
 
-                    <select name="jenis_pelayanan" class="border-gray-300 rounded w-full p-2 text-sm mb-4" required>
-                        <option value="">Pilih Pelayanan</option>
-                        @foreach ($pelayanans as $item)
-                            <option value="{{ $item->id }}">{{ $item->nama_pelayanan }}</option>
-                        @endforeach
-                    </select>
                     <button type="submit"
                         class="w-full cursor-pointer bg-red-500 hover:bg-red-600 text-white py-2 rounded text-sm">
                         Cetak PDF
                     </button>
                 </form>
-
-
             </div>
+
         </div>
     </div>
 @endsection

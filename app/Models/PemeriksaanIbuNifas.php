@@ -15,7 +15,7 @@ class PemeriksaanIbuNifas extends Model
         'pendaftaran_id','nomor_periksa',
         'keluhan', 'riw_penyakit', 'frek_kunjungan', 'td', 'bb', 'tb', 'suhu', 'saturasiOx',
         'alergi', 'tifu', 'lochea', 'payudara', 'lukajahit',
-        'tgllahir', 'tmptpersalinan', 'bantupersalinan', 'jnspersalinan', 'besarrahim',
+        'tgllahir', 'tmptpersalinan', 'bantupersalinan', 'jnspersalinan', 
         'infeksi_kompli', 'edukasi', 'intervensi', 'diagnosa', 'tindak_lnjt', 'tgl_kembali'
     ];
 

@@ -94,48 +94,48 @@
 
                 <div>
                     <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-1">Keluhan</label>
-                    <input type="text" name="keluhan" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="keluhan" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('diagnosa', $pemeriksaan->keluhan) }}" required>
                 </div>
                 <div>
                     <label for="riw_penyakit" class="block text-sm font-medium text-gray-700 mb-1">Riwayat Penyakit</label>
-                    <input type="text" name="riw_penyakit" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="riw_penyakit" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('diagnosa', $pemeriksaan->riw_penyakit) }}" required>
                 </div>
                 <div>
                     <label for="riw_imunisasi" class="block text-sm font-medium text-gray-700 mb-1">Riwayat
                         Imunisasi</label>
-                    <input type="text" name="riw_imunisasi" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="riw_imunisasi" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('diagnosa', $pemeriksaan->riw_imunisasi) }}" required>
                 </div>
                 <div>
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan Bayi<span
                             class="text-red-500 text-xs"> (Kg)</span></label>
-                    <input type="text" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('diagnosa', $pemeriksaan->bb) }}" required>
+                    <input type="text" name="bb" id="bb" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('diagnosa', $pemeriksaan->bb) }}" >
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan Bayi<span
                             class="text-red-500 text-xs"> (Cm)</span></label>
-                    <input type="text" name="tb" id="tb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('diagnosa', $pemeriksaan->tb) }}" required>
+                    <input type="text" name="tb" id="tb" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('diagnosa', $pemeriksaan->tb) }}" >
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
-                    <input type="text" name="suhu" id="suhu" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('diagnosa', $pemeriksaan->suhu) }}" required>
+                    <input type="text" name="suhu" id="suhu" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('diagnosa', $pemeriksaan->suhu) }}" >
                 </div>
                  <div>
                     <label for="pb" class="block text-sm font-medium text-gray-700 mb-1">Panjang Badan Bayi <span
                             class="text-red-500 text-xs">(Cm)</span></label>
-                    <input type="text" name="pb" id="pb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="{{ old('diagnosa', $pemeriksaan->pb) }}" required>
+                    <input type="text" name="pb" id="pb" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
+                        value="{{ old('diagnosa', $pemeriksaan->pb) }}" >
                 </div>
                  <div>
                     <label for="lk" class="block text-sm font-medium text-gray-700 mb-1">Lingkar Kepala Bayi <span
                             class="text-red-500 text-xs">(Cm)</span></label>
-                    <input type="text" name="lk" id="lk" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="lk" id="lk" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('diagnosa', $pemeriksaan->lk) }}" required>
                 </div>
 
@@ -159,11 +159,11 @@
                         Kembali</label>
                     <input type="date" name="tgl_kembali" id="tgl_kembali"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
-                        value="{{ old('tindakan', $pemeriksaan->tgl_kembali) }}" required>
+                        value="{{ old('tindakan', $pemeriksaan->tgl_kembali) }}" >
                 </div>
                   <div class="mb-6">
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
-                    <select id="tindak_lnjt" name="tindak_lnjt" class="w-full border-gray-300 rounded-lg shadow-sm">
+                    <select id="tindak_lnjt" name="tindak_lnjt" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
                         
                         <option value="Puskesmas"
@@ -173,6 +173,10 @@
                         <option value="Klinik"
                             {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Klinik' ? 'selected' : '' }}>Rujukan 
                             Klinik
+                        </option>
+                        <option value="Rujuk Spesialis Anak"
+                            {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rujuk Spesialis Anak' ? 'selected' : '' }}> 
+                            Rujuk Spesialis Anak
                         </option>
                         <option value="Rumah Sakit"
                             {{ old('tindak_lnjt', $pemeriksaan->tindak_lnjt) === 'Rumah Sakit' ? 'selected' : '' }}>Rujukan 
@@ -187,36 +191,31 @@
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
                     <div id="obat-wrapper">
-                        @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
+                      @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
                             <div class="flex gap-2 mb-2">
-                                <select name="obat_id[]" class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm"
-                                    required>
+                                <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" required>
                                     <option value="">-- Pilih Obat --</option>
-                                   @foreach ($obats as $obat)
+                                    @foreach ($obats as $obat)
                                         <option value="{{ $obat->id }}"
                                             {{ $obat->id == $pivotObat->obat_id ? 'selected' : '' }}>
                                             {{ $obat->nama_obat }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <input type="text" name="dosis_carkai[]"
-                                    value="{{ $pivotObat->dosis_carkai }}"
-                                    class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm" placeholder="Dosis"
-                                    required />
+                                <input type="text" name="dosis_carkai[]" value="{{ $pivotObat->dosis_carkai }}"
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
                             </div>
                         @empty
                             {{-- Jika belum ada data obat --}}
                             <div class="flex gap-2 mb-2">
-                                <select name="obat_id[]" class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm"
-                                    required>
+                                <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" >
                                     <option value="">-- Pilih Obat --</option>
                                     @foreach ($obats as $obat)
                                         <option value="{{ $obat->id }}">{{ $obat->nama_obat }}</option>
                                     @endforeach
                                 </select>
                                 <input type="text" name="dosis_carkai[]"
-                                    class="w-1/2 border-gray-300 text-gray-500 rounded-lg shadow-sm" placeholder="Dosis"
-                                    required />
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis"  />
                             </div>
                         @endforelse
                     </div>

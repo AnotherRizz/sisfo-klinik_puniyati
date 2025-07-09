@@ -10,26 +10,69 @@ use App\Models\PemeriksaanKb;
 use App\Models\PemeriksaanKiaIbuHamil;
 use App\Models\PemeriksaanKiaAnak;
 use App\Models\PemeriksaanIbuNifas;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Carbon;
+
 
 class PembayaranController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Pembayaran::with('pemeriksaanable.pendaftaran.pasien');
+public function index(Request $request)
+{
+    // ✅ Default 'filter_tanggal' jadi 'hari_ini'
+    $filterTanggal = $request->get('filter_tanggal', 'hari_ini');
+    $search = $request->get('search');
 
-        if ($search = $request->get('search')) {
-            $query->where('kd_bayar', 'like', "%$search%")
-                  ->orWhereHas('pemeriksaanable.pendaftaran.pasien', function ($q) use ($search) {
-                      $q->where('nama_pasien', 'like', "%$search%");
-                  });
-        }
+    // Gabungkan semua jenis pemeriksaan
+    $all = collect()
+        ->merge(PemeriksaanUmum::with(['pendaftaran.pasien', 'pendaftaran.bidan', 'pembayaran'])->get())
+        ->merge(PemeriksaanKb::with(['pendaftaran.pasien', 'pendaftaran.bidan', 'pembayaran'])->get())
+        ->merge(PemeriksaanKiaIbuHamil::with(['pendaftaran.pasien', 'pendaftaran.bidan', 'pembayaran'])->get())
+        ->merge(PemeriksaanKiaAnak::with(['pendaftaran.pasien', 'pendaftaran.bidan', 'pembayaran'])->get())
+        ->merge(PemeriksaanIbuNifas::with(['pendaftaran.pasien', 'pendaftaran.bidan', 'pembayaran'])->get());
 
-        $pembayarans = $query->paginate($request->get('per_page', 5));
-
-        return view('pages.pembayaran.index', compact('pembayarans'));
+    // ✅ Filter berdasarkan tanggal (default hari ini)
+    if ($filterTanggal === 'hari_ini') {
+        $all = $all->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->isToday());
     }
-public function create()
+
+    // 🔍 Filter berdasarkan nama pasien atau no_rm
+    if ($search) {
+        $searchLower = strtolower($search);
+        $all = $all->filter(function ($item) use ($searchLower) {
+            $pasien = $item->pendaftaran->pasien ?? null;
+            return $pasien &&
+                (
+                    str_contains(strtolower($pasien->nama_pasien), $searchLower) ||
+                    str_contains(strtolower($pasien->no_rm), $searchLower)
+                );
+        });
+    }
+
+    // Urutkan dan paginasi
+    $all = $all->sortByDesc('created_at')->values();
+    $perPage = $request->get('per_page', 10);
+    $currentPage = \Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
+
+    $pagedData = new \Illuminate\Pagination\LengthAwarePaginator(
+        $all->slice(($currentPage - 1) * $perPage, $perPage),
+        $all->count(),
+        $perPage,
+        $currentPage,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    return view('pages.pembayaran.index', [
+        'pembayarans' => $pagedData,
+        'selectedTanggal' => $filterTanggal,
+        'search' => $search,
+    ]);
+}
+
+
+
+
+public function create(Request $request)
 {
     $pemeriksaans = collect()
         ->merge(PemeriksaanUmum::with('pendaftaran.pasien', 'pendaftaran.bidan', 'pendaftaran.pelayanan', 'obatPemeriksaan.obat')
@@ -48,6 +91,7 @@ public function create()
     return view('pages.pembayaran.create', [
         'pemeriksaans' => $pemeriksaans,
         'obats' => Obat::all(),
+        'id'=>$request->id
     ]);
 }
 

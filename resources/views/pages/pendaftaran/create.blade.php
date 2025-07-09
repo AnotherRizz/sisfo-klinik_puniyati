@@ -15,8 +15,8 @@
         <button data-modal-target="crud-modal" data-modal-toggle="crud-modal"
             class="px-3 py-1.5 text-white flex items-center gap-2 mt-2 cursor-pointer bg-green-500 hover:bg-green-600  rounded mb-4 text-sm">
             Daftar Pasien Baru
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                class="size-6">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
             </svg>
@@ -52,28 +52,42 @@
                         <input type="hidden" name="source_form" value="pendaftaran">
                         <div>
                             <label for="nik_pasien" class="block mb-2 text-sm font-medium text-gray-900">NIK Pasien</label>
-                            <input type="number" id="nik_pasien" name="nik_pasien" value="{{ old('nik_pasien') }}"
+                            <input type="text" id="nik_pasien" maxlength="16" name="nik_pasien"
+                                value="{{ old('nik_pasien') }}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                                placeholder="cth : 3674567893567835" required />
+                                required />
                         </div>
                         <div>
                             <label for="nama_pasien" class="block mb-2 text-sm font-medium text-gray-900">Nama
                                 Pasien</label>
                             <input type="text" id="nama_pasien" name="nama_pasien" value="{{ old('nama_pasien') }}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                                placeholder="cth : Risqi" required />
+                                required />
+                        </div>
+                        <div>
+                            <label for="nama_kk" class="block mb-2 text-sm font-medium text-gray-900">Nama
+                                KK</label>
+                            <input type="text" id="nama_kk" name="nama_kk" value="{{ old('nama_kk') }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                                required />
                         </div>
                         <div>
                             <label for="tempt_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tempat
                                 Lahir</label>
                             <input type="text" id="tempt_lahir" name="tempt_lahir" value="{{ old('tempt_lahir') }}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                                placeholder="cth : Boyolali" required />
+                                required />
                         </div>
                         <div>
                             <label for="tgl_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tanggal
                                 Lahir</label>
                             <input type="date" id="tgl_lahir" name="tgl_lahir" value="{{ old('tgl_lahir') }}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                                required />
+                        </div>
+                        <div>
+                            <label for="umur" class="block mb-2 text-sm font-medium text-gray-900">Umur</label>
+                            <input type="text" id="umur" name="umur" value="{{ old('umur') }}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                                 required />
                         </div>
@@ -110,7 +124,8 @@
                             </select>
                         </div>
                         <div>
-                            <label for="pendidikan" class="block mb-2 text-sm font-medium text-gray-900">Pendidikan</label>
+                            <label for="pendidikan"
+                                class="block mb-2 text-sm font-medium text-gray-900">Pendidikan</label>
                             <select id="pendidikan" name="pendidikan"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                                 required>
@@ -155,6 +170,7 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                                 required>
                                 <option value="">-- Pilih --</option>
+                                <option value="-">-</option>
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="AB">AB</option>
@@ -163,7 +179,7 @@
                         </div>
                         <div>
                             <label for="no_tlp" class="block mb-2 text-sm font-medium text-gray-900">No Telepon</label>
-                            <input type="number" id="no_tlp" name="no_tlp" value="{{ old('no_tlp') }}"
+                            <input type="text" id="no_tlp" name="no_tlp" value="{{ old('no_tlp') }}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                                 required />
                         </div>
@@ -201,7 +217,7 @@
 
                 {{-- Bidan --}}
                 <div>
-                    <x-select2 id="bidan_id" name="bidan_id" label="Bidan" :options="$bidans->mapWithKeys(fn($b) => [$b->id => $b->nama_bidan])" :selected="old('bidan_id')" />
+                    <x-select2 id="bidan_id" name="bidan_id" label="Bidan" :options="$bidans->mapWithKeys(fn($b) => [$b->id => $b->nama_bidan])" :selected="old('bidan_id' , 1   ?? '')" />
                 </div>
 
                 {{-- Pelayanan --}}
@@ -260,4 +276,30 @@
             });
         });
     </script>
+@endpush
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tglLahirInput = document.getElementById('tgl_lahir');
+        const umurInput = document.getElementById('umur');
+
+        tglLahirInput.addEventListener('change', function () {
+            const tglLahir = new Date(this.value);
+            const today = new Date();
+
+            let umur = today.getFullYear() - tglLahir.getFullYear();
+            const m = today.getMonth() - tglLahir.getMonth();
+
+            if (m < 0 || (m === 0 && today.getDate() < tglLahir.getDate())) {
+                umur--;
+            }
+
+            if (!isNaN(umur)) {
+                umurInput.value = umur + " Tahun";
+            } else {
+                umurInput.value = '';
+            }
+        });
+    });
+</script>
 @endpush

@@ -160,23 +160,28 @@
         </tr>
         <tr>
             <td class="left">Tensi Darah (mm/Hg)</td>
-            <td>{{ $pemeriksaan->td }} mmHg</td>
+            <td>{{ $pemeriksaan->td ? $pemeriksaan->td . ' mmHg' : '-' }}</td>
         </tr>
         <tr>
             <td class="left">Berat Badan (Kg)</td>
-            <td>{{ $pemeriksaan->bb }} Kg</td>
+            <td>{{ $pemeriksaan->bb ? $pemeriksaan->bb . ' Kg' : '-' }}</td>
         </tr>
         <tr>
             <td class="left">Tinggi Badan (Cm)</td>
-            <td>{{ $pemeriksaan->tb }} Cm</td>
+            <td>{{ $pemeriksaan->tb ? $pemeriksaan->tb . ' Cm' : '-' }}</td>
         </tr>
         <tr>
             <td class="left">Suhu (Celcius)</td>
-            <td>{{ $pemeriksaan->suhu }} °C</td>
+            <td>{{ $pemeriksaan->suhu ? $pemeriksaan->suhu . ' °C' : '-' }}</td>
         </tr>
         <tr>
             <td class="left">Saturasi Oksigen</td>
-            <td>{{ $pemeriksaan->saturasiOx }} %</td>
+            <td>{{ $pemeriksaan->saturasiOx ? $pemeriksaan->saturasiOx . ' %' : '-' }}</td>
+        </tr>
+
+        <tr>
+            <td class="left">Pemeriksaan Penunjang</td>
+            <td>{{ $pemeriksaan->pemeriksaan_penunjang }}</td>
         </tr>
         <tr>
             <td class="left">Diagnosa</td>
@@ -197,6 +202,8 @@
                     Rujukan ke Klinik
                 @elseif ($pemeriksaan->tindak_lnjt === 'Rumah Sakit')
                     Rujukan ke Rumah Sakit
+                @elseif ($pemeriksaan->tindak_lnjt === 'Rujuk Dokter Spesialis')
+                    Rujuk Dokter Spesialis
                 @else
                     -
                 @endif
@@ -205,7 +212,10 @@
         </tr>
         <tr>
             <td class="left">Tanggal Kembali</td>
-            <td> {{ \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->locale('id')->translatedFormat('d F Y') }}</td>
+            <td class="px-4 py-2 text-sm text-gray-900">
+                {{ $pemeriksaan->tgl_kembali ? \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->locale('id')->translatedFormat('d F Y') : '-' }}
+            </td>
+
         </tr>
 
         <tr>

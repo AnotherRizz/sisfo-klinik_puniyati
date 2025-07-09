@@ -33,21 +33,5 @@ class Pembayaran extends Model
         return $this->morphTo();
     }
 
-    // Relasi di bawah ini sebaiknya DIHAPUS, karena sudah tersedia lewat pemeriksaanable
-
-    // public function pasien() {
-    //     return $this->belongsTo(Pasien::class);
-    // }
-
-    // public function pendaftaran() {
-    //     return $this->belongsTo(Pendaftaran::class);
-    // }
-
-    // public function bidan() {
-    //     return $this->belongsTo(Bidan::class);
-    // }
-
-    // public function obat() {
-    //     return $this->belongsTo(Obat::class);
-    // }
+  
 }

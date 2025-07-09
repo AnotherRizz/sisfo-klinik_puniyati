@@ -42,20 +42,14 @@
                 </div>
                 <div>
                     <label for="stok_obat" class="block mb-2 text-sm font-medium text-gray-900">Stok Obat</label>
-                    <input type="number" id="stok_obat" name="stok_obat" value="{{ old('stok_obat', $obat->stok_obat) }}"
+                    <input type="text" id="stok_obat" name="stok_obat" value="{{ old('stok_obat', $obat->stok_obat) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
 
                 <div>
-                    <label for="harga_beli" class="block mb-2 text-sm font-medium text-gray-900">Harga Beli</label>
-                    <input type="number" id="harga_beli" name="harga_beli" value="{{ old('harga_beli', $obat->harga_beli) }}"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                        required />
-                </div>
-                <div>
-                    <label for="harga_jual" class="block mb-2 text-sm font-medium text-gray-900">Harga JUal</label>
-                    <input type="number" id="harga_jual" name="harga_jual" value="{{ old('harga_jual', $obat->harga_jual) }}"
+                    <label for="harga_jual" class="block mb-2 text-sm font-medium text-gray-900">Harga Jual</label>
+                    <input type="text" id="harga_jual" name="harga_jual" value="{{ old('harga_jual', $obat->harga_jual) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>

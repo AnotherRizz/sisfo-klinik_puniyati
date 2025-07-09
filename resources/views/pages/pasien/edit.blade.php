@@ -21,13 +21,14 @@
             <div class="grid gap-6 mb-6 md:grid-cols-2">
                 <div>
                     <label for="no_rm" class="block mb-2 text-sm font-medium text-gray-900">No RM</label>
-                    <input type="number" id="no_rm" name="no_rm" value="{{ old('no_rm', $pasien->no_rm) }}"
+                    <input type="text" id="no_rm" value="{{ old('no_rm', $pasien->no_rm) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                        required />
+                        required readonly />
+                    <input type="hidden" name="no_rm" value="{{ old('no_rm', $pasien->no_rm) }}">
                 </div>
                 <div>
                     <label for="nik_pasien" class="block mb-2 text-sm font-medium text-gray-900">NIK Pasien</label>
-                    <input type="number" id="nik_pasien" name="nik_pasien"
+                    <input type="text" id="nik_pasien" name="nik_pasien" maxlength="16"
                         value="{{ old('nik_pasien', $pasien->nik_pasien) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
@@ -46,15 +47,23 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
+                <div class="mb-4">
+                    <label for="tgl_lahir" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                    <input type="date" id="tgl_lahir" name="tgl_lahir"
+                         value="{{ old('tgl_lahir', isset($pasien->tgl_lahir) ? \Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d') : '') }}"
+                        class="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500"
+                        required>
+                </div>
+
                 <div>
-                    <label for="tgl_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Lahir</label>
-                    <input type="date" id="tgl_lahir" name="tgl_lahir" value="{{ old('tgl_lahir', $pasien->tgl_lahir) }}"
+                    <label for="umur" class="block mb-2 text-sm font-medium text-gray-900">Umur</label>
+                    <input type="text" id="umur" name="umur" value="{{ old('umur', $pasien->umur) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
                 <div>
-                    <label for="umur" class="block mb-2 text-sm font-medium text-gray-900">Umur</label>
-                    <input type="text" id="umur" name="umur" value="{{ old('umur', $pasien->umur) }}"
+                    <label for="nama_kk" class="block mb-2 text-sm font-medium text-gray-900">Nama KK </label>
+                    <input type="text" id="nama_kk" name="nama_kk" value="{{ old('nama_kk', $pasien->nama_kk) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
@@ -185,4 +194,31 @@
             </div>
         </form>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const tglLahirInput = document.getElementById('tgl_lahir');
+                const umurInput = document.getElementById('umur');
+
+                tglLahirInput.addEventListener('change', function() {
+                    const tglLahir = new Date(this.value);
+                    const today = new Date();
+
+                    let umur = today.getFullYear() - tglLahir.getFullYear();
+                    const m = today.getMonth() - tglLahir.getMonth();
+
+                    if (m < 0 || (m === 0 && today.getDate() < tglLahir.getDate())) {
+                        umur--;
+                    }
+
+                    if (!isNaN(umur)) {
+                        umurInput.value = umur + " Tahun";
+                    } else {
+                        umurInput.value = '';
+                    }
+                });
+            });
+        </script>
+    @endpush
 @endsection

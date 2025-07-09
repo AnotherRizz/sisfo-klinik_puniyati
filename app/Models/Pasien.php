@@ -9,7 +9,7 @@ class Pasien extends Model
     protected $table = 'pasien';
     protected $fillable = [
         'no_rm', 'nik_pasien', 'nama_pasien', 'tempt_lahir', 'tgl_lahir','umur','jenis_kelamin', 'alamat',
-        'agama', 'pendidikan', 'new_column', 'pekerjaan', 'penanggungjawab', 'golda', 'no_tlp'
+        'agama', 'pendidikan', 'new_column', 'pekerjaan', 'penanggungjawab', 'golda', 'no_tlp','nama_kk',
     ];
     // App\Models\Pasien.php
 protected $casts = [

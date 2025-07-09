@@ -1,67 +1,83 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Data Pendaftaran</title>
+    <title>Laporan Pendaftaran</title>
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 12px;
-            margin: 30px;
+            margin: 40px;
         }
+
         .header {
             text-align: center;
-            margin-bottom: 10px;
+            position: relative;
         }
+
         .logo {
-            float: left;
-            width: 90px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
         }
-        .kop {
-            text-align: center;
-        }
+
         .kop h1 {
             margin: 0;
             font-size: 16px;
         }
+
         .kop p {
             margin: 2px 0;
             font-size: 11px;
         }
-        .clear {
-            clear: both;
-        }
+
         .divider {
             border-top: 2px solid black;
-            margin-top: 5px;
-            margin-bottom: 20px;
+            margin: 10px 0 15px;
         }
+
         h3.title {
-            text-align: left;
+            font-size: 13px;
             margin-bottom: 10px;
             text-transform: uppercase;
-            font-size: 14px;
         }
-        .table {
+
+        table {
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
+            table-layout: fixed;
         }
-        .table th, .table td {
+
+        th,
+        td {
             border: 1px solid #000;
-            padding: 6px 4px;
+            padding: 4px;
+            word-wrap: break-word;
             text-align: center;
         }
-        .table th {
-            background-color: #e5e5e5;
+
+        th {
+            background-color: #f0f0f0;
         }
+
+        .section-title {
+            background-color: #e0f2ff;
+            font-weight: bold;
+            text-align: left;
+            padding: 6px;
+        }
+
         .footer {
+            margin-top: 25px;
             text-align: right;
-            margin-top: 30px;
             font-size: 11px;
         }
     </style>
 </head>
+
 <body>
 
     <div class="header">
@@ -69,14 +85,23 @@
         <div class="kop">
             <h1>BIDAN PRAKTIK MANDIRI PUNIYATI A.Md Keb</h1>
             <p>Nomor SIPB: 0026/SIPB/33.11/VI/2019</p>
-            <p>Dusun Kalipejang RT01/RW 07, Desa Demakan, Kecamatan Mojolaban, Kabupaten Sukoharjo</p>
+            <p>Dusun Kalipejang RT01/RW07, Desa Demakan, Kec. Mojolaban, Kab. Sukoharjo</p>
         </div>
-        <div class="clear"></div>
     </div>
-    <div class="divider"></div>
-    <h3 class="title">Laporan Data Pendaftaran</h3>
 
-    <table class="table">
+    <div class="divider"></div>
+
+    <h3 class="title">Laporan Pendaftaran Bulan
+        {{ \Carbon\Carbon::createFromDate($tahun, $bulan)->locale('id')->translatedFormat('F Y') }}</h3>
+
+    @php
+        $urutan = ['Umum', 'KIA Ibu Hamil', 'KIA Anak', 'Ibu Nifas', 'KB'];
+        $no = 1;
+    @endphp
+    @php
+        $allpendaftaran = collect($urutan)->flatten(1);
+    @endphp
+    <table>
         <thead>
             <tr>
                 <th>No</th>
@@ -93,27 +118,37 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($pendaftarans as $index => $item)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $item->noreg }}</td>
-                    <td>{{ $item->pasien->no_rm ?? '-' }}</td>
-                    <td>{{ $item->pasien->nama_pasien ?? '-' }}</td>
-                    <td>{{ $item->bidan->kd_bidan ?? '-' }}</td>
-                    <td>{{ $item->bidan->nama_bidan ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($item->tgl_daftar)->format('d-m-Y') }}</td>
-                    <td>{{ \Carbon\Carbon::parse($item->jam_daftar)->format('H:i') }}</td>
-                    <td>{{ $item->pelayanan->kodpel ?? '-' }}</td>
-                    <td>{{ $item->pelayanan->nama_pelayanan ?? '-' }}</td>
-                    <td>{{ $item->jenis_kunjungan }}</td>
-                </tr>
+            @foreach ($urutan as $pelayanan)
+                @if (isset($pendaftaransByPelayanan[$pelayanan]))
+                    @foreach ($pendaftaransByPelayanan[$pelayanan] as $item)
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>{{ $item->noreg }}</td>
+                            <td>{{ $item->pasien->no_rm ?? '-' }}</td>
+                            <td style="text-align: left;">{{ $item->pasien->nama_pasien ?? '-' }}</td>
+                            <td>{{ $item->bidan->kd_bidan ?? '-' }}</td>
+                            <td style="text-align: left;">{{ $item->bidan->nama_bidan ?? '-' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->tgl_daftar)->format('d-m-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->jam_daftar)->format('H:i') }}</td>
+                            <td>{{ $item->pelayanan->kodpel ?? '-' }}</td>
+                            <td style="text-align: left;">{{ $item->pelayanan->nama_pelayanan ?? '-' }}</td>
+                            <td>{{ $item->jenis_kunjungan }}</td>
+                        </tr>
+                    @endforeach
+                @endif
             @endforeach
+        
         </tbody>
     </table>
+
+    <div class="footer">
+          Total Seluruh Pendaftaran: {{ $allpendaftaran->count() }}
+    </div>
 
     <div class="footer">
         Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
     </div>
 
 </body>
+
 </html>

@@ -6,7 +6,7 @@
     <h1 class="text-xl font- mb-4">Data Pelayanan</h1>
 
     <div class="flex w-full gap-2 items-center justify-end">
-        <a href="{{ route('pelayanan.export') }}"target="_blank"            
+        {{-- <a href="{{ route('pelayanan.export') }}"target="_blank"            
             class="px-3 py-1.5 text-white flex gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Cetak
             Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
@@ -14,10 +14,10 @@
                     d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
             </svg>
         </a>
-      
+       --}}
 
 
-        <a href="{{ route('pelayanan.create') }}"
+        {{-- <a href="{{ route('pelayanan.create') }}"
             class="px-3 py-1.5 text-white flex gap-2 cursor-pointer bg-sky-500 hover:bg-sky-600 rounded mb-4 text-sm">
             Tambah Pelayanan
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -27,20 +27,20 @@
             </svg>
 
 
-        </a>
+        </a> --}}
     </div>
 
 
 
-    <div class="bg-white rounded shadow p-2">
-        <div class="w-full flex justify-between">
+    <div class="bg-white rounded shadow p-5">
+        {{-- <div class="w-full flex justify-between">
 
             <div class="mb-4 basis-1/2">
                 <x-search-input :action="route('pelayanan.index')" name="search" placeholder="Cari nama / kode pelayanan..." />
             </div>
             <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('pelayanan.index')" />
 
-        </div>
+        </div> --}}
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -49,7 +49,7 @@
                         Pelayanan</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama
                         Pelayanan</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    {{-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th> --}}
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -61,10 +61,10 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $pelayanan->kodpel }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 uppercase">{{ $pelayanan->nama_pelayanan }}</td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <a href="{{ route('pelayanan.edit', $pelayanan->id) }}"
                                 class="px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600">Edit</a>
-                            {{-- <form id="delete-form-{{ $pelayanan->id }}"
+                            <form id="delete-form-{{ $pelayanan->id }}"
                                 action="{{ route('pelayanan.destroy', $pelayanan->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -73,9 +73,9 @@
                                     onclick="confirmDelete({{ $pelayanan->id }})">
                                     Hapus
                                 </button>
-                            </form> --}}
+                            </form>
 
-                        </td>
+                        </td> --}}
                     </tr>
                  @empty
                     <x-data-notfound :colspan="9" message="Data pelayanan tidak ditemukan"  />

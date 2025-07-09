@@ -55,13 +55,13 @@
                         d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" />
                 </svg>
                 Vital Sign</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                <x-detail-card label="Tensi Darah" :value="$pemeriksaan->td . '   mmHg' ?? '-'" />
-                <x-detail-card label="Berat Badan (BB)" :value="$pemeriksaan->bb . '   Kg' ?? '-'" />
-                <x-detail-card label="Tinggi Badan (TB)" :value="$pemeriksaan->tb . '  Cm' ?? '-'" />
-                <x-detail-card label="Suhu" :value="$pemeriksaan->suhu . ' °C' ?? '-'" />
-                <x-detail-card label="Saturasi Oksigen" :value="$pemeriksaan->saturasiOx . ' %' ?? '-'" />
-            </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+        <x-detail-card label="Tensi Darah" :value="($pemeriksaan->td ? $pemeriksaan->td . ' mmHg' : '-')" />
+        <x-detail-card label="Berat Badan (BB)" :value="($pemeriksaan->bb ? $pemeriksaan->bb . ' Kg' : '-')" />
+        <x-detail-card label="Tinggi Badan (TB)" :value="($pemeriksaan->tb ? $pemeriksaan->tb . ' cm' : '-')" />
+        <x-detail-card label="Suhu" :value="($pemeriksaan->suhu ? $pemeriksaan->suhu . ' °C' : '-')" />
+        <x-detail-card label="Saturasi Oksigen" :value="($pemeriksaan->saturasiOx ? $pemeriksaan->saturasiOx . ' %' : '-')" />
+    </div>
 
             {{-- Obat --}}
             <h2 class="text-lg font-semibold text-teal-500 flex gap-2 items-center mt-8 mb-4"><svg
@@ -72,15 +72,18 @@
 
                 Detail Obat</h2>
             <div class="space-y-4 mb-6">
-                @foreach ($pemeriksaan->obatPemeriksaan as $o)
-                    <div class="flex gap-7">
+                @forelse ($pemeriksaan->obatPemeriksaan as $o)
+                      <div class="flex gap-7">
                         {{-- Kode Obat --}}
                         <x-detail-section label="Kode Obat" :value="$o->obat->kd_obat ?? 'Tidak ada kode'" />
 
                         {{-- Nama Obat dan Dosis --}}
                         <x-detail-section label="Nama Obat dan Dosis" :value="$o->obat->nama_obat . ' - ' . $o->dosis_carkai" />
                     </div>
-                @endforeach
+                @empty
+                    <h1 class="text-sm text-slate-500">Tidak ada obat</h1>
+                @endforelse
+               
 
             </div>
 
@@ -94,7 +97,7 @@
                 Tindakan dan Tindak Lanjut</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
                 <x-detail-card label="Tindakan" :value="$pemeriksaan->tindakan ?? '-'" />
-                <x-detail-card label="Tindak Lanjut" :value="($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk')  ? ($pemeriksaan->tindak_lnjt ?? '-')  : ('Rujukan ' . ($pemeriksaan->tindak_lnjt ?? '-'))" />
+                <x-detail-card label="Tindak Lanjut" :value="($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk' || $pemeriksaan->tindak_lnjt === 'Rujuk Dokter Spesialis')  ? ($pemeriksaan->tindak_lnjt ?? '-')  : ('Rujukan ' . ($pemeriksaan->tindak_lnjt ?? '-'))" />
 
                 <x-detail-card label="Tanggal Kembali" :value="$pemeriksaan->tgl_kembali
                     ? \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->translatedFormat('d F Y')

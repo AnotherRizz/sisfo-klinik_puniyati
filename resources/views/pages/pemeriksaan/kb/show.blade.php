@@ -43,37 +43,36 @@
                 <x-detail-card label="Metode KB" :value="$pemeriksaan->metode_kb ?? '-'" />
                 <x-detail-card label="Edukasi" :value="$pemeriksaan->edukasi ?? '-'" />
                 <x-detail-card label="Intervensi" :value="$pemeriksaan->intervensi ?? '-'" />
-                <x-detail-card label="Efek Samping" :value="$pemeriksaan->efek_samping ?? '-'" />
             </div>
 
             {{-- Vital Sign --}}
             <h2 class="text-lg font-semibold text-red-500 mt-8 mb-4">Vital Sign</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-                <x-detail-card label="Tensi Darah" :value="$pemeriksaan->td . '   mmHg' ?? '-'" />
-                <x-detail-card label="Berat Badan (BB)" :value="$pemeriksaan->bb . '   Kg' ?? '-'" />
-                <x-detail-card label="Tinggi Badan (TB)" :value="$pemeriksaan->tb . '  Cm' ?? '-'" />
-                <x-detail-card label="Suhu" :value="$pemeriksaan->suhu . ' °C' ?? '-'" />
-                <x-detail-card label="Saturasi Oksigen" :value="$pemeriksaan->saturasiOx . ' %' ?? '-'" />
+                 <x-detail-card label="Tensi Darah" :value="($pemeriksaan->td ? $pemeriksaan->td . ' mmHg' : '-')" />
+                 <x-detail-card label="Berat Badan" :value="($pemeriksaan->td ? $pemeriksaan->td . ' Kg' : '-')" />
+              
             </div>
 
             {{-- Obat --}}
             <h2 class="text-lg font-semibold text-teal-500 mt-8 mb-4">Detail Obat</h2>
             <div class="space-y-4 mb-6">
-                @foreach ($pemeriksaan->obatPemeriksaan as $o)
-                    <div class="flex gap-7">
+              @forelse ($pemeriksaan->obatPemeriksaan as $o)
+                      <div class="flex gap-7">
                         {{-- Kode Obat --}}
                         <x-detail-section label="Kode Obat" :value="$o->obat->kd_obat ?? 'Tidak ada kode'" />
 
                         {{-- Nama Obat dan Dosis --}}
                         <x-detail-section label="Nama Obat dan Dosis" :value="$o->obat->nama_obat . ' - ' . $o->dosis_carkai" />
                     </div>
-                @endforeach
+                @empty
+                    <h1 class="text-sm text-slate-500">Tidak ada obat</h1>
+                @endforelse
             </div>
 
             {{-- Tindakan dan Tindak Lanjut --}}
             <h2 class="text-lg font-semibold text-amber-500 mt-8 mb-4">Tindakan dan Tindak Lanjut</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <x-detail-card label="Tindak Lanjut" :value="($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk')  ? ($pemeriksaan->tindak_lnjt ?? '-')  : ('Rujukan ' . ($pemeriksaan->tindak_lnjt ?? '-'))" />
+                <x-detail-card label="Tindak Lanjut" :value="($pemeriksaan->tindak_lnjt === 'Tidak Dirujuk' || $pemeriksaan->tindak_lnjt === 'Rujuk Spesialis Obsgyn')  ? ($pemeriksaan->tindak_lnjt ?? '-')  : ('Rujukan ' . ($pemeriksaan->tindak_lnjt ?? '-'))" />
                 <x-detail-card label="Tanggal Kembali" :value="$pemeriksaan->tgl_kembali
                     ? \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->translatedFormat('d F Y')
                     : '-'" />

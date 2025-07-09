@@ -1,7 +1,7 @@
 {{-- resources/views/components/empty-state.blade.php --}}
 @props([
     'colspan' => 9,
-    'message' => 'Data yang Anda cari tidak ditemukan.',
+    'message' => 'Tidak Ada Data Yang Ditemukan.',
     'image' => 'images/not-found.png',
 ])
 

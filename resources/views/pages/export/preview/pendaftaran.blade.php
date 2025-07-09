@@ -7,7 +7,6 @@
 
         <div class="flex justify-between mb-3">
             <a href="{{ route('laporan.index') }}"
-                
                 class="bg-none flex gap-2 items-center border border-slate-300 hover:bg-slate-300 text-slate-700 text-sm px-4 py-2 rounded">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-5">
@@ -15,10 +14,11 @@
                 </svg>
                 Kembali ke Laporan
             </a>
-            <a href="{{ route('laporan.pendaftaran', ['bulan' => "$tahun-$bulan", 'jenis_pelayanan' => request('jenis_pelayanan')]) }}"
+            <a href="{{ route('laporan.pendaftaran', ['bulan' => request('bulan')]) }}"
                 class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
                 Unduh PDF
             </a>
+
 
         </div>
 
@@ -42,7 +42,20 @@
 
             </div>
 
+            @php
+                use Carbon\Carbon;
+                $urutanPelayanan = ['Umum', 'KIA Ibu Hamil', 'KIA Anak', 'Ibu Nifas', 'KB'];
+                $counter = 1;
+            @endphp
+            @php
+                $allpendaftaran = collect($urutanPelayanan)->flatten(1);
+            @endphp
+
+
             <div class="overflow-x-auto">
+                <h2 class="text-lg font-semibold mb-2">Laporan Pendaftaran Bulan
+                    {{ Carbon::createFromDate($tahun, $bulan)->locale('id')->translatedFormat('F Y') }}</h2>
+
                 <table class="min-w-full text-sm text-left border border-gray-300">
                     <thead class="bg-gray-100 text-gray-700">
                         <tr>
@@ -60,26 +73,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($pendaftarans as $index => $item)
-                            <tr class="border-b">
-                                <td class="border px-2 py-1 text-center">{{ $index + 1 }}</td>
-                                <td class="border px-2 py-1 text-center">{{ $item->noreg }}</td>
-                                <td class="border px-2 py-1 text-center">{{ $item->pasien->no_rm ?? '-' }}</td>
-                                <td class="border px-2 py-1">{{ $item->pasien->nama_pasien ?? '-' }}</td>
-                                <td class="border px-2 py-1 text-center">{{ $item->bidan->kd_bidan ?? '-' }}</td>
-                                <td class="border px-2 py-1">{{ $item->bidan->nama_bidan ?? '-' }}</td>
-                                <td class="border px-2 py-1 text-center">
-                                    {{ \Carbon\Carbon::parse($item->tgl_daftar)->format('d-m-Y') }}</td>
-                                <td class="border px-2 py-1 text-center">
-                                    {{ \Carbon\Carbon::parse($item->jam_daftar)->format('H:i') }}</td>
-                                <td class="border px-2 py-1 text-center">{{ $item->pelayanan->kodpel ?? '-' }}</td>
-                                <td class="border px-2 py-1">{{ $item->pelayanan->nama_pelayanan ?? '-' }}</td>
-                                <td class="border px-2 py-1 text-center">{{ $item->jenis_kunjungan }}</td>
-                            </tr>
+
+                        @foreach ($urutanPelayanan as $pelayananName)
+                            @if (isset($pendaftaransByPelayanan[$pelayananName]))
+                                @foreach ($pendaftaransByPelayanan[$pelayananName] as $item)
+                                    <tr class="border-b">
+                                        <td class="border px-2 py-1 text-center">{{ $counter++ }}</td>
+                                        <td class="border px-2 py-1 text-center">{{ $item->noreg }}</td>
+                                        <td class="border px-2 py-1 text-center">{{ $item->pasien->no_rm ?? '-' }}</td>
+                                        <td class="border px-2 py-1">{{ $item->pasien->nama_pasien ?? '-' }}</td>
+                                        <td class="border px-2 py-1 text-center">{{ $item->bidan->kd_bidan ?? '-' }}</td>
+                                        <td class="border px-2 py-1">{{ $item->bidan->nama_bidan ?? '-' }}</td>
+                                        <td class="border px-2 py-1 text-center">
+                                            {{ \Carbon\Carbon::parse($item->tgl_daftar)->format('d-m-Y') }}</td>
+                                        <td class="border px-2 py-1 text-center">
+                                            {{ \Carbon\Carbon::parse($item->jam_daftar)->format('H:i') }}</td>
+                                        <td class="border px-2 py-1 text-center">{{ $item->pelayanan->kodpel ?? '-' }}</td>
+                                        <td class="border px-2 py-1">{{ $item->pelayanan->nama_pelayanan ?? '-' }}</td>
+                                        <td class="border px-2 py-1 text-center">{{ $item->jenis_kunjungan }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         @endforeach
+                        <tr class="font-semibold">
+                            <td colspan="14" class="border px-2 py-2 text-xs text-right text-gray-700">
+                                Total Seluruh Pendaftaran: {{ $allpendaftaran->count() }}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
+
 
             <div class="text-right text-xs text-gray-600 mt-6">
                 Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}

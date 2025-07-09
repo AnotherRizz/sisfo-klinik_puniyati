@@ -10,17 +10,6 @@
             ← Kembali ke daftar
         </a>
     </div>
-    <div class="mb-5 flex justify-end">
-
-        <a href="{{ route('kia-ibu-hamil.index') }}"
-            class="text-white cursor-pointer flex items-center gap-2 bg-slate-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-4 py-1.5 text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
-            </svg>
-            Kembali
-        </a>
-    </div>
     <div class="p-7 bg-white rounded shadow">
         @if ($errors->any())
             <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
@@ -47,7 +36,7 @@
                                         $p->noreg .
                                         ' - ' .
                                         $p->pasien->nama_pasien .
-                                        (!$p->pemeriksaan ? ' 🔹(New)' : ''),
+                                        (!$p->pemeriksaan ? ' (Baru)' : ''),
                                     'data-pendaftaran-id' => $p->id,
                                     'data-pasien-nama' => $p->pasien->nama_pasien,
                                     'data-bidan-nama' => $p->bidan->nama_bidan,
@@ -56,7 +45,7 @@
                                     'data-pelayanan-kode' => $p->pelayanan->kodpel,
                                 ],
                             ],
-                        )" :selected="old('pendaftaran_id')" />
+                      )" :selected="$pendaftaran_id ?: old('pendaftaran_id')" />
                 </div>
 
                 {{-- Nama Pasien --}}
@@ -91,58 +80,75 @@
                     <input type="text" name="kodpel" id="pelayanan_kode"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required readonly>
                 </div>
-
-                <div>
-                    <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-1">Keluhan</label>
-                    <input type="text" name="keluhan" class="w-full border-gray-300 rounded-lg shadow-sm" value=""
-                        required>
-                </div>
                 <div>
                     <label for="riw_penyakit" class="block text-sm font-medium text-gray-700 mb-1">Riwayat Penyakit</label>
                     <input type="text" name="riw_penyakit" class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="" required>
                 </div>
+                <div>
+                    <label for="riwayat_TT" class="block text-sm font-medium text-gray-700 mb-1">Riwayat TT (riw. Imunisasi
+                        Tetanus Toksoid)</label>
+                    <input type="text" name="riwayat_TT" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
+
 
                 <div>
                     <label for="td" class="block text-sm font-medium text-gray-700 mb-1">Tensi Darah <span
                             class="text-red-500 text-xs"> (mmHg)</span></label>
                     <input type="text" name="td" id="td" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" >
+                </div>
+                <div>
+                    <label for="nadi" class="block text-sm font-medium text-gray-700 mb-1">Denyut Nadi Ibu
+                        Hamil</label>
+                    <input type="text" name="nadi" id="nadi" class="w-full border-gray-300 rounded-lg shadow-sm"
                         value="" required>
                 </div>
                 <div>
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan <span
                             class="text-red-500 text-xs"> (Kg)</span></label>
                     <input type="text" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" required>
+                        value="" >
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan <span
                             class="text-red-500 text-xs"> (Cm)</span></label>
                     <input type="text" name="tb" id="tb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" required>
+                        value="" >
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
                     <input type="text" name="suhu" id="suhu" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" required>
+                        value="" >
                 </div>
                 <div>
                     <label for="saturasiOx" class="block text-sm font-medium text-gray-700 mb-1">Saturasi Oksigen<span
                             class="text-red-500 text-xs"> (%)</span> </label>
                     <input type="text" name="saturasiOx" id="saturasiOx"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" >
                 </div>
-                <div>
-                    <label for="nadi" class="block text-sm font-medium text-gray-700 mb-1">Denyut Nadi Ibu
-                        Hamil</label>
-                    <input type="text" name="nadi" id="nadi"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-                </div>
+
                 <div>
                     <label for="lila" class="block text-sm font-medium text-gray-700 mb-1">Lingkar Lengan Atas<span
                             class="text-red-500 text-xs">(Cm)</span></label>
                     <input type="text" name="lila" id="lila"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
+                </div>
+                <div>
+                    <label for="tablet_tambah_darah" class="block text-sm font-medium text-gray-700 mb-1">Tablet Tambah Darah</label>
+                    <input type="text" name="tablet_tambah_darah" id="tablet_tambah_darah"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
+                </div>
+                <div>
+                    <label for="vitamin_mineral" class="block text-sm font-medium text-gray-700 mb-1">Vitamin Mineral</label>
+                    <input type="text" name="vitamin_mineral" id="vitamin_mineral"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
+                </div>
+                <div>
+                    <label for="asam_folat" class="block text-sm font-medium text-gray-700 mb-1">Asam Folat</label>
+                    <input type="text" name="asam_folat" id="asam_folat"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
                 <div>
@@ -182,14 +188,7 @@
                     <input type="text" name="umr_hamil" id="umr_hamil"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" required>
                 </div>
-                <div>
-                    <label for="ling_perut" class="block text-sm font-medium text-gray-700 mb-1">Lingkar Perut Ibu
-                        Hamil
 
-                    </label>
-                    <input type="text" name="ling_perut" id="ling_perut"
-                        class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500" required>
-                </div>
                 <div>
                     <label for="tifu" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Fundus
                         <span class="text-red-500 text-xs">(Cm)</span>
@@ -236,6 +235,12 @@
                     <textarea name="lab" class="w-full border-gray-300 rounded-lg shadow-sm" id="" cols="30"
                         rows="2"></textarea>
                 </div>
+
+                <div>
+                    <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-1">Keluhan</label>
+                    <input type="text" name="keluhan" class="w-full border-gray-300 rounded-lg shadow-sm"
+                        value="" required>
+                </div>
                 <div>
                     <label for="resti" class="block text-sm font-medium text-gray-700 mb-1">keterangan Resiko
                         Tinggi</label>
@@ -260,7 +265,7 @@
                         Kembali</label>
                     <input type="date" name="tgl_kembali" id="tgl_kembali"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
-                        value="{{ old('tgl_kembali', now()->toDateString()) }}" required>
+                        value="{{ old('tgl_kembali')}}" >
                 </div>
                 <div class="mb-6">
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
@@ -273,6 +278,8 @@
                         </option>
                         <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
                             Rumah Sakit</option>
+                        <option value="Rujuk Dokter Spesialis Obsygin" {{ old('tindak_lnjt') == 'Rujuk Dokter Spesialis Obsygin' ? 'selected' : '' }}>
+                            Rujuk Dokter Spesialis Obsygin</option>
                         <option value="Tidak Dirujuk" {{ old('tindak_lnjt') == 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
                             Dirujuk</option>
                     </select>
@@ -281,14 +288,14 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
                     <div id="obat-wrapper">
                         <div class="flex gap-2 mb-2">
-                            <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" required>
+                            <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm">
                                 <option value="">-- Pilih Obat --</option>
                                 @foreach ($obats as $obat)
                                     <option value="{{ $obat->id }}">{{ $obat->nama_obat }}</option>
                                 @endforeach
                             </select>
                             <input type="text" name="dosis_carkai[]"
-                                class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
+                                class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" />
                         </div>
                     </div>
                     <button type="button" id="add-obat" class="text-sm cursor-pointer text-blue-600">+ Tambah
@@ -315,40 +322,42 @@
         });
     </script>
 
-    <script>
+  <script>
         $(document).ready(function() {
-            $('.select2').select2({
-                placeholder: 'Cari data...',
-                allowClear: true,
-                width: '100%',
-                escapeMarkup: function(markup) {
-                    return markup; // allow HTML in options
-                }
-            });
-        });
-    </script>
-    <script>
-        const noregSelect = $('#pendaftaran_id');
-        const pasienNama = $('#pasien_nama');
-        const pasienId = $('#pasien_id');
-        const bidanNama = $('#bidan_nama');
-        const kdBidan = $('#bidan_kd');
-        const pelayananNama = $('#pelayanan_nama');
-        const pelayananKode = $('#pelayanan_kode');
+            // Elemen Select dan Input yang akan di-update
+            const noregSelect = $('#pendaftaran_id');
+            const pasienNama = $('#pasien_nama');
+            const pasienId = $('#pasien_id');
+            const bidanNama = $('#bidan_nama');
+            const kdBidan = $('#bidan_kd');
+            const pelayananNama = $('#pelayanan_nama');
+            const pelayananKode = $('#pelayanan_kode');
 
-        function updatePasienInfo() {
-            const selected = noregSelect.find(':selected');
-            pasienNama.val(selected.data('pasien-nama') || '');
-            pasienId.val(selected.data('pasien-id') || '');
-            bidanNama.val(selected.data('bidan-nama') || '');
-            kdBidan.val(selected.data('bidan-kd') || '');
-            pelayananNama.val(selected.data('pelayanan-nama') || '');
-            pelayananKode.val(selected.data('pelayanan-kode') || '');
-        }
+            // Fungsi untuk memperbarui informasi pasien berdasarkan pilihan
+            function updatePasienInfo() {
+                const selected = noregSelect.find(':selected');
+                const pasienNamaValue = selected.data('pasien-nama') || '';
+                const pasienIdValue = selected.data('pendaftaran-id') || '';
+                const bidanNamaValue = selected.data('bidan-nama') || '';
+                const kdBidanValue = selected.data('bidan-kd') || '';
+                const pelayananNamaValue = selected.data('pelayanan-nama') || '';
+                const pelayananKodeValue = selected.data('pelayanan-kode') || '';
 
-        $(document).ready(function() {
+                pasienNama.val(pasienNamaValue);
+                pasienId.val(pasienIdValue);
+                bidanNama.val(bidanNamaValue);
+                kdBidan.val(kdBidanValue);
+                pelayananNama.val(pelayananNamaValue);
+                pelayananKode.val(pelayananKodeValue);
+            }
+
+            // Inisialisasi jika ada nilai awal (contoh: old data)
+            if (noregSelect.val()) {
+                updatePasienInfo();
+            }
+
+            // Event listener untuk perubahan nilai select
             noregSelect.on('change', updatePasienInfo);
-            updatePasienInfo(); // untuk set awal saat reload jika ada old value
         });
     </script>
 @endpush
