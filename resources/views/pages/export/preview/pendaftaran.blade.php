@@ -14,11 +14,22 @@
                 </svg>
                 Kembali ke Laporan
             </a>
-            <a href="{{ route('laporan.pendaftaran', ['bulan' => request('bulan')]) }}"
-                class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
-                Unduh PDF
-            </a>
+            <form action="{{ route('laporan.pendaftaran') }}" method="GET">
+                <input type="hidden" name="filter_type" value="{{ request('filter_type') }}">
 
+                @if (request('filter_type') === 'hari')
+                    <input type="hidden" name="tanggal" value="{{ request('tanggal') }}">
+                @elseif(request('filter_type') === 'rentang')
+                    <input type="hidden" name="tanggal_awal" value="{{ request('tanggal_awal') }}">
+                    <input type="hidden" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
+                @elseif(request('filter_type') === 'bulan')
+                    <input type="hidden" name="bulan" value="{{ request('bulan') }}">
+                @endif
+
+                <button type="submit" class="bg-red-600 cursor-pointer hover:bg-red-700 text-white px-4 py-2 rounded text-sm">
+                    Unduh PDF
+                </button>
+            </form>
 
         </div>
 
@@ -37,24 +48,30 @@
 
             <div class="border-t-2 border-black my-2"></div>
 
+
+
             <div class="flex justify-start items-center mb-4">
                 <h2 class="text-base font-semibold uppercase">Laporan Data Pendaftaran</h2>
 
             </div>
+            @if ($filterType === 'hari')
+                <p>Laporan Pendaftaran Tanggal {{ \Carbon\Carbon::parse($request->tanggal)->translatedFormat('d F Y') }}</p>
+            @elseif ($filterType === 'rentang')
+                <p>Laporan Pendaftaran Dari {{ \Carbon\Carbon::parse($request->tanggal_awal)->translatedFormat('d F Y') }}
+                    sampai {{ \Carbon\Carbon::parse($request->tanggal_akhir)->translatedFormat('d F Y') }}</p>
+            @elseif ($filterType === 'bulan')
+                <p>Laporan Pendaftaran Bulan
+                    {{ \Carbon\Carbon::createFromFormat('Y-m', $request->bulan)->translatedFormat('F Y') }}</p>
+            @endif
 
             @php
                 use Carbon\Carbon;
-                $urutanPelayanan = ['Umum', 'KIA Ibu Hamil', 'KIA Anak', 'Ibu Nifas', 'KB'];
+                $urutanPelayanan = ['Umum', 'Kesehatan Ibu Hamil', 'Kesehatan Anak', 'Ibu Nifas', 'KB'];
                 $counter = 1;
-            @endphp
-            @php
-                $allpendaftaran = collect($urutanPelayanan)->flatten(1);
             @endphp
 
 
             <div class="overflow-x-auto">
-                <h2 class="text-lg font-semibold mb-2">Laporan Pendaftaran Bulan
-                    {{ Carbon::createFromDate($tahun, $bulan)->locale('id')->translatedFormat('F Y') }}</h2>
 
                 <table class="min-w-full text-sm text-left border border-gray-300">
                     <thead class="bg-gray-100 text-gray-700">
@@ -97,7 +114,7 @@
                         @endforeach
                         <tr class="font-semibold">
                             <td colspan="14" class="border px-2 py-2 text-xs text-right text-gray-700">
-                                Total Seluruh Pendaftaran: {{ $allpendaftaran->count() }}
+                                Total Seluruh Pendaftaran: {{ $all->count() }} Data
                             </td>
                         </tr>
                     </tbody>

@@ -112,9 +112,22 @@
     </tbody>
 </table>
 
-<div class="footer">
-    Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
-</div>
+ <div class="footer mt-10 text-sm text-gray-700">
+         <div class="mb-2" >
+            Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+        </div>
+        <div style="margin-top: 15px">
+            Sukoharjo, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>
+            Bidan Praktik Mandiri
+        </div>
+
+        <div style="height: 80px;"></div> {{-- Ruang tanda tangan --}}
+
+        <div>
+            <strong><u>Puniyati Amd. Keb</u></strong>
+        </div>
+       
+    </div>
 
 </body>
 </html>

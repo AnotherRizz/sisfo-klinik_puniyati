@@ -91,15 +91,11 @@
 
     <div class="divider"></div>
 
-    <h3 class="title">Laporan Pendaftaran Bulan
-        {{ \Carbon\Carbon::createFromDate($tahun, $bulan)->locale('id')->translatedFormat('F Y') }}</h3>
+    <h3 class="title">Laporan Pendaftaran {{ $judul }}</h3>
 
     @php
-        $urutan = ['Umum', 'KIA Ibu Hamil', 'KIA Anak', 'Ibu Nifas', 'KB'];
+        $urutan = ['Umum', 'Kesehatan Ibu Hamil', 'Kesehatan Anak', 'Ibu Nifas', 'KB'];
         $no = 1;
-    @endphp
-    @php
-        $allpendaftaran = collect($urutan)->flatten(1);
     @endphp
     <table>
         <thead>
@@ -142,11 +138,24 @@
     </table>
 
     <div class="footer">
-          Total Seluruh Pendaftaran: {{ $allpendaftaran->count() }}
+          Total Seluruh Pendaftaran: {{ $allpendaftaran->count() }} Data
     </div>
 
-    <div class="footer">
-        Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+  <div class="footer mt-10 text-sm text-gray-700">
+         <div class="mb-2" >
+            Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+        </div>
+        <div style="margin-top: 15px">
+            Sukoharjo, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>
+            Bidan Praktik Mandiri
+        </div>
+
+        <div style="height: 80px;"></div> {{-- Ruang tanda tangan --}}
+
+        <div>
+            <strong><u>Puniyati Amd. Keb</u></strong>
+        </div>
+       
     </div>
 
 </body>

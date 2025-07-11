@@ -8,6 +8,7 @@ use App\Models\Pelayanan;
 use App\Models\Pendaftaran;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class PendaftaranController extends Controller
 {
@@ -16,6 +17,8 @@ class PendaftaranController extends Controller
      */
 public function index(Request $request)
 {
+ 
+
     $pemeriksaanRelations = [
         'pemeriksaanUmum.pembayaran',
         'pemeriksaanIbuNifas.pembayaran',
@@ -32,33 +35,44 @@ public function index(Request $request)
         $query->where(function ($q) use ($search) {
             $q->whereHas('pasien', function ($pasienQuery) use ($search) {
                 $pasienQuery->where('nama_pasien', 'like', '%' . $search . '%')
-                            ->orWhere('no_rm', 'like', '%' . $search . '%');
+                            ->orWhere('no_rm', 'like', '%' . $search . '%')
+                            ->orWhere('alamat', 'like', '%' . $search . '%');
             })->orWhere('jenis_kunjungan', 'like', '%' . $search . '%');
         });
     }
+    // Filter Pelayanan
+if ($request->filled('pelayanan_filter')) {
+    $query->where('pelayanan_id', $request->pelayanan_filter);
+}
 
-    // ✅ Filter Tanggal: default ke "hari_ini"
+
+    
     $filterTanggal = $request->get('filter_tanggal', 'hari_ini');
     if ($filterTanggal === 'hari_ini') {
         $query->whereDate('tgl_daftar', now()->toDateString());
     }
 
     // Pagination
-    $perPage = $request->get('per_page', 5);
+    $perPage = $request->get('per_page', 10);
     $pendaftarans = $query->paginate($perPage);
 
-    // Optional: logging jika diperlukan
-    // foreach ($pendaftarans as $pendaftaran) {
-    //     logger($pendaftaran->pemeriksaanUmum?->pembayaran);
-    // }
-
-    return view('pages.pendaftaran.index', compact('pendaftarans', 'filterTanggal', 'search'));
+  
+ $pelayanans = \App\Models\Pelayanan::all();
+    return view('pages.pendaftaran.index', compact('pendaftarans', 'filterTanggal', 'search','pelayanans'));
 }
 
 
 
 
 
+public function cekKunjungan($pasien_id)
+{
+    $pernahDaftar = \App\Models\Pendaftaran::where('pasien_id', $pasien_id)->exists();
+
+    return response()->json([
+        'jenis_kunjungan' => $pernahDaftar ? 'LAMA' : 'BARU',
+    ]);
+}
 
 
 
@@ -101,27 +115,32 @@ public function store(Request $request)
     // Simpan data ke database
     $pendaftaran = Pendaftaran::create($data);
 
+ if (Auth::user()->hasRole('admin')) {
+    return redirect()->route('pendaftaran.index')
+        ->with('success', 'Data Pendaftaran berhasil ditambahkan');
+}else {
     // Redirect berdasarkan pelayanan_id
     switch ($pendaftaran->pelayanan_id) {
         case 1: // Pelayanan Umum
            return redirect()->route('umum.index')
-    ->with('success', 'Data berhasil ditambahkan ke pelayanan Umum');
+    ->with('success', 'Data Pendaftaran berhasil ditambahkan ke pelayanan Umum');
 
         case 2: // Pelayanan KIA Ibu Hamil
             return redirect()->route('kia-ibu-hamil.index')
-                ->with('success', 'Data berhasil ditambahkan ke pelayanan KIA Ibu Hamil');
-        case 3: // Pelayanan KIA Anak
+                ->with('success', 'Data Pendaftaran berhasil ditambahkan ke pelayanan Kesehatan Ibu Hamil');
+        case 3: // Pelayanan Kesehatan Anak
             return redirect()->route('kia-anak.index')
-                ->with('success', 'Data berhasil ditambahkan ke pelayanan KIA Anak');
+                ->with('success', 'Data Pendaftaran berhasil ditambahkan ke pelayanan Kesehatan Anak');
         case 4: // Pelayanan Ibu Nifas
             return redirect()->route('nifas.index')
-                ->with('success', 'Data berhasil ditambahkan ke pelayanan Ibu Nifas');
+                ->with('success', 'Data Pendaftaran berhasil ditambahkan ke pelayanan Ibu Nifas');
         case 5: // Pelayanan KB
             return redirect()->route('kb.index')
-                ->with('success', 'Data berhasil ditambahkan ke pelayanan KB');
+                ->with('success', 'Data Pendaftaran berhasil ditambahkan ke pelayanan KB');
         default:
             return redirect()->route('pendaftaran.index')
                 ->with('error', 'Jenis pelayanan tidak ditemukan');
+    }
     }
 }
 

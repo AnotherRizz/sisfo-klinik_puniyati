@@ -4,6 +4,11 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+/**
+ * @method bool hasRole(string|array $roles)
+ * @method bool hasAnyRole(string|array $roles)
+ * @method \Illuminate\Support\Collection getRoleNames()
+ */
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable

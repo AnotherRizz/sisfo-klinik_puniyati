@@ -151,50 +151,9 @@
                 </form>
             </div>
         </div> --}}
-        @if ($obats->hasPages())
-            <nav aria-label="Page navigation" class="mt-4  m-2 mb-3">
-                <ul class="inline-flex -space-x-px text-sm">
-                    {{-- Tombol Previous --}}
-                    @if ($obats->onFirstPage())
-                        <li>
-                            <span
-                                class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-400 bg-white border border-e-0 border-gray-300 rounded-s-lg cursor-not-allowed">Previous</span>
-                        </li>
-                    @else
-                        <li>
-                            <a href="{{ $obats->previousPageUrl() }}"
-                                class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700">Previous</a>
-                        </li>
-                    @endif
-
-                    {{-- Nomor Halaman --}}
-                    @foreach ($obats->getUrlRange(1, $obats->lastPage()) as $page => $url)
-                        <li>
-                            @if ($page == $obats->currentPage())
-                                <span
-                                    class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700">{{ $page }}</span>
-                            @else
-                                <a href="{{ $url }}"
-                                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">{{ $page }}</a>
-                            @endif
-                        </li>
-                    @endforeach
-
-                    {{-- Tombol Next --}}
-                    @if ($obats->hasMorePages())
-                        <li>
-                            <a href="{{ $obats->nextPageUrl() }}"
-                                class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700">Next</a>
-                        </li>
-                    @else
-                        <li>
-                            <span
-                                class="flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-white border border-gray-300 rounded-e-lg cursor-not-allowed">Next</span>
-                        </li>
-                    @endif
-                </ul>
-            </nav>
-        @endif
+       <div class="mt-4">
+            {{ $obats->links() }}
+        </div>
 
 
     </div>

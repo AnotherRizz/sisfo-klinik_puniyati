@@ -44,7 +44,8 @@ public function index(Request $request)
             return $pasien &&
                 (
                     str_contains(strtolower($pasien->nama_pasien), $searchLower) ||
-                    str_contains(strtolower($pasien->no_rm), $searchLower)
+                    str_contains(strtolower($pasien->no_rm), $searchLower)||
+                    str_contains(strtolower($pasien->alamat), $searchLower)
                 );
         });
     }
@@ -118,17 +119,28 @@ public function create(Request $request)
         ]);
 
         $fullType = 'App\\Models\\' . $data['pemeriksaanable_type'];
-        $pemeriksaan = $fullType::where('nomor_periksa', $data['pemeriksaanable_id'])->with('obat')->firstOrFail();
+            $pemeriksaan = $fullType::where('nomor_periksa', $data['pemeriksaanable_id'])
+            ->with('obatPemeriksaan.obat') // ini yang sesuai dengan create()
+            ->firstOrFail();
+
 
         $data['pemeriksaanable_id'] = $pemeriksaan->id;
         $data['pemeriksaanable_type'] = $fullType;
 
-        foreach ($pemeriksaan->obat as $obat) {
-            if ($obat->stok_obat < 1) {
-                return redirect()->back()->with('error', "Stok obat {$obat->nama_obat} tidak mencukupi.");
+      foreach ($pemeriksaan->obatPemeriksaan as $pivotObat) {
+            $obat = $pivotObat->obat;
+            $jumlahDipakai = $pivotObat->jumlah_obat ?? 0;
+
+            if (!$obat) continue; // abaikan jika tidak ada relasi obat
+
+            if ($obat->stok_obat < $jumlahDipakai) {
+                return redirect()->back()->with('error', "Stok obat {$obat->nama_obat} tidak mencukupi. Stok tersedia: {$obat->stok_obat}, dibutuhkan: $jumlahDipakai");
             }
-            $obat->decrement('stok_obat');
+
+            $obat->decrement('stok_obat', $jumlahDipakai);
         }
+
+
 
         $last = Pembayaran::orderBy('kd_bayar', 'desc')->first();
         $nextNumber = $last && preg_match('/TRX(\d+)/', $last->kd_bayar, $matches) ? ((int)$matches[1] + 1) : 1;
@@ -140,27 +152,67 @@ public function create(Request $request)
                          ->with('success', 'Pembayaran berhasil disimpan.');
     }
 
-    public function show(Pembayaran $pembayaran)
-    {
-        $pemeriksaan = $pembayaran->pemeriksaanable;
-       
+public function show(Pembayaran $pembayaran)
+{
+   $pembayaran->loadMorph('pemeriksaanable', [
+        \App\Models\PemeriksaanUmum::class => ['obat'],
+        \App\Models\PemeriksaanKb::class => ['obat'],
+        \App\Models\PemeriksaanKiaIbuHamil::class => ['obat'],
+        \App\Models\PemeriksaanKiaAnak::class => ['obat'],
+        \App\Models\PemeriksaanIbuNifas::class => ['obat'],
+    ]);
 
-        return view('pages.pembayaran.detail', compact('pembayaran', 'pemeriksaan'));
-    }
+    $pemeriksaan = $pembayaran->pemeriksaanable;
+    return view('pages.pembayaran.detail', compact('pembayaran', 'pemeriksaan'));
+}
+
+
+
+
+
+
+
+    
+
 
     public function export()
-    {
-        $pembayaran = Pembayaran::with('pemeriksaanable.pendaftaran.pasien', 'pemeriksaanable.obat')->get();
-        $pdf = Pdf::loadView('pages.export.pembayaran', compact('pembayaran'))->setPaper('A4', 'landscape');
-        return $pdf->stream('data_pembayaran.pdf');
-    }
+{
+    $pembayaran = Pembayaran::with([
+        'pemeriksaanable.pendaftaran.pasien',
+        'pemeriksaanable.obatPemeriksaan.obat'
+    ])->get();
 
-    public function bukti($id)
-    {
-        $pembayaran = Pembayaran::with('pemeriksaanable.pendaftaran.pasien', 'pemeriksaanable.obat')->findOrFail($id);
-        $pdf = Pdf::loadView('pages.export.bukti-bayar', compact('pembayaran'))->setPaper('A5', 'portrait');
-        return $pdf->stream('bukti_pembayaran.pdf');
-    }
+    // Jika ingin mengelompokkan berdasarkan jenis pelayanan
+    $pembayaransByPelayanan = $pembayaran->groupBy(function ($item) {
+        $class = class_basename($item->pemeriksaanable_type);
+        return match ($class) {
+            'PemeriksaanUmum' => 'Umum',
+            'PemeriksaanKiaIbuHamil' => 'Kesehatan Ibu Hamil',
+            'PemeriksaanKiaAnak' => 'Kesehatan Anak',
+            'PemeriksaanIbuNifas' => 'Ibu Nifas',
+            'PemeriksaanKb' => 'KB',
+            default => 'Lainnya',
+        };
+    });
+
+    $pdf = Pdf::loadView('pages.export.pembayaran', compact('pembayaran', 'pembayaransByPelayanan'))
+        ->setPaper('A4', 'landscape');
+    return $pdf->stream('data_pembayaran.pdf');
+}
+
+
+   public function bukti($id)
+{
+    $pembayaran = Pembayaran::with([
+        'pemeriksaanable.pendaftaran.pasien',
+        'pemeriksaanable.pendaftaran.bidan',
+        'pemeriksaanable.obatPemeriksaan.obat'
+    ])->findOrFail($id);
+
+    $pdf = Pdf::loadView('pages.export.bukti-bayar', compact('pembayaran'))->setPaper('A5', 'portrait');
+    return $pdf->stream('bukti_pembayaran.pdf');
+}
+
 
     public function edit($id)
 {

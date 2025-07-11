@@ -71,7 +71,7 @@
         }
 
         .footer {
-            margin-top: 25px;
+            margin-top: 10px;
             font-size: 11px;
             text-align: right;
         }
@@ -90,7 +90,7 @@
     </div>
 
     <div class="divider"></div>
- <h2 class="title font-semibold uppercase">Laporan Data Pemeriksaan {{ $namaPelayanan }} Periode  {{ $namaBulanTahun }}</h2>
+ <h2 class="title font-semibold uppercase">Laporan Data Pemeriksaan {{ $namaPelayanan }}   {{ $judul }}</h2>
 
     <table class="table table-bordered text-xs">
         <thead>
@@ -154,8 +154,21 @@
     </table>
 
 
-    <div class="footer">
-        Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+    <div class="footer text-sm text-gray-700">
+         <div class="mb-2" >
+            Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+        </div>
+        <div style="margin-top: 0px">
+            Sukoharjo, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>
+            Bidan Praktik Mandiri
+        </div>
+
+        <div style="height: 80px;"></div> {{-- Ruang tanda tangan --}}
+
+        <div>
+            <strong><u>Puniyati Amd. Keb</u></strong>
+        </div>
+       
     </div>
 
 </body>

@@ -38,17 +38,36 @@
                         placeholder="cth : zainuba" required />
                 </div>
                 <div>
+                    <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
+                    <select id="status" name="status"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                        required>
+                        <option value="">-- Pilih --</option>
+                        <option value="NY">NY</option>
+                        <option value="TN">TN</option>
+                        <option value="SDR">SDR</option>
+                        <option value="NN">NN</option>
+                        <option value="AN">AN</option>
+                    </select>
+                </div>
+                <div>
                     <label for="tempt_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tempat Lahir</label>
                     <input type="text" id="tempt_lahir" name="tempt_lahir" value="{{ old('tempt_lahir') }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         placeholder="cth : Sukoharjo" required />
                 </div>
+                @php
+                    $maxDate = \Carbon\Carbon::yesterday()->format('Y-m-d');
+                @endphp
+
                 <div>
                     <label for="tgl_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Lahir</label>
                     <input type="date" id="tgl_lahir" name="tgl_lahir" value="{{ old('tgl_lahir') }}"
+                        max="{{ $maxDate }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
+
                 <div>
                     <label for="umur" class="block mb-2 text-sm font-medium text-gray-900">Umur</label>
                     <input type="text" id="umur" name="umur" value="{{ old('umur') }}"
@@ -150,7 +169,7 @@
                         <option value="O">O</option>
                     </select>
                 </div>
-                
+
             </div>
             <button type="submit"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
@@ -159,31 +178,41 @@
         </form>
     </div>
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const tglLahirInput = document.getElementById('tgl_lahir');
-        const umurInput = document.getElementById('umur');
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const tglLahirInput = document.getElementById('tgl_lahir');
+                const umurInput = document.getElementById('umur');
 
-        tglLahirInput.addEventListener('change', function () {
-            const tglLahir = new Date(this.value);
-            const today = new Date();
+                tglLahirInput.addEventListener('change', function() {
+                    const tglLahir = new Date(this.value);
+                    const today = new Date();
 
-            let umur = today.getFullYear() - tglLahir.getFullYear();
-            const m = today.getMonth() - tglLahir.getMonth();
+                    if (isNaN(tglLahir.getTime())) {
+                        umurInput.value = '';
+                        return;
+                    }
 
-            if (m < 0 || (m === 0 && today.getDate() < tglLahir.getDate())) {
-                umur--;
-            }
+                    let tahun = today.getFullYear() - tglLahir.getFullYear();
+                    let bulan = today.getMonth() - tglLahir.getMonth();
+                    let hari = today.getDate() - tglLahir.getDate();
 
-            if (!isNaN(umur)) {
-                umurInput.value = umur + " Tahun";
-            } else {
-                umurInput.value = '';
-            }
-        });
-    });
-</script>
-@endpush
+                    if (hari < 0) {
+                        // Ambil jumlah hari dalam bulan sebelumnya
+                        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                        hari += prevMonth.getDate();
+                        bulan--;
+                    }
+
+                    if (bulan < 0) {
+                        bulan += 12;
+                        tahun--;
+                    }
+
+                    umurInput.value = `${tahun} Tahun ${bulan} Bulan ${hari} Hari`;
+                });
+            });
+        </script>
+    @endpush
 
 @endsection

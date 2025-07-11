@@ -41,18 +41,38 @@
                         required />
                 </div>
                 <div>
+                    <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
+                    <select id="status" name="status"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                        required>
+                        <option value="">-- Pilih --</option>
+                        <option value="NY" {{ old('status', $pasien->status) == 'NY' ? 'selected' : '' }}>NY</option>
+                        <option value="TN" {{ old('status', $pasien->status) == 'TN' ? 'selected' : '' }}>TN</option>
+                        <option value="SDR" {{ old('status', $pasien->status) == 'SDR' ? 'selected' : '' }}>SDR</option>
+                        <option value="NN" {{ old('status', $pasien->status) == 'NN' ? 'selected' : '' }}>NN</option>
+                        <option value="AN" {{ old('status', $pasien->status) == 'AN' ? 'selected' : '' }}>AN</option>
+                    </select>
+                </div>
+
+                <div>
                     <label for="tempt_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tempat Lahir</label>
                     <input type="text" id="tempt_lahir" name="tempt_lahir"
                         value="{{ old('tempt_lahir', $pasien->tempt_lahir) }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                         required />
                 </div>
-                <div class="mb-4">
-                    <label for="tgl_lahir" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+
+                @php
+                    $maxDate = \Carbon\Carbon::yesterday()->format('Y-m-d');
+                @endphp
+
+                <div>
+                    <label for="tgl_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Lahir</label>
                     <input type="date" id="tgl_lahir" name="tgl_lahir"
-                         value="{{ old('tgl_lahir', isset($pasien->tgl_lahir) ? \Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d') : '') }}"
-                        class="w-full p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500"
-                        required>
+                        value="{{ old('tgl_lahir', isset($pasien->tgl_lahir) ? \Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d') : '') }}"
+                        max="{{ $maxDate }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                        required />
                 </div>
 
                 <div>
@@ -201,22 +221,38 @@
                 const tglLahirInput = document.getElementById('tgl_lahir');
                 const umurInput = document.getElementById('umur');
 
-                tglLahirInput.addEventListener('change', function() {
-                    const tglLahir = new Date(this.value);
+                function hitungUmur(tgl) {
+                    const tglLahir = new Date(tgl);
                     const today = new Date();
 
-                    let umur = today.getFullYear() - tglLahir.getFullYear();
-                    const m = today.getMonth() - tglLahir.getMonth();
+                    let tahun = today.getFullYear() - tglLahir.getFullYear();
+                    let bulan = today.getMonth() - tglLahir.getMonth();
+                    let hari = today.getDate() - tglLahir.getDate();
 
-                    if (m < 0 || (m === 0 && today.getDate() < tglLahir.getDate())) {
-                        umur--;
+                    if (hari < 0) {
+                        bulan--;
+                        hari += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
                     }
 
-                    if (!isNaN(umur)) {
-                        umurInput.value = umur + " Tahun";
+                    if (bulan < 0) {
+                        tahun--;
+                        bulan += 12;
+                    }
+
+                    if (!isNaN(tahun)) {
+                        umurInput.value = `${tahun} Tahun ${bulan} Bulan ${hari} Hari`;
                     } else {
                         umurInput.value = '';
                     }
+                }
+
+                // Jalankan saat halaman dimuat jika sudah ada value
+                if (tglLahirInput.value) {
+                    hitungUmur(tglLahirInput.value);
+                }
+
+                tglLahirInput.addEventListener('change', function() {
+                    hitungUmur(this.value);
                 });
             });
         </script>

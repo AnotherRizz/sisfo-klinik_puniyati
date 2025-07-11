@@ -8,7 +8,7 @@
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 12px;
-            margin: 40px;
+            margin: 30px;
         }
 
         .header {
@@ -90,7 +90,7 @@
     </div>
 
     <div class="divider"></div>
-    <h2 class="title font-semibold uppercase">Laporan Data Pemeriksaan {{ $namaPelayanan }} Periode {{ $namaBulanTahun }}
+    <h2 class="title font-semibold uppercase">Laporan Data Pemeriksaan {{ $namaPelayanan }} {{ $judul }}
     </h2>
 
     <table class="table table-bordered text-xs">
@@ -160,9 +160,21 @@
         </tbody>
     </table>
 
+   <div class="footer text-sm text-gray-700">
+         <div class="mb-2" >
+            Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+        </div>
+        <div style="margin-top: 0px">
+            Sukoharjo, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>
+            Bidan Praktik Mandiri
+        </div>
 
-    <div class="footer">
-        Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+        <div style="height: 50px;"></div> {{-- Ruang tanda tangan --}}
+
+        <div>
+            <strong><u>Puniyati Amd. Keb</u></strong>
+        </div>
+       
     </div>
 
 </body>

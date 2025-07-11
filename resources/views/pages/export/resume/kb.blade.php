@@ -217,18 +217,18 @@
             : '-' }}
         </td>
     </tr>
-    <tr>
-        <td class="left">Obat dan Dosis</td>
-        <td>
-            @forelse ($pemeriksaan->obatPemeriksaan as $o)
-                <div>
-                    {{ $o->obat->nama_obat ?? '-' }} ({{ $o->dosis_carkai ?? '-' }})
-                </div>
-            @empty
-                Tidak ada obat
-            @endforelse
-        </td>
-    </tr>
+   <tr>
+            <td class="left">Jumlah Obat dan Dosis</td>
+            <td>
+                @forelse ($pemeriksaan->obatPemeriksaan as $o)
+                    <div>
+                       ({{ $o->jumlah_obat ?? '-' }}) {{ $o->obat->nama_obat }} ({{ $o->dosis_carkai ?? '-' }}) 
+                    </div>
+                @empty
+                    Tidak ada obat
+                @endforelse
+            </td>
+        </tr>
 </table>
 
 </body>

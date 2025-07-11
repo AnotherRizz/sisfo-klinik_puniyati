@@ -45,7 +45,7 @@
                                     'data-pelayanan-kode' => $p->pelayanan->kodpel,
                                 ],
                             ],
-                    )" :selected="$pendaftaran_id ?: old('pendaftaran_id')" />
+                        )" :selected="$pendaftaran_id ?: old('pendaftaran_id')" />
                 </div>
 
                 {{-- Nama Pasien --}}
@@ -94,7 +94,7 @@
                     <input type="text" name="riw_penyakit" id="riw_penyakit"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
-            
+
                 <div>
                     <label for="frek_kunjungan" class="block text-sm font-medium text-gray-700 mb-1">Frekuensi
                         Kunjungan<span class="text-red-500 text-xs">(hari)</span></label>
@@ -106,31 +106,31 @@
                     <label for="td" class="block text-sm font-medium text-gray-700 mb-1">Tensi Darah <span
                             class="text-red-500 text-xs">(mmHg)</span> </label>
                     <input type="text" name="td" id="td" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" >
+                        value="">
                 </div>
                 <div>
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan <span
                             class="text-red-500 text-xs">(Kg)</span></label>
                     <input type="text" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" >
+                        value="">
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan <span
                             class="text-red-500 text-xs">(Cm)</span></label>
                     <input type="text" name="tb" id="tb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" >
+                        value="">
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
-                    <input type="text" name="suhu" id="suhu" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" >
+                    <input type="text" name="suhu" id="suhu"
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
                 <div>
                     <label for="saturasiOx" class="block text-sm font-medium text-gray-700 mb-1">Saturasi Oksigen <span
                             class="text-red-500 text-xs"> (%)</span></label>
                     <input type="text" name="saturasiOx" id="saturasiOx"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" >
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
                 <div>
                     <label for="alergi" class="block text-sm font-medium text-gray-700 mb-1">Alergi </label>
@@ -223,15 +223,17 @@
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
 
-
+                @php
+                    $minDate = \Carbon\Carbon::now()->format('Y-m-d');
+                @endphp
                 <div>
                     <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                         Kembali</label>
-                    <input type="date" name="tgl_kembali" id="tgl_kembali"
+                    <input type="date" name="tgl_kembali" id="tgl_kembali" min="{{$minDate}}"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
-                        value="{{ old('tgl_kembali') }}" >
+                        value="{{ old('tgl_kembali') }}">
                 </div>
-                 <div class="mb-6">
+                <div class="mb-6">
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
                     <select id="tindak_lnjt" name="tindak_lnjt" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Pilih --</option>
@@ -242,24 +244,32 @@
                         </option>
                         <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
                             Rumah Sakit</option>
-                        <option value="Rujuk Spesialis Obsgyn" {{ old('tindak_lnjt') == 'Rujuk Spesialis Obsgyn' ? 'selected' : '' }}>
+                        <option value="Rujuk Spesialis Obsgyn"
+                            {{ old('tindak_lnjt') == 'Rujuk Spesialis Obsgyn' ? 'selected' : '' }}>
                             Rujuk Spesialis Obsgyn</option>
                         <option value="Tidak Dirujuk" {{ old('tindak_lnjt') == 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
                             Dirujuk</option>
                     </select>
                 </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
+                <div class="mb-6 col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Obat, Dosis dan Jumlah</label>
                     <div id="obat-wrapper">
-                        <div class="flex gap-2 mb-2">
-                            <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" >
-                                <option value="">-- Pilih Obat --</option>
-                                @foreach ($obats as $obat)
-                                    <option value="{{ $obat->id }}">{{ $obat->nama_obat }}</option>
-                                @endforeach
-                            </select>
-                            <input type="text" name="dosis_carkai[]"
-                                class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis"  />
+                        <div class="obat-row flex flex-col gap-1 mb-4">
+                            <div class="flex gap-2">
+                                <select name="obat_id[]" class="obat-select w-1/2 border-gray-300 rounded-lg shadow-sm">
+                                    <option value="">-- Pilih Obat --</option>
+                                    @foreach ($obats as $obat)
+                                        <option value="{{ $obat->id }}" data-stok="{{ $obat->stok_obat }}">
+                                            {{ $obat->nama_obat }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="text" name="dosis_carkai[]"
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" />
+                                <input type="text" name="jumlah_obat[]"
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Jumlah Obat" />
+                            </div>
+                            <p class="stok-info text-xs text-end text-gray-500"></p>
                         </div>
                     </div>
                     <button type="button" id="add-obat" class="text-sm cursor-pointer text-blue-600">+ Tambah
@@ -278,11 +288,39 @@
 
 @push('scripts')
     <script>
-        document.getElementById('add-obat').addEventListener('click', function() {
-            const wrapper = document.getElementById('obat-wrapper');
-            const newRow = wrapper.children[0].cloneNode(true);
-            newRow.querySelectorAll('input, select').forEach(input => input.value = '');
-            wrapper.appendChild(newRow);
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateStok(selectElement) {
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const stok = selectedOption.dataset.stok || '';
+                const wrapper = selectElement.closest('.obat-row');
+                const stokInfo = wrapper.querySelector('.stok-info');
+                stokInfo.textContent = stok ? `Stok tersedia: ${stok}` : '';
+            }
+
+            // Event listener awal untuk baris pertama
+            document.querySelectorAll('.obat-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    updateStok(this);
+                });
+            });
+
+            // Tambah obat dinamis
+            document.getElementById('add-obat').addEventListener('click', function() {
+                const wrapper = document.getElementById('obat-wrapper');
+                const originalRow = wrapper.querySelector('.obat-row');
+                const clone = originalRow.cloneNode(true);
+
+                // Reset nilai input dan stok
+                clone.querySelectorAll('input, select').forEach(el => el.value = '');
+                clone.querySelector('.stok-info').textContent = '';
+
+                wrapper.appendChild(clone);
+
+                // Tambahkan event listener baru
+                clone.querySelector('.obat-select').addEventListener('change', function() {
+                    updateStok(this);
+                });
+            });
         });
     </script>
 

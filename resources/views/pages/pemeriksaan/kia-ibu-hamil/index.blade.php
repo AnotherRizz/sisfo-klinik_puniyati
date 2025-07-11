@@ -3,7 +3,7 @@
 @section('title', 'Data Pemeriksaan')
 
 @section('content')
-    <h1 class="text-xl font-semibold mb-4">Data Pemeriksaan KIA IBU HAMIL</h1>
+    <h1 class="text-xl font-semibold mb-4">Data Pemeriksaan Kesehatan IBU HAMIL</h1>
 
     <div class="flex w-full gap-2 justify-start items-center ">
         <div>
@@ -28,7 +28,7 @@
         <div class="w-full flex justify-between">
 
             <div class="mb-4 basis-1/2">
-                <x-search-input :action="route('kia-ibu-hamil.index')" name="search" placeholder="Cari nama / no rm..." />
+                <x-search-input :action="route('kia-ibu-hamil.index')" name="search" placeholder="Cari nama, alamat, tanggal lahir, nomor rm" />
             </div>
             <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('kia-ibu-hamil.index')" />
 

@@ -27,9 +27,14 @@ use Barryvdh\DomPDF\Facade\Pdf;
 Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/reset-password-default', [AuthController::class, 'resetToDefault'])->name('password.reset.default');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::resource('pendaftaran', PendaftaranController::class);
+    Route::get('/cek-kunjungan/{pasien_id}', [PendaftaranController::class, 'cekKunjungan']);
+
     Route::resource('pembayaran', PembayaranController::class);
     Route::resource('dashboard', DashboardController::class);
     Route::resource('setting', SettingController::class);

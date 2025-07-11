@@ -14,10 +14,19 @@
 
                 Kembali ke Pemeriksaan
             </a>
-            <a href="{{ route('laporan.pemeriksaan', ['bulan' => "$tahun-$bulan", 'jenis_pelayanan' => request('jenis_pelayanan')]) }}"
-                class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
-                Unduh PDF
-            </a>
+            <form action="{{ route('laporan.pemeriksaan') }}" method="GET" target="_blank">
+                <input type="hidden" name="filter_type" value="{{ request('filter_type') }}">
+                <input type="hidden" name="jenis_pelayanan" value="{{ request('jenis_pelayanan') }}">
+                <input type="hidden" name="tanggal" value="{{ request('tanggal') }}">
+                <input type="hidden" name="tanggal_awal" value="{{ request('tanggal_awal') }}">
+                <input type="hidden" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
+                <input type="hidden" name="bulan" value="{{ request('bulan') }}">
+
+                <button type="submit" class="bg-red-500 cursor-pointer hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
+                    Unduh PDF
+                </button>
+            </form>
+
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow">
@@ -35,11 +44,8 @@
             <div class="border-t-2 border-black my-2"></div>
 
             <div class="flex justify-start items-center mb-4">
-                <h2 class="text-base font-semibold uppercase">
-                    Laporan Data Pemeriksaan {{ ucwords(str_replace('_', ' ', $jenisPelayanan)) }} Periode
-                    {{ $namaBulan }}
-                </h2>
-
+                <h2 class="text-base font-semibold uppercase">Laporan Data Pemeriksaan {{ $jenisPelayanan }}
+                    {{ $judul }}</h2>
             </div>
 
             {{-- Tabel --}}
@@ -85,7 +91,8 @@
                                 </td>
 
                                 <td class="border px-2 py-1 text-center">{{ $item->nomor_periksa ?? '-' }}</td>
-                                <td class="border px-2 py-1 text-center">{{ $item->pendaftaran->pasien->no_rm ?? '-' }}</td>
+                                <td class="border px-2 py-1 text-center">{{ $item->pendaftaran->pasien->no_rm ?? '-' }}
+                                </td>
                                 <td class="border px-2 py-1">{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->keluhan ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->umr_hamil . ' Minggu' ?? '-' }}</td>
@@ -96,8 +103,10 @@
                                 <td class="border px-2 py-1">{{ $item->lab ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->resti ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->riwayat_TT ?? '-' }}</td>
-                                <td class="border px-2 py-1">  {{ \Carbon\Carbon::parse($item->hpht)->translatedFormat('d/m/Y') ?? '-' }}</td>
-                                <td class="border px-2 py-1">  {{ \Carbon\Carbon::parse($item->hpl)->translatedFormat('d/m/Y') ?? '-' }}</td>
+                                <td class="border px-2 py-1">
+                                    {{ \Carbon\Carbon::parse($item->hpht)->translatedFormat('d/m/Y') ?? '-' }}</td>
+                                <td class="border px-2 py-1">
+                                    {{ \Carbon\Carbon::parse($item->hpl)->translatedFormat('d/m/Y') ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->diagnosa ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->tindakan ?? '-' }}</td>
                                 <td class="border px-2 py-1 text-center">{{ $namaObat ?: '-' }}</td>

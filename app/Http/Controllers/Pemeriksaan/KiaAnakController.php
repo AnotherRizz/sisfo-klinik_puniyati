@@ -40,14 +40,16 @@ public function index(Request $request)
 
     // Filter pencarian
     if ($search = $request->get('search')) {
-        $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
+         $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%');
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%');
         });
 
         $pendaftaranBelumDiperiksa->whereHas('pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%');
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%');
         });
     }
 
@@ -77,7 +79,7 @@ public function create(Request $request)
     {
         return view('pages.pemeriksaan.kia-anak.create', [
             'pendaftarans' => Pendaftaran::doesntHave('pemeriksaanKiaAnak')
-                ->whereHas('pelayanan', fn ($q) => $q->where('nama_pelayanan', 'KIA Anak'))
+                ->whereHas('pelayanan', fn ($q) => $q->where('nama_pelayanan', 'Kesehatan Anak'))
                 ->with(['pasien', 'bidan', 'pelayanan'])->get(),
             'obats' => Obat::all(),
             'pendaftaran_id' => $request->pendaftaran_id,    
@@ -112,16 +114,18 @@ public function create(Request $request)
         // Lewati jika tidak ada obat yang dipilih ("" atau null)
         if (empty($obat_id)) continue;
 
-        $dosis = $request->dosis_carkai[$i] ?? null;
+         $dosis = $request->dosis_carkai[$i] ?? null;
+        $jumlah = $request->jumlah_obat[$i] ?? null;
 
         $pemeriksaan->obatPemeriksaan()->create([
             'obat_id' => $obat_id,
             'dosis_carkai' => $dosis,
+            'jumlah_obat' => $jumlah,
         ]);
     }
 }
 
-        return redirect()->route('kia-anak.index')->with('success', 'Data KIA Anak berhasil disimpan.');
+        return redirect()->route('kia-anak.index')->with('success', 'Data Kesehatan Anak berhasil disimpan.');
     }
 
     public function show($id)
@@ -175,11 +179,13 @@ public function create(Request $request)
         // Lewati jika tidak ada obat yang dipilih ("" atau null)
         if (empty($obat_id)) continue;
 
-        $dosis = $request->dosis_carkai[$i] ?? null;
+         $dosis = $request->dosis_carkai[$i] ?? null;
+        $jumlah = $request->jumlah_obat[$i] ?? null;
 
         $pemeriksaan->obatPemeriksaan()->create([
             'obat_id' => $obat_id,
             'dosis_carkai' => $dosis,
+            'jumlah_obat' => $jumlah,
         ]);
     }
 }

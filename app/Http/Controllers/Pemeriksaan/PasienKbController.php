@@ -38,13 +38,17 @@ class PasienKbController extends Controller
 
     // Pencarian
     if ($search = $request->get('search')) {
-        $query->whereHas('pendaftaran.pasien', fn($q) =>
+          $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%'));
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%');
+        });
 
-        $pendaftaranBelumDiperiksa->whereHas('pasien', fn($q) =>
+        $pendaftaranBelumDiperiksa->whereHas('pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%'));
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%');
+        });
     }
 
     // Gabungkan Data
@@ -113,16 +117,18 @@ public function create(Request $request)
 
         $pemeriksaan = PemeriksaanKb::create($data);
 
-       if ($request->has('obat_id') && is_array($request->obat_id)) {
+      if ($request->has('obat_id') && is_array($request->obat_id)) {
     foreach ($request->obat_id as $i => $obat_id) {
         // Lewati jika tidak ada obat yang dipilih ("" atau null)
         if (empty($obat_id)) continue;
 
         $dosis = $request->dosis_carkai[$i] ?? null;
+        $jumlah = $request->jumlah_obat[$i] ?? null;
 
         $pemeriksaan->obatPemeriksaan()->create([
             'obat_id' => $obat_id,
             'dosis_carkai' => $dosis,
+            'jumlah_obat' => $jumlah,
         ]);
     }
 }
@@ -185,10 +191,12 @@ public function create(Request $request)
         if (empty($obat_id)) continue;
 
         $dosis = $request->dosis_carkai[$i] ?? null;
+        $jumlah = $request->jumlah_obat[$i] ?? null;
 
         $pemeriksaan->obatPemeriksaan()->create([
             'obat_id' => $obat_id,
             'dosis_carkai' => $dosis,
+            'jumlah_obat' => $jumlah,
         ]);
     }
 }

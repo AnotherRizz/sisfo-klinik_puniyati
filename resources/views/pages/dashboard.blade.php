@@ -32,8 +32,8 @@
             </p>
             <div class="flex flex-wrap gap-2 mt-3">
                 <span class="bg-purple-100 text-purple-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan Umum</span>
-                <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan KIA Ibu Hamil</span>
-                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan KIA Anak</span>
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan Kesehatan Ibu Hamil</span>
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan Kesehatan Anak</span>
                 <span class="bg-pink-100 text-pink-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan Ibu Nifas</span>
                 <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-3 py-1 rounded-full">Pelayanan KB</span>
             </div>

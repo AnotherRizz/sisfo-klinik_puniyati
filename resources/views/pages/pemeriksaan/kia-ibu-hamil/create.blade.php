@@ -3,7 +3,7 @@
 @section('title', 'Create Pemeriksaan Umum')
 
 @section('content')
-    <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan KIA IBU HAMIL</h1>
+    <h1 class="text-xl font-semibold mb-4">Tambah Data Pemeriksaan Kesehatan HAMIL</h1>
     <div class="mb-6">
         <a href="{{ route('kia-ibu-hamil.index') }}"
             class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 text-sm rounded shadow-sm">
@@ -28,7 +28,7 @@
                 {{-- No reg --}}
                 {{-- No Registrasi --}}
                 <div>
-                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan KIA IBU HAMIL)"
+                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan Kesehatan IBU HAMIL)"
                         :options="$pendaftarans->mapWithKeys(
                             fn($p) => [
                                 $p->id => [
@@ -258,12 +258,14 @@
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
 
-
+                @php
+                    $minDate = \Carbon\Carbon::now()->format('Y-m-d');
+                @endphp
 
                 <div>
                     <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                         Kembali</label>
-                    <input type="date" name="tgl_kembali" id="tgl_kembali"
+                    <input type="date" name="tgl_kembali" id="tgl_kembali" min="{{$minDate}}"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
                         value="{{ old('tgl_kembali')}}" >
                 </div>
@@ -284,18 +286,25 @@
                             Dirujuk</option>
                     </select>
                 </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
+                <div class="mb-6 col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Obat, Dosis dan Jumlah</label>
                     <div id="obat-wrapper">
-                        <div class="flex gap-2 mb-2">
-                            <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm">
-                                <option value="">-- Pilih Obat --</option>
-                                @foreach ($obats as $obat)
-                                    <option value="{{ $obat->id }}">{{ $obat->nama_obat }}</option>
-                                @endforeach
-                            </select>
-                            <input type="text" name="dosis_carkai[]"
-                                class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" />
+                        <div class="obat-row flex flex-col gap-1 mb-4">
+                            <div class="flex gap-2">
+                                <select name="obat_id[]" class="obat-select w-1/2 border-gray-300 rounded-lg shadow-sm">
+                                    <option value="">-- Pilih Obat --</option>
+                                    @foreach ($obats as $obat)
+                                        <option value="{{ $obat->id }}" data-stok="{{ $obat->stok_obat }}">
+                                            {{ $obat->nama_obat }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="text" name="dosis_carkai[]"
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" />
+                                <input type="text" name="jumlah_obat[]"
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Jumlah Obat" />
+                            </div>
+                            <p class="stok-info text-xs text-end text-gray-500"></p>
                         </div>
                     </div>
                     <button type="button" id="add-obat" class="text-sm cursor-pointer text-blue-600">+ Tambah
@@ -313,14 +322,43 @@
 @endsection
 
 @push('scripts')
-    <script>
-        document.getElementById('add-obat').addEventListener('click', function() {
-            const wrapper = document.getElementById('obat-wrapper');
-            const newRow = wrapper.children[0].cloneNode(true);
-            newRow.querySelectorAll('input, select').forEach(input => input.value = '');
-            wrapper.appendChild(newRow);
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateStok(selectElement) {
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const stok = selectedOption.dataset.stok || '';
+                const wrapper = selectElement.closest('.obat-row');
+                const stokInfo = wrapper.querySelector('.stok-info');
+                stokInfo.textContent = stok ? `Stok tersedia: ${stok}` : '';
+            }
+
+            // Event listener awal untuk baris pertama
+            document.querySelectorAll('.obat-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    updateStok(this);
+                });
+            });
+
+            // Tambah obat dinamis
+            document.getElementById('add-obat').addEventListener('click', function() {
+                const wrapper = document.getElementById('obat-wrapper');
+                const originalRow = wrapper.querySelector('.obat-row');
+                const clone = originalRow.cloneNode(true);
+
+                // Reset nilai input dan stok
+                clone.querySelectorAll('input, select').forEach(el => el.value = '');
+                clone.querySelector('.stok-info').textContent = '';
+
+                wrapper.appendChild(clone);
+
+                // Tambahkan event listener baru
+                clone.querySelector('.obat-select').addEventListener('change', function() {
+                    updateStok(this);
+                });
+            });
         });
     </script>
+
 
   <script>
         $(document).ready(function() {

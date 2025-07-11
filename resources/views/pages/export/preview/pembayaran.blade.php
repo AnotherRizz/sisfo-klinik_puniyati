@@ -14,10 +14,20 @@
                 </svg>
                 Kembali ke Laporan
             </a>
-            <a href="{{ route('laporan.pembayaran', ['bulan' => "$tahun-$bulan"]) }}"
-                class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded" target="_blank">
-                Unduh PDF
-            </a>
+            <form action="{{ route('laporan.pembayaran') }}" method="GET" target="_blank" id="form-export">
+                <input type="hidden" name="filter_type" value="{{ $request->filter_type }}">
+                <input type="hidden" name="tanggal" value="{{ $request->tanggal }}">
+                <input type="hidden" name="tanggal_awal" value="{{ $request->tanggal_awal }}">
+                <input type="hidden" name="tanggal_akhir" value="{{ $request->tanggal_akhir }}">
+                <input type="hidden" name="bulan" value="{{ $request->bulan }}">
+
+                <button type="submit" class="bg-red-500 hover:bg-red-600 cursor-pointer text-white text-sm px-4 py-2 rounded">
+                    Unduh PDF
+                </button>
+            </form>
+
+
+
 
 
         </div>
@@ -40,7 +50,7 @@
 
 
             <h1 colspan="14" class="text-sm font-semibold uppercase py-2 text-slate-600">
-                Laporan Data Pembayaran Periode {{ $namaBulan }}
+                Laporan Data Pembayaran {{ $judul }}
             </h1>
 
 
@@ -89,7 +99,8 @@
                                     </td>
                                     <td class="border px-2 py-1 text-xs text-center">{{ $pasien->no_rm ?? '-' }}</td>
                                     <td class="border px-2 py-1 text-xs text-center">{{ $pasien->nama_pasien ?? '-' }}</td>
-                                    <td class="border px-2 py-1 text-xs text-center">{{ $pelayanan->nama_pelayanan ?? '-' }}
+                                    <td class="border px-2 py-1 text-xs text-center">
+                                        {{ $pelayanan->nama_pelayanan ?? '-' }}
                                     </td>
                                     <td class="border px-2 py-1 text-xs text-center">
                                         {{ $obatList->pluck('nama_obat')->join(', ') ?: '-' }}</td>

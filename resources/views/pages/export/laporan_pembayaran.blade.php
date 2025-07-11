@@ -8,7 +8,7 @@
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 12px;
-            margin: 40px;
+            margin: 5px;
         }
 
         .header {
@@ -80,7 +80,7 @@
             text-align: right;
         }
 
-        .total-row {
+        .total {
             font-weight: bold;
             background-color: #f5f5f5;
         }
@@ -100,8 +100,8 @@
 
     <div class="divider"></div>
 
-    <h3 class="title">Laporan Pembayaran Bulan
-        {{ \Carbon\Carbon::createFromDate($tahun, $bulan)->locale('id')->translatedFormat('F Y') }}</h3>
+    <h3 class="title">Laporan Pembayaran  {{ $judul }}
+        {{-- {{ \Carbon\Carbon::createFromDate($tahun, $bulan)->locale('id')->translatedFormat('F Y') }}</h3> --}}
 
     <table class="table">
         <thead>
@@ -124,29 +124,42 @@
         </thead>
         <tbody>
             @php
-                $urutanPelayanan = ['Umum', 'KIA Ibu Hamil', 'KIA Anak', 'Ibu Nifas', 'KB'];
+                $urutanPelayanan = ['Umum', 'Kesehatan Ibu Hamil', 'Kesehatan Anak', 'Ibu Nifas', 'KB'];
                 $counter = 1;
                 $totalTindakan = $totalAdministrasi = $totalKonsultasi = $totalObat = 0;
-            @endphp
-            @php
+
                 $allPembayaran = collect($pembayaransByPelayanan)->flatten(1);
             @endphp
 
             @foreach ($urutanPelayanan as $pelayananName)
-                @if (isset($pembayaransByPelayanan[$pelayananName]) && count($pembayaransByPelayanan[$pelayananName]))
+                @if (isset($pembayaransByPelayanan[$pelayananName]))
                     @foreach ($pembayaransByPelayanan[$pelayananName] as $item)
                         @php
                             $periksa = $item->pemeriksaanable;
                             $pendaftaran = optional($periksa)->pendaftaran;
                             $pasien = optional($pendaftaran)->pasien;
-                            $obatList = optional($periksa)->obat ?? collect();
-                            $obatHarga = $obatList->sum('harga_jual');
+                            $obatPemeriksaan = optional($periksa)->obatPemeriksaan ?? collect();
 
+                            $subtotalObat = $obatPemeriksaan->sum(function ($ob) {
+                                return ($ob->jumlah_obat ?? 0) * ($ob->obat->harga_jual ?? 0);
+                            });
+
+                            $obatNamaList =
+                                $obatPemeriksaan
+                                    ->map(function ($ob) {
+                                        return optional($ob->obat)->nama_obat;
+                                    })
+                                    ->filter()
+                                    ->join(', ') ?:
+                                '-';
+
+                            // Total keseluruhan
                             $totalTindakan += $item->biaya_tindakan ?? 0;
                             $totalAdministrasi += $item->biaya_administrasi ?? 0;
                             $totalKonsultasi += $item->biaya_konsultasi ?? 0;
-                            $totalObat += $obatHarga;
+                            $totalObat += $subtotalObat;
                         @endphp
+
                         <tr>
                             <td>{{ $counter++ }}</td>
                             <td>{{ $item->kd_bayar ?? '-' }}</td>
@@ -154,12 +167,12 @@
                             <td>{{ $pasien->no_rm ?? '-' }}</td>
                             <td>{{ $pasien->nama_pasien ?? '-' }}</td>
                             <td>{{ $pelayananName }}</td>
-                            <td>{{ $obatList->pluck('nama_obat')->join(', ') ?: '-' }}</td>
+                            <td>{{ $obatNamaList }}</td>
                             <td>{{ $item->tindakan ?? '-' }}</td>
                             <td>Rp{{ number_format($item->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
                             <td>Rp{{ number_format($item->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
                             <td>Rp{{ number_format($item->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
-                            <td>Rp{{ number_format($obatHarga, 0, ',', '.') }}</td>
+                            <td>Rp{{ number_format($subtotalObat, 0, ',', '.') }}</td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_bayar ?? $item->created_at)->format('d/m/Y') }}
                             </td>
                             <td>{{ $item->jenis_bayar ?? '-' }}</td>
@@ -167,17 +180,43 @@
                     @endforeach
                 @endif
             @endforeach
+            @php
+                $grandTotal = $totalTindakan + $totalAdministrasi + $totalKonsultasi + $totalObat;
+            @endphp
 
-            <tr class="font-semibold">
-                <td colspan="14" class="border px-2 py-2 text-xs text-right text-gray-700">
-                    Total Seluruh Pembayaran: {{ $allPembayaran->count() }} transaksi
-                </td>
+            <tr class="font-semibold total bg-gray-100">
+                <td colspan="8" style="text-align: right">Jumlah</td>
+                <td>Rp{{ number_format($totalTindakan, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($totalAdministrasi, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($totalKonsultasi, 0, ',', '.') }}</td>
+                <td>Rp{{ number_format($totalObat, 0, ',', '.') }}</td>
+                <td colspan="2"></td>
             </tr>
+            <tr class="font-semibold total bg-gray-100">
+                <td colspan="8" style="text-align: right">Total</td>
+                <td colspan="6" style="text-align: left">Rp{{ number_format($grandTotal, 0, ',', '.') }}</td>
+
+            </tr>
+
         </tbody>
+
     </table>
 
-    <div class="footer">
-        Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+    <div class="footer text-sm text-gray-700">
+        <div class="mb-2">
+            Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
+        </div>
+        <div style="margin-top: 0px">
+            Sukoharjo, {{ \Carbon\Carbon::now()->locale('id')->translatedFormat('d F Y') }}<br>
+            Bidan Praktik Mandiri
+        </div>
+
+        <div style="height: 50px;"></div> {{-- Ruang tanda tangan --}}
+
+        <div>
+            <strong><u>Puniyati Amd. Keb</u></strong>
+        </div>
+
     </div>
 
 </body>

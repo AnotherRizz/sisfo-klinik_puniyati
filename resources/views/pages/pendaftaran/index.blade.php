@@ -6,12 +6,12 @@
     <h1 class="text-xl font-semibold mb-4">Data Pendaftaran</h1>
 
     <div class="flex w-full gap-2 items-center justify-between px-2  rounded-md my-3">
-         <div>
+        <div>
             <h1 class="text-lg font-bold text-slate-500">
                 @if (request('filter_tanggal') == 'semua')
-                Menampilkan Semua Pendaftaran
+                    Menampilkan Semua Pendaftaran
                 @else
-                Menampilkan Pendaftaran Tanggal {{ now()->locale('id')->translatedFormat('d F Y') }}
+                    Menampilkan Pendaftaran Tanggal {{ now()->locale('id')->translatedFormat('d F Y') }}
                 @endif
             </h1>
         </div>
@@ -63,12 +63,13 @@
         <div class="w-full flex justify-between items-center">
 
             <div class="mb-4 basis-1/2">
-                <x-search-input :action="route('pendaftaran.index')" name="search" placeholder="Cari nama / no rekam medis..." />
+                <x-search-input :action="route('pendaftaran.index')" name="search" placeholder="Cari nama,alamat, tanggal lahir, nomor rm" />
             </div>
 
 
             <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('pendaftaran.index')" />
         </div>
+
 
 
 
@@ -80,9 +81,27 @@
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No Reg</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No RM</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Pasien</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Bidan</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Alamat</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Lahir</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Daftar</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Pelayanan</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        <form method="GET" action="{{ route('pendaftaran.index') }}">
+                            {{-- Tetap bawa filter lain agar tidak hilang --}}
+                            <input type="hidden" name="filter_tanggal" value="{{ request('filter_tanggal') }}">
+                            <input type="hidden" name="search" value="{{ request('search') }}">
+                            <select name="pelayanan_filter" onchange="this.form.submit()"
+                                class="text-xs px-2 py-1 border rounded">
+                                <option value="">Semua</option>
+                                @foreach ($pelayanans as $pelayanan)
+                                    <option value="{{ $pelayanan->id }}"
+                                        {{ request('pelayanan_filter') == $pelayanan->id ? 'selected' : '' }}>
+                                        {{ $pelayanan->nama_pelayanan }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </th>
+
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Jenis Kunjungan</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
@@ -95,7 +114,10 @@
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->noreg }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pasien->no_rm ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pasien->nama_pasien ?? '-' }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->bidan->nama_bidan ?? '-' }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pasien->alamat ?? '-' }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                            {{ \Carbon\Carbon::parse($item->pasien->tgl_lahir)->locale('id')->translatedFormat('d F Y') }}
+                        </td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ \Carbon\Carbon::parse($item->tgl_daftar)->locale('id')->translatedFormat('d F Y') }}
                         </td>
@@ -133,8 +155,13 @@
                         <!-- Kolom Aksi -->
                         <td class="px-4 py-2 text-sm items-center text-gray-900 flex gap-1">
                             @if (!$hasPayment)
-                                <a href="{{ route('pendaftaran.edit', $item->id) }}"
-                                    class="px-3 py-1 text-white bg-yellow-500 rounded text-xs hover:bg-yellow-600">Edit</a>
+                                @role('bidan')
+                                    <a href="{{ route('pendaftaran.edit', $item->id) }}"
+                                        class="px-3 py-1 text-white bg-yellow-500 rounded text-xs hover:bg-yellow-600">Edit</a>
+                                @endrole
+                                @role('admin')
+                                    <span class="text-red-500 text-xs italic">Pembayaran Belum selesai</span>
+                                @endrole
                             @else
                                 <span class="text-gray-500 text-xs italic">Pembayaran selesai</span>
                             @endif

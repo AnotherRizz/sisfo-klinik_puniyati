@@ -65,6 +65,19 @@
                                 required />
                         </div>
                         <div>
+                            <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
+                            <select id="status" name="status"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                                required>
+                                <option value="">-- Pilih --</option>
+                                <option value="NY">NY</option>
+                                <option value="TN">TN</option>
+                                <option value="SDR">SDR</option>
+                                <option value="NN">NN</option>
+                                <option value="AN">AN</option>
+                            </select>
+                        </div>
+                        <div>
                             <label for="nama_kk" class="block mb-2 text-sm font-medium text-gray-900">Nama
                                 KK</label>
                             <input type="text" id="nama_kk" name="nama_kk" value="{{ old('nama_kk') }}"
@@ -78,10 +91,15 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                                 required />
                         </div>
+                        @php
+                            $maxDate = \Carbon\Carbon::yesterday()->format('Y-m-d');
+                        @endphp
+
                         <div>
                             <label for="tgl_lahir" class="block mb-2 text-sm font-medium text-gray-900">Tanggal
                                 Lahir</label>
                             <input type="date" id="tgl_lahir" name="tgl_lahir" value="{{ old('tgl_lahir') }}"
+                                max="{{ $maxDate }}"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                                 required />
                         </div>
@@ -211,13 +229,17 @@
 
                 {{-- Pasien --}}
                 <div>
-                    <x-select2 id="pasien_id" name="pasien_id" label="Pasien" :options="$pasiens->mapWithKeys(fn($p) => [$p->id => $p->nama_pasien . ' - ' . $p->no_rm])" :selected="old('pasien_id', $selectedPasien ?? '')" />
+                    <x-select2 id="pasien_id" name="pasien_id" label="Pasien" :options="$pasiens->mapWithKeys(
+                        fn($p) => [
+                            $p->id => $p->nama_pasien . ' - ' . $p->no_rm . ' - ' . $p->alamat,
+                        ],
+                    )" :selected="old('pasien_id', $selectedPasien ?? '')" />
 
                 </div>
 
                 {{-- Bidan --}}
                 <div>
-                    <x-select2 id="bidan_id" name="bidan_id" label="Bidan" :options="$bidans->mapWithKeys(fn($b) => [$b->id => $b->nama_bidan])" :selected="old('bidan_id' , 1   ?? '')" />
+                    <x-select2 id="bidan_id" name="bidan_id" label="Bidan" :options="$bidans->mapWithKeys(fn($b) => [$b->id => $b->nama_bidan])" :selected="old('bidan_id', 1 ?? '')" />
                 </div>
 
                 {{-- Pelayanan --}}
@@ -278,28 +300,90 @@
     </script>
 @endpush
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const tglLahirInput = document.getElementById('tgl_lahir');
-        const umurInput = document.getElementById('umur');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tglLahirInput = document.getElementById('tgl_lahir');
+            const umurInput = document.getElementById('umur');
 
-        tglLahirInput.addEventListener('change', function () {
-            const tglLahir = new Date(this.value);
-            const today = new Date();
+            tglLahirInput.addEventListener('change', function() {
+                const tglLahir = new Date(this.value);
+                const today = new Date();
 
-            let umur = today.getFullYear() - tglLahir.getFullYear();
-            const m = today.getMonth() - tglLahir.getMonth();
+                if (isNaN(tglLahir.getTime())) {
+                    umurInput.value = '';
+                    return;
+                }
 
-            if (m < 0 || (m === 0 && today.getDate() < tglLahir.getDate())) {
-                umur--;
-            }
+                let tahun = today.getFullYear() - tglLahir.getFullYear();
+                let bulan = today.getMonth() - tglLahir.getMonth();
+                let hari = today.getDate() - tglLahir.getDate();
 
-            if (!isNaN(umur)) {
-                umurInput.value = umur + " Tahun";
-            } else {
-                umurInput.value = '';
-            }
+                if (hari < 0) {
+                    // Ambil jumlah hari dalam bulan sebelumnya
+                    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                    hari += prevMonth.getDate();
+                    bulan--;
+                }
+
+                if (bulan < 0) {
+                    bulan += 12;
+                    tahun--;
+                }
+
+                umurInput.value = `${tahun} Tahun ${bulan} Bulan ${hari} Hari`;
+            });
         });
-    });
-</script>
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('.select2').select2({
+                placeholder: '-- Pilih --',
+                allowClear: true,
+                width: '100%',
+                templateResult: function(data) {
+                    if (!data.id) return data.text;
+
+                    // Pisahkan berdasarkan " - "
+                    let parts = data.text.split(' - ');
+                    let nama = parts[0] || '';
+                    let rm = parts[1] || '';
+                    let alamat = parts[2] || '';
+
+                    return $(`
+                        <div style="line-height: 1.4; padding: 5px 0; margin-bottom: 6px; border-bottom: 1px dashed #ddd;">
+                            <div><strong>${nama}</strong></div>
+                            <div class="text-sm text-gray-500">No. RM: ${rm}</div>
+                            <div class="text-sm text-gray-500">Alamat: ${alamat}</div>
+                        </div>
+                    `);
+
+                },
+                templateSelection: function(data) {
+                    return data.text;
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#pasien_id').on('change', function() {
+                let pasienId = $(this).val();
+
+                if (pasienId) {
+                    $.ajax({
+                        url: `/cek-kunjungan/${pasienId}`,
+                        type: 'GET',
+                        success: function(response) {
+                            $('#jenis_kunjungan').val(response.jenis_kunjungan).change();
+                        },
+                        error: function() {
+                            console.error('Gagal mengecek jenis kunjungan.');
+                        }
+                    });
+                } else {
+                    $('#jenis_kunjungan').val('').change();
+                }
+            });
+        });
+    </script>
 @endpush

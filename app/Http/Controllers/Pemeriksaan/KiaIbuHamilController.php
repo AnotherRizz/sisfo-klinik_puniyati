@@ -41,14 +41,16 @@ public function index(Request $request)
 
     // Filter pencarian
     if ($search = $request->get('search')) {
-        $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
+         $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%');
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%');
         });
 
         $pendaftaranBelumDiperiksa->whereHas('pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%');
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%');
         });
     }
 
@@ -76,7 +78,7 @@ public function create(Request $request)
     {
         return view('pages.pemeriksaan.kia-ibu-hamil.create', [
             'pendaftarans' => Pendaftaran::doesntHave('pemeriksaanKiaIbuHamil')
-                ->whereHas('pelayanan', fn ($q) => $q->where('nama_pelayanan', 'KIA Ibu Hamil'))
+                ->whereHas('pelayanan', fn ($q) => $q->where('nama_pelayanan', 'Kesehatan Ibu Hamil'))
                 ->with(['pasien', 'bidan', 'pelayanan'])->get(),
             'obats' => Obat::all(),
             'pendaftaran_id' => $request->pendaftaran_id,    
@@ -138,13 +140,14 @@ public function create(Request $request)
             $pemeriksaan->obatPemeriksaan()->create([
                 'obat_id' => $obat_id,
                 'dosis_carkai' => $request->dosis_carkai[$i] ?? null,
+                'jumlah_obat' => $request->jumlah_obat[$i] ?? null,
             ]);
         }
     }
 }
 
 
-    return redirect()->route('kia-ibu-hamil.index')->with('success', 'Berhasil menyimpan data KIA Ibu Hamil.');
+    return redirect()->route('kia-ibu-hamil.index')->with('success', 'Berhasil menyimpan data Kesehatan Ibu Hamil.');
 }
 
 
@@ -224,13 +227,14 @@ public function create(Request $request)
             $pemeriksaan->obatPemeriksaan()->create([
                 'obat_id' => $obat_id,
                 'dosis_carkai' => $request->dosis_carkai[$i] ?? null,
+                'jumlah_obat' => $request->jumlah_obat[$i] ?? null,
             ]);
         }
     }
 }
 
 
-    return redirect()->route('kia-ibu-hamil.index')->with('success', 'Berhasil memperbarui data KIA Ibu Hamil.');
+    return redirect()->route('kia-ibu-hamil.index')->with('success', 'Berhasil memperbarui data Kesehatan Ibu Hamil.');
 }
 
 

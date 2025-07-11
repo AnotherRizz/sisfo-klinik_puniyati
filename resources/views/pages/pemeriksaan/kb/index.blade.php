@@ -29,7 +29,7 @@
         <div class="w-full flex justify-between">
 
             <div class="mb-4 basis-1/2">
-                <x-search-input :action="route('kb.index')" name="search" placeholder="Cari nama / no rm..." />
+                <x-search-input :action="route('kb.index')" name="search" placeholder="Cari nama, alamat, tanggal lahir, nomor rm" />
             </div>
             <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('kb.index')" />
 

@@ -14,10 +14,19 @@
 
                 Kembali ke Pemeriksaan
             </a>
-            <a href="{{ route('laporan.pemeriksaan', ['bulan' => "$tahun-$bulan", 'jenis_pelayanan' => request('jenis_pelayanan')]) }}"
-                class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
-                Unduh PDF
-            </a>
+             <form action="{{ route('laporan.pemeriksaan') }}" method="GET" target="_blank">
+                <input type="hidden" name="filter_type" value="{{ request('filter_type') }}">
+                <input type="hidden" name="jenis_pelayanan" value="{{ request('jenis_pelayanan') }}">
+                <input type="hidden" name="tanggal" value="{{ request('tanggal') }}">
+                <input type="hidden" name="tanggal_awal" value="{{ request('tanggal_awal') }}">
+                <input type="hidden" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
+                <input type="hidden" name="bulan" value="{{ request('bulan') }}">
+
+                <button type="submit" class="bg-red-500 cursor-pointer hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
+                    Unduh PDF
+                </button>
+            </form>
+
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow">
@@ -34,12 +43,9 @@
 
             <div class="border-t-2 border-black my-2"></div>
 
-            <div class="flex justify-start items-center mb-4">
-               <h2 class="text-base font-semibold uppercase">
-                    Laporan Data Pemeriksaan {{ ucwords(str_replace('_', ' ', $jenisPelayanan)) }} Periode
-                    {{ $namaBulan }}
-                </h2>
-
+             <div class="flex justify-start items-center mb-4">
+                <h2 class="text-base font-semibold uppercase">Laporan Data Pemeriksaan {{ $jenisPelayanan }} 
+                    {{ $judul }}</h2>
             </div>
 
             {{-- Tabel --}}

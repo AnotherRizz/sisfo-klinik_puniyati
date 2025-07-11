@@ -98,7 +98,7 @@
                  <div>
                     <label for="riwayat_TT" class="block text-sm font-medium text-gray-700 mb-1">Riwayat TT (riw. Imunisasi
                         Tetanus Toksoid)</label>
-                    <input type="text" name="riwayat_TT" class="w-full border-gray-300 rounded-lg shadow-sm"
+                    <input type="text" name="riwayat_TT" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm"
                         value="{{ old('riwayat_TT', $pemeriksaan->riwayat_TT) }}" required>
                 </div>
 
@@ -148,17 +148,17 @@
                   <div>
                     <label for="tablet_tambah_darah" class="block text-sm font-medium text-gray-700 mb-1">Tablet Tambah Darah</label>
                     <input type="text" name="tablet_tambah_darah" id="tablet_tambah_darah"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('tablet_tambah_darah', $pemeriksaan->tablet_tambah_darah) }}" required>
+                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('tablet_tambah_darah', $pemeriksaan->tablet_tambah_darah) }}" required>
                 </div>
                 <div>
                     <label for="vitamin_mineral" class="block text-sm font-medium text-gray-700 mb-1">Vitamin Mineral</label>
                     <input type="text" name="vitamin_mineral" id="vitamin_mineral"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('vitamin_mineral', $pemeriksaan->vitamin_mineral) }}" required>
+                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('vitamin_mineral', $pemeriksaan->vitamin_mineral) }}" required>
                 </div>
                 <div>
                     <label for="asam_folat" class="block text-sm font-medium text-gray-700 mb-1">Asam Folat</label>
                     <input type="text" name="asam_folat" id="asam_folat"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('asam_folat', $pemeriksaan->asam_folat) }}" required>
+                        class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('asam_folat', $pemeriksaan->asam_folat) }}" required>
                 </div>
                 <div>
                     <label for="hpht" class="block text-sm font-medium text-gray-700 mb-1">Hari Pertama Haid Ibu
@@ -251,7 +251,7 @@
                 </div>
                  <div>
                     <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-1">Keluhan</label>
-                    <input type="text" name="keluhan" class="w-full border-gray-300 rounded-lg shadow-sm" value="{{ old('keluhan', $pemeriksaan->keluhan) }}"
+                    <input type="text" name="keluhan" class="w-full text-gray-500 border-gray-300 rounded-lg shadow-sm" value="{{ old('keluhan', $pemeriksaan->keluhan) }}"
                         required>
                 </div>
                 <div>
@@ -275,11 +275,14 @@
                         value="{{ old('intervensi', $pemeriksaan->intervensi) }}">
                 </div>
 
+                @php
+                    $minDate = \Carbon\Carbon::now()->format('Y-m-d');
+                @endphp
 
                 <div>
                     <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                         Kembali</label>
-                    <input type="date" name="tgl_kembali" id="tgl_kembali"
+                    <input type="date" name="tgl_kembali" id="tgl_kembali" min="{{$minDate}}"
                         class="w-full border-gray-300 text-gray-500 rounded-lg shadow-sm"
                         value="{{ old('tindakan', $pemeriksaan->tgl_kembali) }}" >
                 </div>
@@ -311,36 +314,60 @@
                     </select>
                 </div>
 
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Obat dan Dosis</label>
+                <div class="mb-6 col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Obat, Dosis dan Jumlah</label>
                     <div id="obat-wrapper">
-                       @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
-                            <div class="flex gap-2 mb-2">
-                                <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" required>
-                                    <option value="">-- Pilih Obat --</option>
-                                    @foreach ($obats as $obat)
-                                        <option value="{{ $obat->id }}"
-                                            {{ $obat->id == $pivotObat->obat_id ? 'selected' : '' }}>
-                                            {{ $obat->nama_obat }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <input type="text" name="dosis_carkai[]" value="{{ $pivotObat->dosis_carkai }}"
-                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
+                        @forelse ($pemeriksaan->obatPemeriksaan as $pivotObat)
+                            <div class="obat-row flex flex-col gap-1 mb-4">
+                                <div class="flex gap-2">
+                                    <select name="obat_id[]"
+                                        class="obat-select w-1/2 border-gray-300 rounded-lg shadow-sm" required>
+                                        <option value="">-- Pilih Obat --</option>
+                                        @foreach ($obats as $obat)
+                                            <option value="{{ $obat->id }}" data-stok="{{ $obat->stok_obat }}"
+                                                {{ $obat->id == $pivotObat->obat_id ? 'selected' : '' }}>
+                                                {{ $obat->nama_obat }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    <input type="text" name="dosis_carkai[]" value="{{ $pivotObat->dosis_carkai }}"
+                                        class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
+
+                                    <input type="text" name="jumlah_obat[]" value="{{ $pivotObat->jumlah_obat }}"
+                                        class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Jumlah Obat"
+                                        required />
+                                </div>
+                                <p class="stok-info text-xs text-end text-gray-500">
+                                    {{-- Optional: tampilkan stok jika obat dipilih --}}
+                                    @php
+                                        $stokDipilih = $obats->firstWhere('id', $pivotObat->obat_id)?->stok_obat;
+                                    @endphp
+                                    {{ $stokDipilih ? 'Stok tersedia: ' . $stokDipilih : '' }}
+                                </p>
                             </div>
                         @empty
-                            {{-- Jika belum ada data obat --}}
-                            <div class="flex gap-2 mb-2">
-                                <select name="obat_id[]" class="w-1/2 border-gray-300 rounded-lg shadow-sm" >
-                                    <option value="">-- Pilih Obat --</option>
-                                    @foreach ($obats as $obat)
-                                        <option value="{{ $obat->id }}">{{ $obat->nama_obat }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="text" name="dosis_carkai[]"
-                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis"  />
+                            <div class="obat-row flex flex-col gap-1 mb-4">
+                                <div class="flex gap-2">
+                                    <select name="obat_id[]"
+                                        class="obat-select w-1/2 border-gray-300 rounded-lg shadow-sm" required>
+                                        <option value="">-- Pilih Obat --</option>
+                                        @foreach ($obats as $obat)
+                                            <option value="{{ $obat->id }}" data-stok="{{ $obat->stok_obat }}">
+                                                {{ $obat->nama_obat }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <input type="text" name="dosis_carkai[]"
+                                        class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" required />
+                                    <input type="text" name="jumlah_obat[]"
+                                        class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Jumlah Obat"
+                                        required />
+                                </div>
+                                <p class="stok-info text-xs text-end text-gray-500"></p>
                             </div>
                         @endforelse
+
                     </div>
                     <button type="button" id="add-obat" class="text-sm text-blue-600">+ Tambah Obat</button>
                 </div>
@@ -363,12 +390,39 @@
 
 @push('scripts')
     <script>
-        document.getElementById('add-obat').addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            const addBtn = document.getElementById('add-obat');
             const wrapper = document.getElementById('obat-wrapper');
-            const firstRow = wrapper.children[0];
-            const newRow = firstRow.cloneNode(true);
-            newRow.querySelectorAll('input, select').forEach(el => el.value = '');
-            wrapper.appendChild(newRow);
+
+            addBtn.addEventListener('click', function() {
+                const firstRow = wrapper.querySelector('.obat-row');
+                const newRow = firstRow.cloneNode(true);
+
+                // Kosongkan semua input dan select
+                newRow.querySelectorAll('input, select').forEach(el => {
+                    el.value = '';
+                });
+
+                // Kosongkan teks stok juga
+                const stokInfo = newRow.querySelector('.stok-info');
+                if (stokInfo) stokInfo.textContent = '';
+
+                wrapper.appendChild(newRow);
+            });
+
+            function updateStok(selectElement) {
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+                const stok = selectedOption.dataset.stok || '';
+                const wrapper = selectElement.closest('.obat-row');
+                const stokInfo = wrapper.querySelector('.stok-info');
+                stokInfo.textContent = stok ? `Stok tersedia: ${stok}` : '';
+            }
+
+            document.querySelectorAll('.obat-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    updateStok(this);
+                });
+            });
         });
     </script>
     <script>

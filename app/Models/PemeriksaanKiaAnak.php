@@ -36,7 +36,7 @@ class PemeriksaanKiaAnak extends Model
     public function obat()
 {
     return $this->morphToMany(Obat::class, 'pemeriksaanable', 'obat_pemeriksaan')
-                ->withPivot('dosis_carkai')
+                ->withPivot('dosis_carkai', 'jumlah_obat')
                 ->withTimestamps();
 }
 public function getObatAttribute()

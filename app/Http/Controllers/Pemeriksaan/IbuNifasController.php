@@ -40,15 +40,16 @@ class IbuNifasController extends Controller
 
     // Filter pencarian
     if ($search = $request->get('search')) {
-        $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
+         $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%');
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%');
         });
 
         $pendaftaranBelumDiperiksa->whereHas('pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%');
-              
+              ->orWhere('no_rm', 'like', '%' . $search . '%')
+              ->orWhere('alamat', 'like', '%' . $search . '%');
         });
     }
 
@@ -134,10 +135,12 @@ public function create(Request $request)
         if (empty($obat_id)) continue;
 
         $dosis = $request->dosis_carkai[$i] ?? null;
+        $jumlah = $request->jumlah_obat[$i] ?? null;
 
         $pemeriksaan->obatPemeriksaan()->create([
             'obat_id' => $obat_id,
             'dosis_carkai' => $dosis,
+            'jumlah_obat' => $jumlah,
         ]);
     }
 }
@@ -210,10 +213,12 @@ public function create(Request $request)
         if (empty($obat_id)) continue;
 
         $dosis = $request->dosis_carkai[$i] ?? null;
+        $jumlah = $request->jumlah_obat[$i] ?? null;
 
         $pemeriksaan->obatPemeriksaan()->create([
             'obat_id' => $obat_id,
             'dosis_carkai' => $dosis,
+            'jumlah_obat' => $jumlah,
         ]);
     }
 }

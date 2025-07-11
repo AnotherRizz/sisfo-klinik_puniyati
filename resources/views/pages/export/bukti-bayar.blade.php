@@ -112,43 +112,56 @@
                 <th>TOTAL</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>ADMINISTRASI</td>
-                <td>Rp {{ number_format($pembayaran->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td><strong>TINDAKAN DAN LAYANAN MEDIS</strong></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>{{ $pembayaran->tindakan ?? '-' }}</td>
-                <td>Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
-            </tr>
-            @foreach ($pembayaran->pemeriksaanable->obat ?? [] as $obat)
-                <tr>
-                    <td>{{ $obat->nama_obat }} ({{ $obat->pivot->dosis_carkai ?? '-' }})</td>
-                    <td>Rp {{ number_format($obat->harga_jual ?? 0, 0, ',', '.') }}</td>
-                </tr>
-            @endforeach
-            <tr>
-                <td>KONSULTASI</td>
-                <td>Rp {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
-            </tr>
-            <tr>
-                <td><strong>TOTAL</strong></td>
-                <td>
-                    @php
-                        $total = 
-                            ($pembayaran->biaya_administrasi ?? 0) + 
-                            ($pembayaran->biaya_tindakan ?? 0) + 
-                            ($pembayaran->biaya_konsultasi ?? 0) + 
-                            ($pembayaran->pemeriksaanable->obat->sum('harga_jual') ?? 0);
-                    @endphp
-                    <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
-                </td>
-            </tr>
-        </tbody>
+      <tbody>
+    <tr>
+        <td>ADMINISTRASI</td>
+        <td>Rp {{ number_format($pembayaran->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
+    </tr>
+    <tr>
+        <td><strong>TINDAKAN DAN LAYANAN MEDIS</strong></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>{{ $pembayaran->tindakan ?? '-' }}</td>
+        <td>Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
+    </tr>
+
+    @php
+        $totalObat = 0;
+    @endphp
+
+    @foreach ($pembayaran->pemeriksaanable->obatPemeriksaan ?? [] as $item)
+        @php
+            $jumlah = $item->jumlah_obat ?? 0;
+            $harga = $item->obat->harga_jual ?? 0;
+            $subtotal = $jumlah * $harga;
+            $totalObat += $subtotal;
+        @endphp
+        <tr>
+            <td>{{ $item->obat->nama_obat ?? '-' }} ({{ $item->dosis_carkai ?? '-' }}) x {{ $jumlah }}</td>
+            <td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+        </tr>
+    @endforeach
+
+    <tr>
+        <td>KONSULTASI</td>
+        <td>Rp {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
+    </tr>
+    <tr>
+        <td><strong>TOTAL</strong></td>
+        <td>
+            @php
+                $total = 
+                    ($pembayaran->biaya_administrasi ?? 0) +
+                    ($pembayaran->biaya_tindakan ?? 0) +
+                    ($pembayaran->biaya_konsultasi ?? 0) +
+                    $totalObat;
+            @endphp
+            <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
+        </td>
+    </tr>
+</tbody>
+
     </table>
 
     <div class="footer">

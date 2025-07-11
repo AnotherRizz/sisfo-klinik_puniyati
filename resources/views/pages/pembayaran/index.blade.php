@@ -4,20 +4,20 @@
 
 @section('content')
     <h1 class="text-xl font-semibold mb-4">Data Pembayaran</h1>
-   <div>
-            <h1 class="text-lg font-bold text-slate-500">
-                @if (request('filter_tanggal') == 'semua')
+    <div>
+        <h1 class="text-lg font-bold text-slate-500">
+            @if (request('filter_tanggal') == 'semua')
                 Menampilkan Semua Pembayaran
-                @else
+            @else
                 Menampilkan Pembayaran Tanggal {{ now()->locale('id')->translatedFormat('d F Y') }}
-                @endif
-            </h1>
-        </div>
+            @endif
+        </h1>
+    </div>
 
 
 
     <div x-data="{ search: '' }" class="bg-white rounded shadow p-2 overflow-x-auto">
-         <div class="flex justify-end my-3 items-center gap-2">
+        <div class="flex justify-end my-3 items-center gap-2">
             <x-filter-tanggal id="filterTanggal" name="filter_tanggal" class="border-gray-300 rounded px-7 py-2 text-sm"
                 :selected="request('filter_tanggal')" />
 
@@ -26,7 +26,7 @@
         <div class="w-full flex justify-between">
 
             <div class="mb-4 basis-1/2">
-                <x-search-input :action="route('pembayaran.index')" name="search" placeholder="Cari nama / no rm..." />
+                <x-search-input :action="route('pembayaran.index')" name="search" placeholder="Cari nama, alamat, tanggal lahir, nomor rm" />
             </div>
             <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('pembayaran.index')" />
 
@@ -76,9 +76,9 @@
                         <td class="px-4 py-2 text-sm text-gray-900">
                             @if ($pembayaran)
                                 <a href="{{ route('pembayaran.show', $pembayaran->id) }}"
-                                    class="px-2 py-1 text-xs bg-sky-500 text-white rounded">Detail</a>
+                                    class="px-2 py-1 text-xs bg-sky-500 mb-1 text-white rounded">Detail</a>
                                 <a href="{{ route('pmb.bukti-bayar', $pembayaran->id) }}" target="_blank"
-                                    class="px-2 py-1 text-xs bg-teal-500 text-white rounded">Bukti</a>
+                                    class="px-2 py-1 text-xs bg-teal-500 mb-1 text-white rounded">Bukti</a>
                             @else
                                 <a href="{{ route('pembayaran.create', ['nomor_periksa' => $item->nomor_periksa]) }}"
                                     class="px-3 py-1 text-xs bg-orange-600 text-white rounded hover:bg-orange-700">Bayar</a>
@@ -89,12 +89,12 @@
                     <x-data-notfound :colspan="7" />
                 @endforelse
             </tbody>
+        </table> 
 
+        <div class="mt-4 bg-white">
+            {{ $pembayarans->links() }}
+        </div>
 
-            {{-- Pagination --}}
-            <div class="mt-4 bg-white">
-                {{ $pembayarans->links() }}
-            </div>
     </div>
 
 

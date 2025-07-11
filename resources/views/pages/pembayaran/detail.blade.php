@@ -46,7 +46,7 @@
                     <td>Tanggal Cetak</td>
                     <td>: {{ now()->format('d-m-Y') }}</td>
                 </tr>
-                
+
                 <tr>
                     <td>Tanggal Lahir</td>
                     <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->tgl_lahir?->format('d-m-Y') ?? '-' }}
@@ -80,13 +80,24 @@
                         <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}
                         </td>
                     </tr>
-                    @foreach ($pembayaran->pemeriksaanable->obat as $obat)
+                    @foreach ($pemeriksaan->obatPemeriksaan as $item)
+                        @php
+                            $jumlah = $item->jumlah_obat ?? 0;
+                            $subtotal = $jumlah * ($item->obat->harga_jual ?? 0);
+                        @endphp
                         <tr>
-                            <td class="border px-4 py-2">{{ $obat->nama_obat }} ({{ $obat->pivot->dosis_carkai ?? '-' }})
+                            <td class="border px-4 py-2">
+                                {{ $item->obat->nama_obat ?? '-' }} x
+                                {{ $jumlah }} (jumlah obat)
                             </td>
-                            <td class="border px-4 py-2">Rp {{ number_format($obat->harga_jual ?? 0, 0, ',', '.') }}</td>
+                            <td class="border px-4 py-2">
+                                Rp {{ number_format($subtotal, 0, ',', '.') }}
+                            </td>
                         </tr>
                     @endforeach
+
+
+
                     <tr>
                         <td class="border px-4 py-2">KONSULTASI</td>
                         <td class="border px-4 py-2">Rp
@@ -96,12 +107,20 @@
                         <td class="border px-4 py-2">TOTAL</td>
                         <td class="border px-4 py-2">
                             @php
+                                $totalObat = $pemeriksaan->obatPemeriksaan->sum(function ($item) {
+                                    return ($item->jumlah_obat ?? 0) * ($item->obat->harga_jual ?? 0);
+                                });
+
                                 $total =
                                     ($pembayaran->biaya_administrasi ?? 0) +
                                     ($pembayaran->biaya_tindakan ?? 0) +
-                                    $pembayaran->pemeriksaanable->obat->sum('harga_jual') +
-                                    ($pembayaran->biaya_konsultasi ?? 0);
+                                    ($pembayaran->biaya_konsultasi ?? 0) +
+                                    $totalObat;
                             @endphp
+
+
+
+
                             Rp {{ number_format($total, 0, ',', '.') }}
                         </td>
                     </tr>

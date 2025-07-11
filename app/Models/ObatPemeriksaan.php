@@ -15,6 +15,7 @@ class ObatPemeriksaan extends Pivot
         'pemeriksaanable_type',
         'obat_id',
         'dosis_carkai',
+        'jumlah_obat'
     ];
 
     public function pemeriksaanable(): MorphTo

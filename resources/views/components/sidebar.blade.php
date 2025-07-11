@@ -131,13 +131,13 @@
                     <li>
                         <a href="{{ route('kia-ibu-hamil.index') }}"
                             class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('kia-ibu-hamil.*') ? 'bg-gray-700 text-white' : 'text-white hover:bg-gray-700' }}">
-                            KIA IBU HAMIL
+                            KESEHATAN IBU HAMIL
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('kia-anak.index') }}"
                             class="flex items-center w-full p-2 text-sm text-gray-900 transition duration-75 rounded-lg pl-11 group {{ request()->routeIs('kia-anak.*') ? 'bg-gray-700 text-white' : 'text-white hover:bg-gray-700' }}">
-                            KIA ANAK
+                            KESEHATAN ANAK
                         </a>
                     </li>
                     <li>
@@ -167,6 +167,7 @@
                     <span class="flex-1 ms-3 text-sm whitespace-nowrap">Pembayaran</span>
                 </a>
             </li>
+              @endrole
             <li>
                 <a href="{{ route('laporan.index') }}"
                     class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg  {{ request()->routeIs('laporan.*') ? 'bg-gray-700 text-white' : 'text-white hover:bg-gray-700' }}">
@@ -179,7 +180,7 @@
                     <span class="flex-1 ms-3 text-sm whitespace-nowrap">Laporan</span>
                 </a>
             </li>
-              @endrole
+            
             <span class="block w-full border-t border-gray-600 my-3"></span>
             <li>
                 <a href="{{ route('setting.index') }}"
