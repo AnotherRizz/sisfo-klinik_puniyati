@@ -113,7 +113,7 @@
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $i + 1 }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->noreg }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pasien->no_rm ?? '-' }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pasien->nama_pasien ?? '-' }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pasien->status .'. ' . $item->pasien->nama_pasien ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->pasien->alamat ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ \Carbon\Carbon::parse($item->pasien->tgl_lahir)->locale('id')->translatedFormat('d F Y') }}

@@ -28,8 +28,8 @@
                 {{-- No reg --}}
                 {{-- No Registrasi --}}
                 <div>
-                    <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi(pelayanan Kesehatan IBU HAMIL)"
-                        :options="$pendaftarans->mapWithKeys(
+                    <x-select2 id="pendaftaran_id" name="pendaftaran_id"
+                        label="No Registrasi(pelayanan Kesehatan IBU HAMIL)" :options="$pendaftarans->mapWithKeys(
                             fn($p) => [
                                 $p->id => [
                                     'label' =>
@@ -45,7 +45,7 @@
                                     'data-pelayanan-kode' => $p->pelayanan->kodpel,
                                 ],
                             ],
-                      )" :selected="$pendaftaran_id ?: old('pendaftaran_id')" />
+                        )" :selected="$pendaftaran_id ?: old('pendaftaran_id')" />
                 </div>
 
                 {{-- Nama Pasien --}}
@@ -97,7 +97,7 @@
                     <label for="td" class="block text-sm font-medium text-gray-700 mb-1">Tensi Darah <span
                             class="text-red-500 text-xs"> (mmHg)</span></label>
                     <input type="text" name="td" id="td" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" >
+                        value="">
                 </div>
                 <div>
                     <label for="nadi" class="block text-sm font-medium text-gray-700 mb-1">Denyut Nadi Ibu
@@ -109,25 +109,25 @@
                     <label for="bb" class="block text-sm font-medium text-gray-700 mb-1">Berat Badan <span
                             class="text-red-500 text-xs"> (Kg)</span></label>
                     <input type="text" name="bb" id="bb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" >
+                        value="">
                 </div>
                 <div>
                     <label for="tb" class="block text-sm font-medium text-gray-700 mb-1">Tinggi Badan <span
                             class="text-red-500 text-xs"> (Cm)</span></label>
                     <input type="text" name="tb" id="tb" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" >
+                        value="">
                 </div>
                 <div>
                     <label for="suhu" class="block text-sm font-medium text-gray-700 mb-1">Suhu<span
                             class="text-red-500 text-xs"> (°C)</span> </label>
                     <input type="text" name="suhu" id="suhu" class="w-full border-gray-300 rounded-lg shadow-sm"
-                        value="" >
+                        value="">
                 </div>
                 <div>
                     <label for="saturasiOx" class="block text-sm font-medium text-gray-700 mb-1">Saturasi Oksigen<span
                             class="text-red-500 text-xs"> (%)</span> </label>
                     <input type="text" name="saturasiOx" id="saturasiOx"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" >
+                        class="w-full border-gray-300 rounded-lg shadow-sm" value="">
                 </div>
 
                 <div>
@@ -136,21 +136,7 @@
                     <input type="text" name="lila" id="lila"
                         class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
                 </div>
-                <div>
-                    <label for="tablet_tambah_darah" class="block text-sm font-medium text-gray-700 mb-1">Tablet Tambah Darah</label>
-                    <input type="text" name="tablet_tambah_darah" id="tablet_tambah_darah"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-                </div>
-                <div>
-                    <label for="vitamin_mineral" class="block text-sm font-medium text-gray-700 mb-1">Vitamin Mineral</label>
-                    <input type="text" name="vitamin_mineral" id="vitamin_mineral"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-                </div>
-                <div>
-                    <label for="asam_folat" class="block text-sm font-medium text-gray-700 mb-1">Asam Folat</label>
-                    <input type="text" name="asam_folat" id="asam_folat"
-                        class="w-full border-gray-300 rounded-lg shadow-sm" value="" required>
-                </div>
+
                 <div>
                     <label for="hpht" class="block text-sm font-medium text-gray-700 mb-1">Hari Pertama Haid Ibu
                         Hamil
@@ -265,9 +251,9 @@
                 <div>
                     <label for="tgl_kembali" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                         Kembali</label>
-                    <input type="date" name="tgl_kembali" id="tgl_kembali" min="{{$minDate}}"
+                    <input type="date" name="tgl_kembali" id="tgl_kembali" min="{{ $minDate }}"
                         class="w-full border-gray-300 rounded-lg shadow-sm text-gray-500"
-                        value="{{ old('tgl_kembali')}}" >
+                        value="{{ old('tgl_kembali') }}">
                 </div>
                 <div class="mb-6">
                     <label for="tindak_lnjt" class="block text-sm font-medium text-gray-700 mb-1">Tindak Lanjut</label>
@@ -280,17 +266,47 @@
                         </option>
                         <option value="Rumah Sakit" {{ old('tindak_lnjt') == 'Rumah Sakit' ? 'selected' : '' }}>Rujukan
                             Rumah Sakit</option>
-                        <option value="Rujuk Dokter Spesialis Obsygin" {{ old('tindak_lnjt') == 'Rujuk Dokter Spesialis Obsygin' ? 'selected' : '' }}>
+                        <option value="Rujuk Dokter Spesialis Obsygin"
+                            {{ old('tindak_lnjt') == 'Rujuk Dokter Spesialis Obsygin' ? 'selected' : '' }}>
                             Rujuk Dokter Spesialis Obsygin</option>
                         <option value="Tidak Dirujuk" {{ old('tindak_lnjt') == 'Tidak Dirujuk' ? 'selected' : '' }}>Tidak
                             Dirujuk</option>
                     </select>
                 </div>
+                {{-- vit suplemen --}}
+                <div class="mb-6 col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Vitamin/Suplemen, Dosis dan Jumlah</label>
+                    <div id="suplemen-wrapper">
+                        <div class="obat-row flex flex-col gap-1 mb-4">
+                            <div class="flex gap-2">
+                                <input type="hidden" name="vitamin_suplemen[]" value="ya">
+                                <select name="obat_id[]" class="obat-select w-1/2 border-gray-300 rounded-lg shadow-sm">
+                                    <option value="">-- Pilih --</option>
+                                    @foreach ($obats as $obat)
+                                        <option value="{{ $obat->id }}" data-stok="{{ $obat->stok_obat }}">
+                                            {{ $obat->nama_obat }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="text" name="dosis_carkai[]"
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Dosis" />
+                                <input type="text" name="jumlah_obat[]"
+                                    class="w-1/2 border-gray-300 rounded-lg shadow-sm" placeholder="Jumlah " />
+                            </div>
+                            <p class="stok-info text-xs text-end text-gray-500"></p>
+                        </div>
+                    </div>
+                    <button type="button" id="add-suplemen" class="text-sm cursor-pointer text-blue-600">+ Tambah
+                        Suplemen</button>
+                </div>
+
+                {{-- obat --}}
                 <div class="mb-6 col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Obat, Dosis dan Jumlah</label>
                     <div id="obat-wrapper">
                         <div class="obat-row flex flex-col gap-1 mb-4">
                             <div class="flex gap-2">
+                                <input type="hidden" name="vitamin_suplemen[]" value="tidak">
                                 <select name="obat_id[]" class="obat-select w-1/2 border-gray-300 rounded-lg shadow-sm">
                                     <option value="">-- Pilih Obat --</option>
                                     @foreach ($obats as $obat)
@@ -322,7 +338,7 @@
 @endsection
 
 @push('scripts')
-      <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             function updateStok(selectElement) {
                 const selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -357,10 +373,31 @@
                 });
             });
         });
+        // Tambah suplemen dinamis
+        document.getElementById('add-suplemen').addEventListener('click', function() {
+            const wrapper = document.getElementById('suplemen-wrapper');
+            const originalRow = wrapper.querySelector('.obat-row');
+            const clone = originalRow.cloneNode(true);
+
+            // Reset nilai input dan stok
+            clone.querySelectorAll('input, select').forEach(el => el.value = '');
+
+            // Pastikan value hidden vitamin_suplemen tetap 'ya'
+            clone.querySelector('input[name="vitamin_suplemen[]"]').value = 'ya';
+
+            clone.querySelector('.stok-info').textContent = '';
+
+            wrapper.appendChild(clone);
+
+            // Tambahkan event listener baru
+            clone.querySelector('.obat-select').addEventListener('change', function() {
+                updateStok(this);
+            });
+        });
     </script>
 
 
-  <script>
+    <script>
         $(document).ready(function() {
             // Elemen Select dan Input yang akan di-update
             const noregSelect = $('#pendaftaran_id');

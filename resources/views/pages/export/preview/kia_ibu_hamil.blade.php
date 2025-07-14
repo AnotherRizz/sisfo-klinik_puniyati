@@ -22,7 +22,8 @@
                 <input type="hidden" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
                 <input type="hidden" name="bulan" value="{{ request('bulan') }}">
 
-                <button type="submit" class="bg-red-500 cursor-pointer hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
+                <button type="submit"
+                    class="bg-red-500 cursor-pointer hover:bg-red-600 text-white text-sm px-4 py-2 rounded">
                     Unduh PDF
                 </button>
             </form>
@@ -82,20 +83,46 @@
                         @foreach ($pemeriksaans as $index => $item)
                             @php
                                 $obats = $item->obatPemeriksaan ?? collect();
-                                $namaObat = $obats->map(fn($o) => $o->obat->nama_obat ?? '-')->join(', ');
+
+                                $suplemenList = $obats
+                                    ->where('vitamin_suplemen', 'ya')
+                                    ->map(
+                                        fn($o) => '(' .
+                                            ($o->jumlah_obat ?? '-') .
+                                            ') ' .
+                                            ($o->obat->nama_obat ?? '-') .
+                                            ' (' .
+                                            ($o->dosis_carkai ?? '-') .
+                                            ')',
+                                    )
+                                    ->join(', ');
+
+                                $obatBiasaList = $obats
+                                    ->where('vitamin_suplemen', 'tidak')
+                                    ->map(
+                                        fn($o) => '(' .
+                                            ($o->jumlah_obat ?? '-') .
+                                            ') ' .
+                                            ($o->obat->nama_obat ?? '-') .
+                                            ' (' .
+                                            ($o->dosis_carkai ?? '-') .
+                                            ')',
+                                    )
+                                    ->join(', ');
                             @endphp
+
                             <tr class="border-b">
                                 <td class="border px-2 py-1 text-center">{{ $index + 1 }}</td>
                                 <td class="border px-2 py-1 text-center">
-                                    {{ \Carbon\Carbon::parse($item->pendaftaran->tgl_daftar)->translatedFormat('d/m/Y') ?? '-' }}
+                                    {{ optional($item->pendaftaran)->tgl_daftar ? \Carbon\Carbon::parse($item->pendaftaran->tgl_daftar)->translatedFormat('d/m/Y') : '-' }}
                                 </td>
-
                                 <td class="border px-2 py-1 text-center">{{ $item->nomor_periksa ?? '-' }}</td>
                                 <td class="border px-2 py-1 text-center">{{ $item->pendaftaran->pasien->no_rm ?? '-' }}
                                 </td>
-                                <td class="border px-2 py-1">{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                                 <td class="border px-2 py-1">{{ $item->pendaftaran->pasien->status.'. '.  $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->keluhan ?? '-' }}</td>
-                                <td class="border px-2 py-1">{{ $item->umr_hamil . ' Minggu' ?? '-' }}</td>
+                                <td class="border px-2 py-1">{{ $item->umr_hamil ? $item->umr_hamil . ' Minggu' : '-' }}
+                                </td>
                                 <td class="border px-2 py-1">{{ $item->td ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->bb ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->tb ?? '-' }}</td>
@@ -104,21 +131,36 @@
                                 <td class="border px-2 py-1">{{ $item->resti ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->riwayat_TT ?? '-' }}</td>
                                 <td class="border px-2 py-1">
-                                    {{ \Carbon\Carbon::parse($item->hpht)->translatedFormat('d/m/Y') ?? '-' }}</td>
+                                    {{ $item->hpht ? \Carbon\Carbon::parse($item->hpht)->translatedFormat('d/m/Y') : '-' }}
+                                </td>
                                 <td class="border px-2 py-1">
-                                    {{ \Carbon\Carbon::parse($item->hpl)->translatedFormat('d/m/Y') ?? '-' }}</td>
+                                    {{ $item->hpl ? \Carbon\Carbon::parse($item->hpl)->translatedFormat('d/m/Y') : '-' }}
+                                </td>
                                 <td class="border px-2 py-1">{{ $item->diagnosa ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->tindakan ?? '-' }}</td>
-                                <td class="border px-2 py-1 text-center">{{ $namaObat ?: '-' }}</td>
+
+                                {{-- Obat dan Suplemen --}}
+                                <td class="border px-2 py-1 text-sm">
+                                    @if ($suplemenList)
+                                        <div><strong>Suplemen:</strong> {{ $suplemenList }}</div>
+                                    @endif
+                                    @if ($obatBiasaList)
+                                        <div><strong>Obat:</strong> {{ $obatBiasaList }}</div>
+                                    @endif
+                                    @if (!$suplemenList && !$obatBiasaList)
+                                        <div>-</div>
+                                    @endif
+                                </td>
 
                                 <td class="border px-2 py-1 text-center">
-                                    {{ \Carbon\Carbon::parse($item->tgl_kembali)->translatedFormat('d/m/Y') ?? '-' }}
+                                    {{ $item->tgl_kembali ? \Carbon\Carbon::parse($item->tgl_kembali)->translatedFormat('d/m/Y') : '-' }}
                                 </td>
                                 <td class="border px-2 py-1">{{ $item->tindak_lnjt ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->pendaftaran->pasien->no_tlp ?? '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
+
 
                 </table>
 

@@ -34,7 +34,7 @@
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Pasien (*)</label>
                     <input type="text" name="name" id="name"
                         class="w-full border-gray-300 rounded-lg shadow-sm" readonly
-                        value="{{ old('name', $pendaftaran->pasien->nama_pasien) }}" required>
+                        value="{{ old('name', $pendaftaran->pasien->status .'. '. $pendaftaran->pasien->nama_pasien) }}" required>
                 </div>
                 <input type="hidden" name="pasien_id" value="{{ old('pasien_id', $pendaftaran->pasien_id) }}">
              

@@ -98,7 +98,7 @@
                                     <td class="border px-2 py-1 text-xs text-center">{{ $periksa->nomor_periksa ?? '-' }}
                                     </td>
                                     <td class="border px-2 py-1 text-xs text-center">{{ $pasien->no_rm ?? '-' }}</td>
-                                    <td class="border px-2 py-1 text-xs text-center">{{ $pasien->nama_pasien ?? '-' }}</td>
+                                    <td class="border px-2 py-1 text-xs text-center">{{ $pasien->status.'. '. $pasien->nama_pasien ?? '-' }}</td>
                                     <td class="border px-2 py-1 text-xs text-center">
                                         {{ $pelayanan->nama_pelayanan ?? '-' }}
                                     </td>

@@ -231,9 +231,20 @@
                 <div>
                     <x-select2 id="pasien_id" name="pasien_id" label="Pasien" :options="$pasiens->mapWithKeys(
                         fn($p) => [
-                            $p->id => $p->nama_pasien . ' - ' . $p->no_rm . ' - ' . $p->alamat,
+                            $p->id =>
+                                $p->no_rm .
+                                ' - ' .
+                                $p->status . '. ' . $p->nama_pasien .
+                                ' - ' .
+                                ($p->tgl_lahir
+                                    ? \Carbon\Carbon::parse($p->tgl_lahir)->translatedFormat('d F Y')
+                                    : '-') .
+                                   ' - ' .
+                                $p->alamat,
                         ],
-                    )" :selected="old('pasien_id', $selectedPasien ?? '')" />
+                    )"
+                        :selected="old('pasien_id', $selectedPasien ?? '')" />
+
 
                 </div>
 

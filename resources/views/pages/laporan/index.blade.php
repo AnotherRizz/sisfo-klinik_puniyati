@@ -21,18 +21,18 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Filter Berdasarkan:</label>
                     <div x-data="{ filter: 'hari' }">
                         <div class="flex gap-4 text-sm mb-3">
-                            <label><input type="radio" name="filter_type" value="hari" x-model="filter"> Per
-                                Hari</label>
-                            <label><input type="radio" name="filter_type" value="rentang" x-model="filter">
+                            {{-- <label><input type="radio" name="filter_type" value="hari" x-model="filter"> Per
+                                Hari</label> --}}
+                            <label><input type="radio" name="filter_type"  value="rentang" x-model="filter">
                                 Rentang</label>
-                            <label><input type="radio" name="filter_type" value="bulan" x-model="filter"> Per
-                                Bulan</label>
+                            {{-- <label><input type="radio" name="filter_type" value="bulan" x-model="filter"> Per
+                                Bulan</label> --}}
                         </div>
 
                         {{-- Per Hari --}}
-                        <div x-show="filter === 'hari'" class="mb-3" x-transition>
+                        {{-- <div x-show="filter === 'hari'" class="mb-3" x-transition>
                             <input type="date" name="tanggal" class="border-gray-300 rounded w-full p-2 text-sm">
-                        </div>
+                        </div> --}}
 
                         {{-- Rentang --}}
                         <div x-show="filter === 'rentang'" class="mb-3" x-transition>
@@ -45,10 +45,10 @@
                         </div>
 
                         {{-- Per Bulan --}}
-                        <div x-show="filter === 'bulan'" class="mb-3" x-transition>
+                        {{-- <div x-show="filter === 'bulan'" class="mb-3" x-transition>
                             <input type="month" name="bulan" class="border-gray-300 rounded w-full p-2 text-sm"
                                 value="{{ old('bulan', date('Y-m')) }}">
-                        </div>
+                        </div> --}}
                     </div>
 
 
@@ -77,18 +77,18 @@
                         <div x-data="{ filter: 'hari' }">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Filter Berdasarkan:</label>
                             <div class="flex gap-4 text-sm mb-3">
-                                <label><input type="radio" name="filter_type" value="hari" x-model="filter"> Per
-                                    Hari</label>
+                                {{-- <label><input type="radio" name="filter_type" value="hari" x-model="filter"> Per
+                                    Hari</label> --}}
                                 <label><input type="radio" name="filter_type" value="rentang" x-model="filter">
                                     Rentang</label>
-                                <label><input type="radio" name="filter_type" value="bulan" x-model="filter"> Per
-                                    Bulan</label>
+                                {{-- <label><input type="radio" name="filter_type" value="bulan" x-model="filter"> Per
+                                    Bulan</label> --}}
                             </div>
 
                             {{-- Per Hari --}}
-                            <div x-show="filter === 'hari'" class="mb-3" x-transition>
+                            {{-- <div x-show="filter === 'hari'" class="mb-3" x-transition>
                                 <input type="date" name="tanggal" class="border-gray-300 rounded w-full p-2 text-sm">
-                            </div>
+                            </div> --}}
 
                             {{-- Rentang --}}
                             <div x-show="filter === 'rentang'" class="mb-3" x-transition>
@@ -101,10 +101,10 @@
                             </div>
 
                             {{-- Per Bulan --}}
-                            <div x-show="filter === 'bulan'" class="mb-3" x-transition>
+                            {{-- <div x-show="filter === 'bulan'" class="mb-3" x-transition>
                                 <input type="month" name="bulan" class="border-gray-300 rounded w-full p-2 text-sm"
                                     value="{{ old('bulan', date('Y-m')) }}">
-                            </div>
+                            </div> --}}
                         </div>
 
 
@@ -141,18 +141,18 @@
                         <div x-data="{ filter: 'hari' }">
                             <label class="block text-sm font-medium text-gray-700 mb-1">Filter Berdasarkan:</label>
                             <div class="flex gap-4 text-sm mb-3">
-                                <label><input type="radio" name="filter_type" value="hari" x-model="filter"> Per
-                                    Hari</label>
+                                {{-- <label><input type="radio" name="filter_type" value="hari" x-model="filter"> Per
+                                    Hari</label> --}}
                                 <label><input type="radio" name="filter_type" value="rentang" x-model="filter">
                                     Rentang</label>
-                                <label><input type="radio" name="filter_type" value="bulan" x-model="filter"> Per
-                                    Bulan</label>
+                                {{-- <label><input type="radio" name="filter_type" value="bulan" x-model="filter"> Per
+                                    Bulan</label> --}}
                             </div>
 
                             {{-- Per Hari --}}
-                            <div x-show="filter === 'hari'" class="mb-3" x-transition>
+                            {{-- <div x-show="filter === 'hari'" class="mb-3" x-transition>
                                 <input type="date" name="tanggal" class="border-gray-300 rounded w-full p-2 text-sm">
-                            </div>
+                            </div> --}}
 
                             {{-- Rentang --}}
                             <div x-show="filter === 'rentang'" class="mb-3" x-transition>
@@ -165,10 +165,10 @@
                             </div>
 
                             {{-- Per Bulan --}}
-                            <div x-show="filter === 'bulan'" class="mb-3" x-transition>
+                            {{-- <div x-show="filter === 'bulan'" class="mb-3" x-transition>
                                 <input type="month" name="bulan" class="border-gray-300 rounded w-full p-2 text-sm"
                                     value="{{ old('bulan', date('Y-m')) }}">
-                            </div>
+                            </div> --}}
                         </div>
 
 

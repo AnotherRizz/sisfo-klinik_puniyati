@@ -36,19 +36,32 @@ public function index(Request $request)
         $all = $all->filter(fn($item) => \Carbon\Carbon::parse($item->created_at)->isToday());
     }
 
-    // 🔍 Filter berdasarkan nama pasien atau no_rm
     if ($search) {
-        $searchLower = strtolower($search);
-        $all = $all->filter(function ($item) use ($searchLower) {
-            $pasien = $item->pendaftaran->pasien ?? null;
-            return $pasien &&
-                (
-                    str_contains(strtolower($pasien->nama_pasien), $searchLower) ||
-                    str_contains(strtolower($pasien->no_rm), $searchLower)||
-                    str_contains(strtolower($pasien->alamat), $searchLower)
-                );
-        });
-    }
+    $searchLower = strtolower($search);
+    $all = $all->filter(function ($item) use ($searchLower) {
+        $pasien = $item->pendaftaran->pasien ?? null;
+
+        // Konversi tanggal lahir ke format 'd F Y' dalam lowercase untuk dibandingkan
+        $tglLahirFormatted = $pasien && $pasien->tgl_lahir
+            ? strtolower(\Carbon\Carbon::parse($pasien->tgl_lahir)->translatedFormat('d F Y'))
+            : '';
+
+        // Format tambahan misal '13 juni'
+        $tglLahirShort = $pasien && $pasien->tgl_lahir
+            ? strtolower(\Carbon\Carbon::parse($pasien->tgl_lahir)->translatedFormat('d F'))
+            : '';
+
+        return $pasien &&
+            (
+                str_contains(strtolower($pasien->nama_pasien), $searchLower) ||
+                str_contains(strtolower($pasien->no_rm), $searchLower) ||
+                str_contains(strtolower($pasien->alamat), $searchLower) ||
+                str_contains($tglLahirFormatted, $searchLower) ||
+                str_contains($tglLahirShort, $searchLower)
+            );
+    });
+}
+
 
     // Urutkan dan paginasi
     $all = $all->sortByDesc('created_at')->values();

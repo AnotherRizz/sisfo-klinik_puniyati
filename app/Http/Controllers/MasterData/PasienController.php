@@ -16,14 +16,41 @@ public function index(Request $request)
     $query = Pasien::query(); // Gunakan query builder
 
     // Cek apakah parameter 'search' ada dalam request
-    if ($search = $request->get('search')) {
-        // Cari berdasarkan 'nama_pasien' atau 'no_rm' (pencarian berdasarkan....)
-        $query->where('nama_pasien', 'like', '%' . $search . '%')
-              ->orWhere('no_rm', 'like', '%' . $search . '%')
-              ->orWhere('alamat', 'like', '%' . $search . '%')
-              ->orWhere('tgl_lahir', 'like', '%' . $search . '%');
-    }
-  $perPage = $request->get('per_page', 5);
+  $search = $request->get('search');
+
+if ($search = $request->get('search')) {
+    $search = strtolower($search);
+
+    $query->where(function ($q) use ($search) {
+        $q->where('nama_pasien', 'like', '%' . $search . '%')
+          ->orWhere('no_rm', 'like', '%' . $search . '%')
+          ->orWhere('alamat', 'like', '%' . $search . '%')
+          ->orWhereRaw("DATE_FORMAT(tgl_lahir, '%d-%m-%Y') LIKE ?", ["%{$search}%"])
+          ->orWhereRaw("LOWER(CONCAT(
+                DAY(tgl_lahir), ' ',
+                CASE MONTH(tgl_lahir)
+                    WHEN 1 THEN 'januari'
+                    WHEN 2 THEN 'februari'
+                    WHEN 3 THEN 'maret'
+                    WHEN 4 THEN 'april'
+                    WHEN 5 THEN 'mei'
+                    WHEN 6 THEN 'juni'
+                    WHEN 7 THEN 'juli'
+                    WHEN 8 THEN 'agustus'
+                    WHEN 9 THEN 'september'
+                    WHEN 10 THEN 'oktober'
+                    WHEN 11 THEN 'november'
+                    WHEN 12 THEN 'desember'
+                END,
+                ' ',
+                YEAR(tgl_lahir)
+            )) LIKE ?", ["%{$search}%"]);
+    });
+}
+
+    
+
+  $perPage = $request->get('per_page', 10);
     // Ambil data dengan paginasi
     $pasiens = $query->paginate($perPage); 
 

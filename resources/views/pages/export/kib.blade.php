@@ -80,7 +80,7 @@
 <div class="box">
     <table>
         <tr><td>No. RM</td><td>: {{ $pasien->no_rm }}</td></tr>
-        <tr><td>Nama Pasien</td><td>: {{ $pasien->nama_pasien }}</td></tr>
+        <tr><td>Nama Pasien</td><td>: {{ $pasien->status. '. '. $pasien->nama_pasien }}</td></tr>
         <tr><td>Tempat Lahir</td><td>: {{ $pasien->tempt_lahir }}</td></tr>
         <tr><td>Tanggal Lahir</td><td>: {{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') }}</td></tr>
         <tr><td>Umur</td><td>: {{ $pasien->umur }}</td></tr>

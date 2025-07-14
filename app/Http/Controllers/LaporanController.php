@@ -36,7 +36,7 @@ class LaporanController extends Controller
 public function exportPendaftaran(Request $request)
 {
     $filterType = $request->input('filter_type');
-    dd($filterType);
+    // dd($filterType);
 
     if ($filterType === 'hari') {
         $request->validate([

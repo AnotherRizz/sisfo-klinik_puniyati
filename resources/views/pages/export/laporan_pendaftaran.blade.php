@@ -121,7 +121,7 @@
                             <td>{{ $no++ }}</td>
                             <td>{{ $item->noreg }}</td>
                             <td>{{ $item->pasien->no_rm ?? '-' }}</td>
-                            <td style="text-align: left;">{{ $item->pasien->nama_pasien ?? '-' }}</td>
+                            <td style="text-align: left;">{{ $item->pasien->status.'. '. $item->pasien->nama_pasien ?? '-' }}</td>
                             <td>{{ $item->bidan->kd_bidan ?? '-' }}</td>
                             <td style="text-align: left;">{{ $item->bidan->nama_bidan ?? '-' }}</td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_daftar)->format('d-m-Y') }}</td>

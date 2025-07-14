@@ -130,7 +130,7 @@
                     <td>{{ $i + 1 }}</td>
                     <td>{{ $item->nama_kk ?? '-' }}</td>
                     <td>{{ $item->no_rm ?? '-' }}</td>
-                    <td>{{ $item->nama_pasien ?? '-' }}</td>
+                    <td>{{ $item->status .'. '.$item->nama_pasien  ?? '-' }}</td>
                     <td>{{ $item->nik_pasien ?? '-' }}</td>
                     <td>{{ $item->umur ?? '-' }}</td>
                     <td>{{ $item->tempt_lahir ?? '-' }}</td>

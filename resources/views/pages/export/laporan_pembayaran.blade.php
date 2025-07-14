@@ -165,7 +165,7 @@
                             <td>{{ $item->kd_bayar ?? '-' }}</td>
                             <td>{{ $periksa->nomor_periksa ?? '-' }}</td>
                             <td>{{ $pasien->no_rm ?? '-' }}</td>
-                            <td>{{ $pasien->nama_pasien ?? '-' }}</td>
+                            <td>{{ $pasien->status .'. '.$pasien->nama_pasien ?? '-' }}</td>
                             <td>{{ $pelayananName }}</td>
                             <td>{{ $obatNamaList }}</td>
                             <td>{{ $item->tindakan ?? '-' }}</td>

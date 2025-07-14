@@ -33,7 +33,7 @@
                 </tr>
                 <tr>
                     <td>Nama Pasien</td>
-                    <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                    <td>: {{ $pembayaran->pemeriksaanable->pendaftaran->pasien->status .'. '. $pembayaran->pemeriksaanable->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
                     <td>Tanggal Pemeriksaan</td>
                     <td>:
                         {{ \Carbon\Carbon::parse($pembayaran->pemeriksaanable->pendaftaran->pasien->tgl_lahir)->format('d-m-Y') }}
@@ -58,74 +58,71 @@
             </table>
 
             {{-- Informasi Pembayaran --}}
-            <table class="w-full border-collapse border text-sm">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="border px-4 py-2">DESKRIPSI</th>
-                        <th class="border px-4 py-2">TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border px-4 py-2">ADMINISTRASI</td>
-                        <td class="border px-4 py-2">Rp
-                            {{ number_format($pembayaran->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr>
-                        <td class="border px-4 py-2 font-semibold">TINDAKAN DAN LAYANAN MEDIS</td>
-                        <td class="border px-4 py-2"></td>
-                    </tr>
-                    <tr>
-                        <td class="border px-4 py-2">{{ $pembayaran->tindakan ?? '-' }}</td>
-                        <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}
-                        </td>
-                    </tr>
-                    @foreach ($pemeriksaan->obatPemeriksaan as $item)
-                        @php
-                            $jumlah = $item->jumlah_obat ?? 0;
-                            $subtotal = $jumlah * ($item->obat->harga_jual ?? 0);
-                        @endphp
-                        <tr>
-                            <td class="border px-4 py-2">
-                                {{ $item->obat->nama_obat ?? '-' }} x
-                                {{ $jumlah }} (jumlah obat)
-                            </td>
-                            <td class="border px-4 py-2">
-                                Rp {{ number_format($subtotal, 0, ',', '.') }}
-                            </td>
-                        </tr>
-                    @endforeach
+          <table class="w-full border-collapse border text-sm">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="border px-4 py-2">DESKRIPSI</th>
+            <th class="border px-4 py-2">TOTAL</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{-- Biaya Administrasi --}}
+        <tr>
+            <td class="border px-4 py-2">ADMINISTRASI</td>
+            <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_administrasi ?? 0, 0, ',', '.') }}</td>
+        </tr>
 
+        {{-- Tindakan --}}
+        <tr>
+            <td class="border px-4 py-2 font-semibold">TINDAKAN DAN LAYANAN MEDIS</td>
+            <td class="border px-4 py-2"></td>
+        </tr>
+        <tr>
+            <td class="border px-4 py-2">{{ $pembayaran->tindakan ?? '-' }}</td>
+            <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_tindakan ?? 0, 0, ',', '.') }}</td>
+        </tr>
 
+        {{-- Obat & Suplemen --}}
+        @php
+            $totalObat = 0;
+        @endphp
 
-                    <tr>
-                        <td class="border px-4 py-2">KONSULTASI</td>
-                        <td class="border px-4 py-2">Rp
-                            {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
-                    </tr>
-                    <tr class="bg-gray-100 font-bold">
-                        <td class="border px-4 py-2">TOTAL</td>
-                        <td class="border px-4 py-2">
-                            @php
-                                $totalObat = $pemeriksaan->obatPemeriksaan->sum(function ($item) {
-                                    return ($item->jumlah_obat ?? 0) * ($item->obat->harga_jual ?? 0);
-                                });
+        @foreach ($pemeriksaan->obatPemeriksaan as $item)
+            @php
+                $jumlah = $item->jumlah_obat ?? 0;
+                $harga = $item->obat->harga_jual ?? 0;
+                $subtotal = $jumlah * $harga;
+                $totalObat += $subtotal;
+            @endphp
+            <tr>
+                <td class="border px-4 py-2">
+                    {{ $item->vitamin_suplemen === 'ya' ? 'Suplemen' : 'Obat' }}:
+                    {{ $item->obat->nama_obat ?? '-' }} x {{ $jumlah }} ({{ $item->dosis_carkai ?? '-' }})
+                </td>
+                <td class="border px-4 py-2">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+            </tr>
+        @endforeach
 
-                                $total =
-                                    ($pembayaran->biaya_administrasi ?? 0) +
-                                    ($pembayaran->biaya_tindakan ?? 0) +
-                                    ($pembayaran->biaya_konsultasi ?? 0) +
-                                    $totalObat;
-                            @endphp
+        {{-- Konsultasi --}}
+        <tr>
+            <td class="border px-4 py-2">KONSULTASI</td>
+            <td class="border px-4 py-2">Rp {{ number_format($pembayaran->biaya_konsultasi ?? 0, 0, ',', '.') }}</td>
+        </tr>
 
+        {{-- TOTAL --}}
+        @php
+            $total = ($pembayaran->biaya_administrasi ?? 0)
+                + ($pembayaran->biaya_tindakan ?? 0)
+                + ($pembayaran->biaya_konsultasi ?? 0)
+                + $totalObat;
+        @endphp
+        <tr class="bg-gray-100 font-bold">
+            <td class="border px-4 py-2">TOTAL</td>
+            <td class="border px-4 py-2">Rp {{ number_format($total, 0, ',', '.') }}</td>
+        </tr>
+    </tbody>
+</table>
 
-
-
-                            Rp {{ number_format($total, 0, ',', '.') }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
 
             {{-- Tombol Cetak --}}
             <div class="mt-6 text-center">

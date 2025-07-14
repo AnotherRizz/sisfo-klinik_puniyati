@@ -9,9 +9,9 @@
         <div>
             <h1 class="text-lg font-bold text-slate-500">
                 @if (request('filter_tanggal') == 'semua')
-                Menampilkan Semua Pemeriksaan
+                    Menampilkan Semua Pemeriksaan
                 @else
-                Menampilkan Pemeriksaan Tanggal {{ now()->locale('id')->translatedFormat('d F Y') }}
+                    Menampilkan Pemeriksaan Tanggal {{ now()->locale('id')->translatedFormat('d F Y') }}
                 @endif
             </h1>
         </div>
@@ -57,9 +57,19 @@
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ $item->pendaftaran->pasien->no_rm ?? ($item->pasien->no_rm ?? '-') }}
                         </td>
-                        <td class="px-4 py-2 text-sm text-gray-900">
-                            {{ $item->pendaftaran->pasien->nama_pasien ?? ($item->pasien->nama_pasien ?? '-') }}
-                        </td>
+                        @php
+                            if ($item->pendaftaran->pasien ?? false) {
+                                $namaStatus =
+                                    $item->pendaftaran->pasien->status . '. ' . $item->pendaftaran->pasien->nama_pasien;
+                            } elseif ($item->pasien ?? false) {
+                                $namaStatus = $item->pasien->status . '. ' . $item->pasien->nama_pasien;
+                            } else {
+                                $namaStatus = '-';
+                            }
+                        @endphp
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $namaStatus }}</td>
+
+
                         <td class="px-4 py-2 text-sm text-gray-900">
                             @if ($item->pendaftaran->pasien->tgl_lahir ?? $item->pasien->tgl_lahir)
                                 {{ \Carbon\Carbon::parse($item->pendaftaran->pasien->tgl_lahir ?? $item->pasien->tgl_lahir)->format('d/m/Y') }}
@@ -108,7 +118,7 @@
                         </td>
                     </tr>
                 @empty
-                      <x-data-notfound :colspan="8" />
+                    <x-data-notfound :colspan="8" />
                 @endforelse
             </tbody>
 

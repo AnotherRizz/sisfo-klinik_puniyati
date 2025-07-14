@@ -14,7 +14,7 @@ class PemeriksaanKiaIbuHamil extends Model
     protected $fillable = [
         'pendaftaran_id','nomor_periksa',
         'keluhan', 'riw_penyakit', 'td', 'bb', 'tb', 'suhu', 'saturasiOx', 'nadi', 'lila',
-        'hpht', 'hpl', 'gpa', 'riwayatkehamilankesehatan', 'umr_hamil', 'riwayat_TT', 'tablet_tambah_darah', 'vitamin_mineral', 'asam_folat', 
+        'hpht', 'hpl', 'gpa', 'riwayatkehamilankesehatan', 'umr_hamil', 'riwayat_TT',
         'tifu', 'djj', 'ltkjanin', 'ktrkuterus', 'refla', 'lab', 'resti', 'diagnosa',
         'intervensi', 'tindak_lnjt', 'tgl_kembali'
     ];
@@ -26,7 +26,7 @@ class PemeriksaanKiaIbuHamil extends Model
   public function obat()
 {
     return $this->morphToMany(Obat::class, 'pemeriksaanable', 'obat_pemeriksaan')
-                ->withPivot('dosis_carkai', 'jumlah_obat')
+                ->withPivot('dosis_carkai', 'jumlah_obat','vitamin_suplemen')
                 ->withTimestamps();
 }
 

@@ -41,7 +41,7 @@
                 const clearBtn = document.getElementById('clearSearch');
 
                 let typingTimer;
-                const delay = 500;
+                const delay = 1000;
 
                 if (searchInput) {
                     searchInput.addEventListener('input', function () {

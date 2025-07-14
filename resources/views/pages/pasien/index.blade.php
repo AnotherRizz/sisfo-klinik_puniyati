@@ -7,14 +7,14 @@
 
     <div class="flex w-full gap-2 items-center justify-end">
         @role('bidan')
-        <a href="{{ route('pasien.export') }}" target="_blank"            
-            class="px-3 py-1.5 text-white flex gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Cetak
-            Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-            </svg>
-        </a>
+            <a href="{{ route('pasien.export') }}" target="_blank"
+                class="px-3 py-1.5 text-white flex gap-2 cursor-pointer bg-red-500 hover:bg-red-600 rounded mb-4 text-sm">Cetak
+                Data<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+            </a>
         @endrole
         <a href="{{ route('pasien.create') }}"
             class="px-3 py-1.5 text-white flex gap-2 cursor-pointer bg-sky-500 hover:bg-sky-600 rounded mb-4 text-sm">
@@ -35,7 +35,7 @@
         <div class="w-full flex justify-between">
 
             <div class="mb-4 basis-1/2">
-                <x-search-input :action="route('pasien.index')" name="search" placeholder="Cari nama / no rekam medis..." />
+                <x-search-input :action="route('pasien.index')" name="search" placeholder="Cari nama / no rm / tanggal lahir" />
             </div>
             <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('pasien.index')" />
 
@@ -47,6 +47,8 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. RM</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Lahir
+                    </th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -58,8 +60,11 @@
                             {{ $loop->iteration + ($pasiens->currentPage() - 1) * $pasiens->perPage() }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $pasien->no_rm }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $pasien->nama_pasien }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $pasien->status .'. ' . $pasien->nama_pasien }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $pasien->nik_pasien }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">
+                            {{ \Carbon\Carbon::parse($pasien->tgl_lahir)->locale('id')->translatedFormat('d F Y') }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $pasien->alamat }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <a href="{{ route('pasien.edit', $pasien->id) }}"
@@ -82,11 +87,11 @@
                         </td>
                     </tr>
                 @empty
-                    <x-data-notfound :colspan="9" message="Data pasien tidak ditemukan"  />
+                    <x-data-notfound :colspan="9" message="Data pasien tidak ditemukan" />
                 @endforelse
             </tbody>
         </table>
-       <div class="mt-4">
+        <div class="mt-4">
             {{ $pasiens->links() }}
         </div>
 

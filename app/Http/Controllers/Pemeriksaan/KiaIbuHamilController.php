@@ -44,13 +44,53 @@ public function index(Request $request)
          $query->whereHas('pendaftaran.pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
               ->orWhere('no_rm', 'like', '%' . $search . '%')
-              ->orWhere('alamat', 'like', '%' . $search . '%');
+              ->orWhere('alamat', 'like', '%' . $search . '%')
+              ->orWhereRaw("DATE_FORMAT(tgl_lahir, '%d-%m-%Y') LIKE ?", ["%{$search}%"])
+                            ->orWhereRaw("LOWER(CONCAT(
+                                    DAY(tgl_lahir), ' ',
+                                    CASE MONTH(tgl_lahir)
+                                        WHEN 1 THEN 'januari'
+                                        WHEN 2 THEN 'februari'
+                                        WHEN 3 THEN 'maret'
+                                        WHEN 4 THEN 'april'
+                                        WHEN 5 THEN 'mei'
+                                        WHEN 6 THEN 'juni'
+                                        WHEN 7 THEN 'juli'
+                                        WHEN 8 THEN 'agustus'
+                                        WHEN 9 THEN 'september'
+                                        WHEN 10 THEN 'oktober'
+                                        WHEN 11 THEN 'november'
+                                        WHEN 12 THEN 'desember'
+                                    END,
+                                    ' ',
+                                    YEAR(tgl_lahir)
+                                )) LIKE ?", ["%{$search}%"]);
         });
 
         $pendaftaranBelumDiperiksa->whereHas('pasien', function ($q) use ($search) {
             $q->where('nama_pasien', 'like', '%' . $search . '%')
               ->orWhere('no_rm', 'like', '%' . $search . '%')
-              ->orWhere('alamat', 'like', '%' . $search . '%');
+              ->orWhere('alamat', 'like', '%' . $search . '%')
+              ->orWhereRaw("DATE_FORMAT(tgl_lahir, '%d-%m-%Y') LIKE ?", ["%{$search}%"])
+                            ->orWhereRaw("LOWER(CONCAT(
+                                    DAY(tgl_lahir), ' ',
+                                    CASE MONTH(tgl_lahir)
+                                        WHEN 1 THEN 'januari'
+                                        WHEN 2 THEN 'februari'
+                                        WHEN 3 THEN 'maret'
+                                        WHEN 4 THEN 'april'
+                                        WHEN 5 THEN 'mei'
+                                        WHEN 6 THEN 'juni'
+                                        WHEN 7 THEN 'juli'
+                                        WHEN 8 THEN 'agustus'
+                                        WHEN 9 THEN 'september'
+                                        WHEN 10 THEN 'oktober'
+                                        WHEN 11 THEN 'november'
+                                        WHEN 12 THEN 'desember'
+                                    END,
+                                    ' ',
+                                    YEAR(tgl_lahir)
+                                )) LIKE ?", ["%{$search}%"]);
         });
     }
 
@@ -111,9 +151,6 @@ public function create(Request $request)
         'lab' => 'required',
         'resti' => 'required',
         'riwayat_TT' => 'required',
-        'tablet_tambah_darah' => 'required',
-        'vitamin_mineral' => 'required',
-        'asam_folat' => 'required',
         'diagnosa' => 'required|string',
         'intervensi' => 'required|string',
         'tindak_lnjt' => 'required|string',
@@ -123,7 +160,7 @@ public function create(Request $request)
         'obat_id' => 'nullable|array',
     'obat_id.*' => 'nullable|exists:obat,id',
     'dosis_carkai' => 'nullable|array',
-    ]);
+    ]); 
 
     // Generate nomor periksa otomatis
     $last = PemeriksaanKiaIbuHamil::latest()->first();
@@ -133,18 +170,19 @@ public function create(Request $request)
     $pemeriksaan = PemeriksaanKiaIbuHamil::create($request->except('obat_id', 'dosis_carkai'));
 
     // Tambahkan data obat hanya jika ada input
-   if ($request->filled('obat_id') && is_array($request->obat_id)) {
+ if ($request->filled('obat_id') && is_array($request->obat_id)) {
     foreach ($request->obat_id as $i => $obat_id) {
-        // Cek jika nilai obat valid dan bukan null atau kosong
         if (!empty($obat_id)) {
             $pemeriksaan->obatPemeriksaan()->create([
                 'obat_id' => $obat_id,
                 'dosis_carkai' => $request->dosis_carkai[$i] ?? null,
                 'jumlah_obat' => $request->jumlah_obat[$i] ?? null,
+                'vitamin_suplemen' => $request->vitamin_suplemen[$i] ?? 'tidak', // enum: ya / tidak
             ]);
         }
     }
 }
+
 
 
     return redirect()->route('kia-ibu-hamil.index')->with('success', 'Berhasil menyimpan data Kesehatan Ibu Hamil.');
@@ -199,9 +237,6 @@ public function create(Request $request)
         'lab' => 'required',
         'resti' => 'required',
         'riwayat_TT' => 'required',
-        'tablet_tambah_darah' => 'required',
-        'vitamin_mineral' => 'required',
-        'asam_folat' => 'required',
         'diagnosa' => 'required|string',
         'intervensi' => 'required|string',
         'tindak_lnjt' => 'required|string',
@@ -220,14 +255,14 @@ public function create(Request $request)
     $pemeriksaan->obatPemeriksaan()->delete();
 
     // Tambahkan data obat baru jika ada
-   if ($request->filled('obat_id') && is_array($request->obat_id)) {
+  if ($request->filled('obat_id') && is_array($request->obat_id)) {
     foreach ($request->obat_id as $i => $obat_id) {
-        // Cek jika nilai obat valid dan bukan null atau kosong
         if (!empty($obat_id)) {
             $pemeriksaan->obatPemeriksaan()->create([
                 'obat_id' => $obat_id,
                 'dosis_carkai' => $request->dosis_carkai[$i] ?? null,
                 'jumlah_obat' => $request->jumlah_obat[$i] ?? null,
+                'vitamin_suplemen' => $request->vitamin_suplemen[$i] ?? 'tidak', // enum: ya / tidak
             ]);
         }
     }

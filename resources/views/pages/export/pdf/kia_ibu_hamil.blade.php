@@ -120,44 +120,64 @@
                 <th >NO. HP </th>
             </tr>
         </thead>
-        <tbody>
-            @foreach ($pemeriksaans as $index => $item)
-                            @php
-                                $obats = $item->obatPemeriksaan ?? collect();
-                                $namaObat = $obats->map(fn($o) => $o->obat->nama_obat ?? '-')->join(', ');
-                            @endphp
-                            <tr class="border-b">
-                                <td >{{ $index + 1 }}</td>
-                                <td >
-                                    {{ \Carbon\Carbon::parse($item->pendaftaran->tgl_daftar)->translatedFormat('d/m/Y') ?? '-' }}
-                                </td>
+       <tbody>
+    @foreach ($pemeriksaans as $index => $item)
+        @php
+            $obats = $item->obatPemeriksaan ?? collect();
 
-                                <td >{{ $item->nomor_periksa ?? '-' }}</td>
-                                <td >{{ $item->pendaftaran->pasien->no_rm ?? '-' }}</td>
-                                <td >{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
-                                <td >{{ $item->keluhan ?? '-' }}</td>
-                                <td >{{ $item->umr_hamil . ' Minggu' ?? '-' }}</td>
-                                <td >{{ $item->td ?? '-' }}</td>
-                                <td >{{ $item->bb ?? '-' }}</td>
-                                <td >{{ $item->tb ?? '-' }}</td>
-                                <td >{{ $item->gpa ?? '-' }}</td>
-                                <td >{{ $item->lab ?? '-' }}</td>
-                                <td >{{ $item->resti ?? '-' }}</td>
-                                <td >{{ $item->riwayat_TT ?? '-' }}</td>
-                                <td >  {{ \Carbon\Carbon::parse($item->hpht)->translatedFormat('d/m/Y') ?? '-' }}</td>
-                                <td >  {{ \Carbon\Carbon::parse($item->hpl)->translatedFormat('d/m/Y') ?? '-' }}</td>
-                                <td >{{ $item->diagnosa ?? '-' }}</td>
-                                <td >{{ $item->tindakan ?? '-' }}</td>
-                                <td >{{ $namaObat ?: '-' }}</td>
+            $suplemenList = $obats->where('vitamin_suplemen', 'ya')->map(fn($o) =>
+                '(' . ($o->jumlah_obat ?? '-') . ') ' .
+                ($o->obat->nama_obat ?? '-') .
+                ' (' . ($o->dosis_carkai ?? '-') . ')'
+            )->join(', ');
 
-                                <td >
-                                    {{ \Carbon\Carbon::parse($item->tgl_kembali)->translatedFormat('d/m/Y') ?? '-' }}
-                                </td>
-                                <td >{{ $item->tindak_lnjt ?? '-' }}</td>
-                                <td >{{ $item->pendaftaran->pasien->no_tlp ?? '-' }}</td>
-                            </tr>
-                        @endforeach
-        </tbody>
+            $obatBiasaList = $obats->where('vitamin_suplemen', 'tidak')->map(fn($o) =>
+                '(' . ($o->jumlah_obat ?? '-') . ') ' .
+                ($o->obat->nama_obat ?? '-') .
+                ' (' . ($o->dosis_carkai ?? '-') . ')'
+            )->join(', ');
+        @endphp
+
+        <tr class="border-b">
+            <td>{{ $index + 1 }}</td>
+            <td>{{ $item->pendaftaran->tgl_daftar ? \Carbon\Carbon::parse($item->pendaftaran->tgl_daftar)->translatedFormat('d/m/Y') : '-' }}</td>
+            <td>{{ $item->nomor_periksa ?? '-' }}</td>
+            <td>{{ $item->pendaftaran->pasien->no_rm ?? '-' }}</td>
+            <td>{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+            <td>{{ $item->keluhan ?? '-' }}</td>
+            <td>{{ $item->umr_hamil ? $item->umr_hamil . ' Minggu' : '-' }}</td>
+            <td>{{ $item->td ?? '-' }}</td>
+            <td>{{ $item->bb ?? '-' }}</td>
+            <td>{{ $item->tb ?? '-' }}</td>
+            <td>{{ $item->gpa ?? '-' }}</td>
+            <td>{{ $item->lab ?? '-' }}</td>
+            <td>{{ $item->resti ?? '-' }}</td>
+            <td>{{ $item->riwayat_TT ?? '-' }}</td>
+            <td>{{ $item->hpht ? \Carbon\Carbon::parse($item->hpht)->translatedFormat('d/m/Y') : '-' }}</td>
+            <td>{{ $item->hpl ? \Carbon\Carbon::parse($item->hpl)->translatedFormat('d/m/Y') : '-' }}</td>
+            <td>{{ $item->diagnosa ?? '-' }}</td>
+            <td>{{ $item->tindakan ?? '-' }}</td>
+
+            {{-- Obat dan Suplemen --}}
+            <td>
+                @if ($suplemenList)
+                    <div><strong>Suplemen:</strong> {{ $suplemenList }}</div>
+                @endif
+                @if ($obatBiasaList)
+                    <div><strong>Obat:</strong> {{ $obatBiasaList }}</div>
+                @endif
+                @if (!$suplemenList && !$obatBiasaList)
+                    <div>-</div>
+                @endif
+            </td>
+
+            <td>{{ $item->tgl_kembali ? \Carbon\Carbon::parse($item->tgl_kembali)->translatedFormat('d/m/Y') : '-' }}</td>
+            <td>{{ $item->tindak_lnjt ?? '-' }}</td>
+            <td>{{ $item->pendaftaran->pasien->no_tlp ?? '-' }}</td>
+        </tr>
+    @endforeach
+</tbody>
+
     </table>
 
 

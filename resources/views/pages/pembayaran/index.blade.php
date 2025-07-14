@@ -38,6 +38,7 @@
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No Periksa</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No. RM</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama Pasien</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Lahir</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Alamat</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Pembayaran</th>
                     <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -54,7 +55,10 @@
                     <tr>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $item->nomor_periksa ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $pasien->no_rm ?? '-' }}</td>
-                        <td class="px-4 py-2 text-sm text-gray-900">{{ $pasien->nama_pasien ?? '-' }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-900">{{ $pasien->status .'. '.$pasien->nama_pasien ?? '-' }}</td>
+                         <td class="px-4 py-2 text-sm text-gray-900">
+                            {{ \Carbon\Carbon::parse($pasien->tgl_lahir)->locale('id')->translatedFormat('d F Y') }}
+                        </td>
                         <td class="px-4 py-2 text-sm text-gray-900">{{ $pasien->alamat ?? '-' }}</td>
                         <td class="px-4 py-2 text-sm text-gray-900">
                             {{ $pembayaran ? \Carbon\Carbon::parse($pembayaran->tgl_bayar)->translatedFormat('d F Y') : '-' }}

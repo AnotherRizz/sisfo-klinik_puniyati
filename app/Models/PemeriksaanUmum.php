@@ -45,7 +45,7 @@ public function getObatAttribute()
 public function obat()
 {
     return $this->morphToMany(Obat::class, 'pemeriksaanable', 'obat_pemeriksaan')
-        ->withPivot('dosis_carkai', 'jumlah_obat')
+        ->withPivot('dosis_carkai', 'jumlah_obat','vitamin_suplemen')
         ->withTimestamps();
 }
 

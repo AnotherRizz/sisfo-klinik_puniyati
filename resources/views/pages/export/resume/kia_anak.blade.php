@@ -107,7 +107,7 @@
             <tr>
                 <td class="label">Nama Pasien</td>
                 <td class="separator">:</td>
-                <td class="value">: {{ $pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                 <td class="value">: {{ $pemeriksaan->pendaftaran->pasien->status .'. '. $pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
 
                 <td class="label">Tanggal Periksa</td>
                 <td class="separator">:</td>

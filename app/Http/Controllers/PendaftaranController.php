@@ -36,9 +36,29 @@ public function index(Request $request)
             $q->whereHas('pasien', function ($pasienQuery) use ($search) {
                 $pasienQuery->where('nama_pasien', 'like', '%' . $search . '%')
                             ->orWhere('no_rm', 'like', '%' . $search . '%')
-                            ->orWhere('alamat', 'like', '%' . $search . '%');
-            })->orWhere('jenis_kunjungan', 'like', '%' . $search . '%');
-        });
+                            ->orWhere('alamat', 'like', '%' . $search . '%')
+                             ->orWhereRaw("DATE_FORMAT(tgl_lahir, '%d-%m-%Y') LIKE ?", ["%{$search}%"])
+                        ->orWhereRaw("LOWER(CONCAT(
+                                DAY(tgl_lahir), ' ',
+                                CASE MONTH(tgl_lahir)
+                                    WHEN 1 THEN 'januari'
+                                    WHEN 2 THEN 'februari'
+                                    WHEN 3 THEN 'maret'
+                                    WHEN 4 THEN 'april'
+                                    WHEN 5 THEN 'mei'
+                                    WHEN 6 THEN 'juni'
+                                    WHEN 7 THEN 'juli'
+                                    WHEN 8 THEN 'agustus'
+                                    WHEN 9 THEN 'september'
+                                    WHEN 10 THEN 'oktober'
+                                    WHEN 11 THEN 'november'
+                                    WHEN 12 THEN 'desember'
+                                END,
+                                ' ',
+                                YEAR(tgl_lahir)
+                            )) LIKE ?", ["%{$search}%"]);
+                            })->orWhere('jenis_kunjungan', 'like', '%' . $search . '%');
+                        });
     }
     // Filter Pelayanan
 if ($request->filled('pelayanan_filter')) {

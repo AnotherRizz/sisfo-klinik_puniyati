@@ -89,7 +89,7 @@
                                 <td class="border px-2 py-1 text-center">{{ $item->nomor_periksa ?? '-' }}</td>
                                 <td class="border px-2 py-1 text-center">{{ $item->pendaftaran->pasien->no_rm ?? '-' }}
                                 </td>
-                                <td class="border px-2 py-1">{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                                <td class="border px-2 py-1">{{ $item->pendaftaran->pasien->status.'. '.  $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->keluhan ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->riw_penyakit ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->td ?? '-' }}</td>

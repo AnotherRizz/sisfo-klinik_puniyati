@@ -107,7 +107,7 @@
             <tr>
                 <td class="label">Nama Pasien</td>
                 <td class="separator">:</td>
-                <td class="value">: {{ $pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                 <td class="value">: {{ $pemeriksaan->pendaftaran->pasien->status .'. '. $pemeriksaan->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
 
                 <td class="label">Tanggal Periksa</td>
                 <td class="separator">:</td>
@@ -145,160 +145,179 @@
     </div>
     <hr>
     <h4 style="margin-top: 10px;">PEMERIKSAAN</h4>
-   <table class="bordered">
-    <tr>
-        <td class="left">Keluhan</td>
-        <td>{{ $pemeriksaan->keluhan ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Riwayat Penyakit</td>
-        <td>{{ $pemeriksaan->riw_penyakit ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Riwayat TT (riw. Imunisasi Tetanus Toksoid)</td>
-        <td>{{ $pemeriksaan->riwayat_TT ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Tensi Darah (mm/Hg)</td>
-        <td>{{ $pemeriksaan->td ? $pemeriksaan->td . ' mmHg' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Berat Badan (Kg)</td>
-        <td>{{ $pemeriksaan->bb ? $pemeriksaan->bb . ' Kg' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Tinggi Badan (Cm)</td>
-        <td>{{ $pemeriksaan->tb ? $pemeriksaan->tb . ' Cm' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Suhu (Celcius)</td>
-        <td>{{ $pemeriksaan->suhu ? $pemeriksaan->suhu . ' °C' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Saturasi Oksigen</td>
-        <td>{{ $pemeriksaan->saturasiOx ? $pemeriksaan->saturasiOx . ' %' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Tinggi Fundus (Cm)</td>
-        <td>{{ $pemeriksaan->tifu ? $pemeriksaan->tifu . ' Cm' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Denyut Nadi Ibu Hamil</td>
-        <td>{{ $pemeriksaan->nadi ? $pemeriksaan->nadi . ' bpm' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Tablet Tambah Darah</td>
-        <td>{{ $pemeriksaan->tablet_tambah_darah ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Vitamin Mineral</td>
-        <td>{{ $pemeriksaan->vitamin_mineral ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Asam Folat</td>
-        <td>{{ $pemeriksaan->asam_folat ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Lingkar Lengan Atas (LILA)</td>
-        <td>{{ $pemeriksaan->lila ? $pemeriksaan->lila . ' cm' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Hari Pertama Haid Ibu Hamil</td>
-        <td>{{ $pemeriksaan->hpht ? \Carbon\Carbon::parse($pemeriksaan->hpht)->translatedFormat('d F Y') : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Hari Perkiraan Lahir Bayi</td>
-        <td>{{ $pemeriksaan->hpl ? \Carbon\Carbon::parse($pemeriksaan->hpl)->translatedFormat('d F Y') : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Gravida, Paritas, Abortus Ibu Hamil</td>
-        <td>{{ $pemeriksaan->gpa ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Riwayat Kehamilan dan Kesehatan</td>
-        <td>{{ $pemeriksaan->riwayatkehamilankesehatan ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Umur Kehamilan</td>
-        <td>{{ $pemeriksaan->umr_hamil ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Tinggi Fundus Uteri (TFU)</td>
-        <td>{{ $pemeriksaan->tifu ? $pemeriksaan->tifu . ' cm' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Denyut Jantung Janin</td>
-        <td>{{ $pemeriksaan->djj ? $pemeriksaan->djj . ' bpm' : '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Letak Janin</td>
-        <td>{{ $pemeriksaan->ltkjanin ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Kontraksi Uterus</td>
-        <td>{{ $pemeriksaan->ktrkuterus ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Refleks Patela (Refla)</td>
-        <td>{{ $pemeriksaan->refla ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Pemeriksaan Lab</td>
-        <td>{{ $pemeriksaan->lab ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Keterangan Resiko Tinggi</td>
-        <td>{{ $pemeriksaan->resti ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Diagnosa</td>
-        <td>{{ $pemeriksaan->diagnosa ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Intervensi</td>
-        <td>{{ $pemeriksaan->intervensi ?? '-' }}</td>
-    </tr>
-    <tr>
-        <td class="left">Tindak Lanjut</td>
-        <td>
-            @switch($pemeriksaan->tindak_lnjt)
-                @case('Tidak Dirujuk')
-                    Tidak Dirujuk
-                    @break
-                @case('Puskesmas')
-                    Rujukan ke Puskesmas
-                    @break
-                @case('Klinik')
-                    Rujukan ke Klinik
-                    @break
-                @case('Rujuk Dokter Spesialis Obsygin')
-                    Rujukan ke Dokter Spesialis Obsygin
-                    @break
-                @case('Rumah Sakit')
-                    Rujukan ke Rumah Sakit
-                    @break
-                @default
-                    -
-            @endswitch
-        </td>
-    </tr>
-    <tr>
-        <td class="left">Tanggal Kembali</td>
-        <td>{{ $pemeriksaan->tgl_kembali ? \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->translatedFormat('d F Y') : '-' }}</td>
-    </tr>
-   <tr>
-            <td class="left">Jumlah Obat dan Dosis</td>
-            <td>
-                @forelse ($pemeriksaan->obatPemeriksaan as $o)
-                    <div>
-                       ({{ $o->jumlah_obat ?? '-' }}) {{ $o->obat->nama_obat }} ({{ $o->dosis_carkai ?? '-' }}) 
-                    </div>
-                @empty
-                    Tidak ada obat
-                @endforelse
+    <table class="bordered">
+        <tr>
+            <td class="left">Keluhan</td>
+            <td>{{ $pemeriksaan->keluhan ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Riwayat Penyakit</td>
+            <td>{{ $pemeriksaan->riw_penyakit ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Riwayat TT (riw. Imunisasi Tetanus Toksoid)</td>
+            <td>{{ $pemeriksaan->riwayat_TT ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Tensi Darah (mm/Hg)</td>
+            <td>{{ $pemeriksaan->td ? $pemeriksaan->td . ' mmHg' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Berat Badan (Kg)</td>
+            <td>{{ $pemeriksaan->bb ? $pemeriksaan->bb . ' Kg' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Tinggi Badan (Cm)</td>
+            <td>{{ $pemeriksaan->tb ? $pemeriksaan->tb . ' Cm' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Suhu (Celcius)</td>
+            <td>{{ $pemeriksaan->suhu ? $pemeriksaan->suhu . ' °C' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Saturasi Oksigen</td>
+            <td>{{ $pemeriksaan->saturasiOx ? $pemeriksaan->saturasiOx . ' %' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Tinggi Fundus (Cm)</td>
+            <td>{{ $pemeriksaan->tifu ? $pemeriksaan->tifu . ' Cm' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Denyut Nadi Ibu Hamil</td>
+            <td>{{ $pemeriksaan->nadi ? $pemeriksaan->nadi . ' bpm' : '-' }}</td>
+        </tr>
+
+        <tr>
+            <td class="left">Lingkar Lengan Atas (LILA)</td>
+            <td>{{ $pemeriksaan->lila ? $pemeriksaan->lila . ' cm' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Hari Pertama Haid Ibu Hamil</td>
+            <td>{{ $pemeriksaan->hpht ? \Carbon\Carbon::parse($pemeriksaan->hpht)->translatedFormat('d F Y') : '-' }}
             </td>
         </tr>
-</table>
+        <tr>
+            <td class="left">Hari Perkiraan Lahir Bayi</td>
+            <td>{{ $pemeriksaan->hpl ? \Carbon\Carbon::parse($pemeriksaan->hpl)->translatedFormat('d F Y') : '-' }}
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Gravida, Paritas, Abortus Ibu Hamil</td>
+            <td>{{ $pemeriksaan->gpa ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Riwayat Kehamilan dan Kesehatan</td>
+            <td>{{ $pemeriksaan->riwayatkehamilankesehatan ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Umur Kehamilan</td>
+            <td>{{ $pemeriksaan->umr_hamil ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Tinggi Fundus Uteri (TFU)</td>
+            <td>{{ $pemeriksaan->tifu ? $pemeriksaan->tifu . ' cm' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Denyut Jantung Janin</td>
+            <td>{{ $pemeriksaan->djj ? $pemeriksaan->djj . ' bpm' : '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Letak Janin</td>
+            <td>{{ $pemeriksaan->ltkjanin ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Kontraksi Uterus</td>
+            <td>{{ $pemeriksaan->ktrkuterus ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Refleks Patela (Refla)</td>
+            <td>{{ $pemeriksaan->refla ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Pemeriksaan Lab</td>
+            <td>{{ $pemeriksaan->lab ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Keterangan Resiko Tinggi</td>
+            <td>{{ $pemeriksaan->resti ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Diagnosa</td>
+            <td>{{ $pemeriksaan->diagnosa ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Intervensi</td>
+            <td>{{ $pemeriksaan->intervensi ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td class="left">Tindak Lanjut</td>
+            <td>
+                @switch($pemeriksaan->tindak_lnjt)
+                    @case('Tidak Dirujuk')
+                        Tidak Dirujuk
+                    @break
+
+                    @case('Puskesmas')
+                        Rujukan ke Puskesmas
+                    @break
+
+                    @case('Klinik')
+                        Rujukan ke Klinik
+                    @break
+
+                    @case('Rujuk Dokter Spesialis Obsygin')
+                        Rujukan ke Dokter Spesialis Obsygin
+                    @break
+
+                    @case('Rumah Sakit')
+                        Rujukan ke Rumah Sakit
+                    @break
+
+                    @default
+                        -
+                @endswitch
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Tanggal Kembali</td>
+            <td>{{ $pemeriksaan->tgl_kembali ? \Carbon\Carbon::parse($pemeriksaan->tgl_kembali)->translatedFormat('d F Y') : '-' }}
+            </td>
+        </tr>
+       <tr>
+    <td class="left">Vitamin/Suplemen</td>
+    <td>
+        @php
+            $suplemen = $pemeriksaan->obatPemeriksaan->where('vitamin_suplemen', 'ya');
+        @endphp
+
+        @forelse ($suplemen as $o)
+            <div>
+                ({{ $o->jumlah_obat ?? '-' }}) {{ $o->obat->nama_obat ?? '-' }} ({{ $o->dosis_carkai ?? '-' }})
+            </div>
+        @empty
+            Tidak ada suplemen
+        @endforelse
+    </td>
+</tr>
+
+<tr>
+    <td class="left">Obat </td>
+    <td>
+        @php
+            $obatBiasa = $pemeriksaan->obatPemeriksaan->where('vitamin_suplemen', 'tidak');
+        @endphp
+
+        @forelse ($obatBiasa as $o)
+            <div>
+                ({{ $o->jumlah_obat ?? '-' }}) {{ $o->obat->nama_obat ?? '-' }} ({{ $o->dosis_carkai ?? '-' }})
+            </div>
+        @empty
+            Tidak ada obat 
+        @endforelse
+    </td>
+</tr>
+
+    </table>
 
 </body>
 

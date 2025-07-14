@@ -37,7 +37,7 @@
                     <x-select2 id="pendaftaran_id" name="pendaftaran_id" label="No Registrasi" :options="$pendaftarans->mapWithKeys(
                         fn($p) => [
                             $p->id => [
-                                'label' => $p->noreg . ' - ' . $p->pasien->nama_pasien,
+                                'label' => $p->noreg . ' - ' . $p->pasien->status .'. '. $p->pasien->nama_pasien,
                                 'data-pendaftaran-id' => $p->id,
                                 'data-pasien-nama' => $p->pasien->nama_pasien,
                                 'data-bidan-nama' => $p->bidan->nama_bidan,
