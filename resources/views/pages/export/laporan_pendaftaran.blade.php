@@ -93,6 +93,15 @@
 
     <h3 class="title">Laporan Pendaftaran {{ $judul }}</h3>
 
+@if(auth()->check() && auth()->user()->hasRole('admin'))
+<h3>
+    Dicetak oleh: {{ auth()->user()->name }} A00{{ auth()->user()->id }}
+</h3>
+@endif
+
+
+
+
     @php
         $urutan = ['Umum', 'Kesehatan Ibu Hamil', 'Kesehatan Anak', 'Ibu Nifas', 'KB'];
         $no = 1;
@@ -121,7 +130,8 @@
                             <td>{{ $no++ }}</td>
                             <td>{{ $item->noreg }}</td>
                             <td>{{ $item->pasien->no_rm ?? '-' }}</td>
-                            <td style="text-align: left;">{{ $item->pasien->status.'. '. $item->pasien->nama_pasien ?? '-' }}</td>
+                            <td style="text-align: left;">
+                                {{ $item->pasien->status . '. ' . $item->pasien->nama_pasien ?? '-' }}</td>
                             <td>{{ $item->bidan->kd_bidan ?? '-' }}</td>
                             <td style="text-align: left;">{{ $item->bidan->nama_bidan ?? '-' }}</td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_daftar)->format('d-m-Y') }}</td>
@@ -133,16 +143,16 @@
                     @endforeach
                 @endif
             @endforeach
-        
+
         </tbody>
     </table>
 
     <div class="footer">
-          Total Seluruh Pendaftaran: {{ $allpendaftaran->count() }} Data
+        Total Seluruh Pendaftaran: {{ $allpendaftaran->count() }} Data
     </div>
 
-  <div class="footer mt-10 text-sm text-gray-700">
-         <div class="mb-2" >
+    <div class="footer mt-10 text-sm text-gray-700">
+        <div class="mb-2">
             Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
         </div>
         <div style="margin-top: 15px">
@@ -155,7 +165,7 @@
         <div>
             <strong><u>Puniyati Amd. Keb</u></strong>
         </div>
-       
+
     </div>
 
 </body>

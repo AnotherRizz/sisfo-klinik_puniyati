@@ -9,6 +9,8 @@ use App\Models\PemeriksaanKb;
 use App\Models\PemeriksaanKiaIbuHamil;
 use App\Models\PemeriksaanKiaAnak;
 use App\Models\PemeriksaanIbuNifas;
+use App\Models\Pendaftaran;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -18,6 +20,8 @@ class DashboardController extends Controller
    public function index()
 {
     $pasien = Pasien::count();
+   $pendaftaranHariIni = Pendaftaran::whereDate('tgl_daftar', Carbon::today())->count();
+
 
     $pemeriksaan = 
         PemeriksaanUmum::count() +
@@ -26,7 +30,7 @@ class DashboardController extends Controller
         PemeriksaanKiaAnak::count() +
         PemeriksaanIbuNifas::count();
 
-    return view('pages.dashboard', compact('pasien', 'pemeriksaan'));
+    return view('pages.dashboard', compact('pasien', 'pemeriksaan', 'pendaftaranHariIni'));
 }
 
     /**

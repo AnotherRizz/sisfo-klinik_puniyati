@@ -12,13 +12,22 @@
                 <h2 class="text-xl font-semibold text-gray-800">Selamat Datang, {{ Auth::user()->name ?? 'Admin' }}</h2>
                 <p class="text-sm text-gray-600 mt-1">Sistem Rekam Medis Elektronik Bidan Praktik Mandiri Puniyati Amd. Keb Mojolaban</p>
             </div>
+           
             <img src="{{ asset('images/logo.png') }}" class="w-24 mt-4" alt="">
+          
         </div>
         <div class="p-4 bg-blue-50 rounded shadow flex items-center">
+              @role('bidan')
             <img src="{{ asset('images/pp.jpg') }}" class="w-16 h-16 rounded-full object-cover border border-blue-300 mr-4" alt="Profil">
+              @endrole
             <div>
                 <h3 class="font-bold text-blue-800">Puniyati Amd. Keb</h3>
+                @role('bidan')
                 <p class="text-sm text-gray-600">Administrator</p>
+                @endrole
+                @role('admin')
+                <p class="text-sm text-gray-600">Bidan Praktik</p>
+                @endrole
             </div>
         </div>
     </div>
@@ -55,8 +64,16 @@
             <h2 class="text-3xl font-bold text-blue-800">{{ $pasien }}</h2>
         </div>
         <div class="p-6 bg-white rounded shadow">
+            @role('bidan')
             <p class="text-sm text-gray-600">Jumlah Data Pemeriksaan</p>
             <h2 class="text-3xl font-bold text-teal-700">{{ $pemeriksaan }}</h2>
+
+            @endrole
+            @role('admin')
+            <p class="text-sm text-gray-600">Jumlah Pendaftaran Hari Ini</p>
+            <h2 class="text-3xl font-bold text-teal-700">{{ $pendaftaranHariIni }}</h2>
+
+            @endrole
         </div>
     </div>
    
