@@ -111,6 +111,7 @@
                 <th>NO PERIKSA</th>
                 <th>NO RM</th>
                 <th>Nama Pasien</th>
+                <th>Nama KK</th>
                 <th>Jenis Pelayanan</th>
                 <th>Obat</th>
                 <th>TINDAKAN</th>
@@ -166,6 +167,7 @@
                             <td>{{ $periksa->nomor_periksa ?? '-' }}</td>
                             <td>{{ $pasien->no_rm ?? '-' }}</td>
                             <td>{{ $pasien->status .'. '.$pasien->nama_pasien ?? '-' }}</td>
+                            <td>{{ $pasien->nama_kk ?? '-' }}</td>
                             <td>{{ $pelayananName }}</td>
                             <td>{{ $obatNamaList }}</td>
                             <td>{{ $item->tindakan ?? '-' }}</td>
@@ -190,11 +192,11 @@
                 <td>Rp{{ number_format($totalAdministrasi, 0, ',', '.') }}</td>
                 <td>Rp{{ number_format($totalKonsultasi, 0, ',', '.') }}</td>
                 <td>Rp{{ number_format($totalObat, 0, ',', '.') }}</td>
-                <td colspan="2"></td>
+                <td colspan="3"></td>
             </tr>
             <tr class="font-semibold total bg-gray-100">
                 <td colspan="8" style="text-align: right">Total</td>
-                <td colspan="6" style="text-align: left">Rp{{ number_format($grandTotal, 0, ',', '.') }}</td>
+                <td colspan="7" style="text-align: left">Rp{{ number_format($grandTotal, 0, ',', '.') }}</td>
 
             </tr>
 

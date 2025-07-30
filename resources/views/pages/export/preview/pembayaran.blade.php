@@ -64,6 +64,7 @@
                             <th class="border px-2 py-1 text-xs text-center">NO PERIKSA</th>
                             <th class="border px-2 py-1 text-xs text-center">NO RM</th>
                             <th class="border px-2 py-1 text-xs text-center">Nama Pasien</th>
+                            <th class="border px-2 py-1 text-xs text-center">Nama KK</th>
                             <th class="border px-2 py-1 text-xs text-center">Jenis Pelayanan</th>
                             <th class="border px-2 py-1 text-xs text-center">Obat</th>
                             <th class="border px-2 py-1 text-xs text-center">TINDAKAN</th>
@@ -99,6 +100,7 @@
                                     </td>
                                     <td class="border px-2 py-1 text-xs text-center">{{ $pasien->no_rm ?? '-' }}</td>
                                     <td class="border px-2 py-1 text-xs text-center">{{ $pasien->status.'. '. $pasien->nama_pasien ?? '-' }}</td>
+                                    <td class="border px-2 py-1 text-xs text-center">{{ $pasien->nama_kk ?? '-' }}</td>
                                     <td class="border px-2 py-1 text-xs text-center">
                                         {{ $pelayanan->nama_pelayanan ?? '-' }}
                                     </td>
@@ -121,7 +123,7 @@
                             @endforeach
                         @endforeach
                         <tr class="font-semibold">
-                            <td colspan="14" class="border px-2 py-2 text-xs text-right text-gray-700">
+                            <td colspan="15" class="border px-2 py-2 text-xs text-right text-gray-700">
                                 Total Seluruh Pembayaran: {{ $allPembayaran->count() }} transaksi
                             </td>
                         </tr>

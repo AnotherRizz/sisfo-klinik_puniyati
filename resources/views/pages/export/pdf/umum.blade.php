@@ -8,7 +8,7 @@
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 12px;
-            margin: 40px;
+            margin: 0px;
         }
 
         .header {
@@ -100,6 +100,7 @@
                 <th >NO. Periksa</th>
                 <th >NO. RM</th>
                 <th >NAMA PASIEN</th>
+                <th >NAMA KK</th>
                 <th >KELUHAN</th>
                 <th >RIW PENYAKIT </th>
                 <th >TD (mmHg) </th>
@@ -132,6 +133,7 @@
                                 <td >{{ $item->nomor_periksa ?? '-' }}</td>
                                 <td >{{ $item->pendaftaran->pasien->no_rm ?? '-' }}</td>
                                 <td >{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                                <td >{{ $item->pendaftaran->pasien->nama_kk ?? '-' }}</td>
                                 <td >{{ $item->keluhan ?? '-' }}</td>
                                 <td >{{ $item->riw_penyakit ?? '-' }}</td>
                                 <td >{{ $item->td ?? '-' }}</td>

@@ -114,6 +114,7 @@
                 <th class="uppercase">Tempat Lahir</th>
                 <th class="uppercase">Tanggal Lahir</th>
                 <th class="uppercase">Alamat</th>
+                <th class="uppercase">Nama KK</th>
                 <th class="uppercase">Agama</th>
                 <th class="uppercase">Jenkel</th>
                 <th class="uppercase">Pendidikan</th>
@@ -136,6 +137,7 @@
                     <td>{{ $item->tempt_lahir ?? '-' }}</td>
                     <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y') }}</td>
                     <td>{{ $item->alamat ?? '-' }}</td>
+                    <td>{{ $item->nama_kk ?? '-' }}</td>
                     <td>{{ $item->agama ?? '-' }}</td>
                     <td>{{ $item->jenis_kelamin ?? '-' }}</td>
                     <td>{{ $item->pendidikan ?? '-' }}</td>

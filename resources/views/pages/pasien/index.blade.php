@@ -31,24 +31,24 @@
 
 
 
-    <div class="bg-white rounded shadow p-2">
-        <div class="w-full flex justify-between">
-
-            <div class="mb-4 basis-1/2">
-                <x-search-input :action="route('pasien.index')" name="search" placeholder="Cari nama / no rm / tanggal lahir" />
-            </div>
-            <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('pasien.index')" />
-
+   <div class="bg-white rounded shadow p-2">
+    <div class="w-full flex flex-col md:flex-row justify-between gap-2 mb-4">
+        <div class="md:basis-1/2">
+            <x-search-input :action="route('pasien.index')" name="search" placeholder="Cari nama / no rm / tanggal lahir" />
         </div>
-        <table class="min-w-full divide-y divide-gray-200">
+        <x-paginate :options="[2, 5, 10, 15, 20]" :default="10" :action="route('pasien.index')" />
+    </div>
+
+    <!-- Bungkus tabel dengan div overflow -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 w-full">
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. RM</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Lahir
-                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Lahir</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -69,21 +69,8 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <a href="{{ route('pasien.edit', $pasien->id) }}"
                                 class="px-3 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600">Edit</a>
-
-                            {{-- <form id="delete-form-{{ $pasien->id }}" action="{{ route('pasien.destroy', $pasien->id) }}"
-                                method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button"
-                                    class="px-3 py-1 cursor-pointer text-white bg-red-500 rounded hover:bg-red-600"
-                                    onclick="confirmDelete({{ $pasien->id }})">
-                                    Hapus
-                                </button>
-                            </form> --}}
                             <a href="{{ route('pasien.cetak.kib', $pasien->id) }}" target="_blank"
                                 class="px-3 py-1 text-white bg-teal-500 rounded hover:bg-teal-600">Cetak KIB</a>
-
-
                         </td>
                     </tr>
                 @empty
@@ -91,12 +78,13 @@
                 @endforelse
             </tbody>
         </table>
-        <div class="mt-4">
-            {{ $pasiens->links() }}
-        </div>
-
-
     </div>
+
+    <div class="mt-4">
+        {{ $pasiens->links() }}
+    </div>
+</div>
+
 
     <script>
         function confirmDelete(id) {

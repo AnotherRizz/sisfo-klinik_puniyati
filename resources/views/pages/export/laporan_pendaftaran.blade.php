@@ -113,6 +113,7 @@
                 <th>No. Reg</th>
                 <th>No. RM</th>
                 <th>Nama Pasien</th>
+                <th>Nama KK</th>
                 <th>Kode Bidan</th>
                 <th>Nama Bidan</th>
                 <th>Tanggal Daftar</th>
@@ -132,6 +133,7 @@
                             <td>{{ $item->pasien->no_rm ?? '-' }}</td>
                             <td style="text-align: left;">
                                 {{ $item->pasien->status . '. ' . $item->pasien->nama_pasien ?? '-' }}</td>
+                                <td>{{ $item->pasien->nama_kk ?? '-' }}</td>
                             <td>{{ $item->bidan->kd_bidan ?? '-' }}</td>
                             <td style="text-align: left;">{{ $item->bidan->nama_bidan ?? '-' }}</td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_daftar)->format('d-m-Y') }}</td>

@@ -80,6 +80,7 @@
                             <th class="border px-2 py-1 text-center">No. Reg</th>
                             <th class="border px-2 py-1 text-center">No. RM</th>
                             <th class="border px-2 py-1 text-center">Nama Pasien</th>
+                            <th class="border px-2 py-1 text-center">Nama KK</th>
                             <th class="border px-2 py-1 text-center">Kode Bidan</th>
                             <th class="border px-2 py-1 text-center">Nama Bidan</th>
                             <th class="border px-2 py-1 text-center">Tanggal Daftar</th>
@@ -99,6 +100,7 @@
                                         <td class="border px-2 py-1 text-center">{{ $item->noreg }}</td>
                                         <td class="border px-2 py-1 text-center">{{ $item->pasien->no_rm ?? '-' }}</td>
                                         <td class="border px-2 py-1">{{ $item->pasien->status. '. '. $item->pasien->nama_pasien ?? '-' }}</td>
+                                        <td class="border px-2 py-1 text-center">{{ $item->pasien->nama_kk ?? '-' }}</td>
                                         <td class="border px-2 py-1 text-center">{{ $item->bidan->kd_bidan ?? '-' }}</td>
                                         <td class="border px-2 py-1">{{ $item->bidan->nama_bidan ?? '-' }}</td>
                                         <td class="border px-2 py-1 text-center">

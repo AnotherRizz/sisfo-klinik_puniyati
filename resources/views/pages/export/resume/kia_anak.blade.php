@@ -141,6 +141,11 @@
                 <td class="separator">:</td>
                 <td class="value">: {{ $pemeriksaan->pendaftaran->pelayanan->nama_pelayanan ?? '-' }}</td>
             </tr>
+              <tr>
+                <td class="label">Nama KK</td>
+                <td class="separator">:</td>
+                <td class="value">: {{ $pemeriksaan->pendaftaran->pasien->nama_kk ?? '-' }}</td>
+            </tr>
         </table>
     </div>
     <hr>

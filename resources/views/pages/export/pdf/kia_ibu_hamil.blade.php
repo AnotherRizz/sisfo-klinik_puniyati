@@ -101,6 +101,7 @@
                 <th >NO. Periksa</th>
                 <th >NO. RM</th>
                 <th >NAMA PASIEN</th>
+                <th >NAMA KK</th>
                 <th >KELUHAN</th>
                 <th >UMUR KEHAMILAN</th>
                 <th >TD (mmHg) </th>
@@ -144,6 +145,7 @@
             <td>{{ $item->nomor_periksa ?? '-' }}</td>
             <td>{{ $item->pendaftaran->pasien->no_rm ?? '-' }}</td>
             <td>{{ $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+            <td>{{ $item->pendaftaran->pasien->nama_kk ?? '-' }}</td>
             <td>{{ $item->keluhan ?? '-' }}</td>
             <td>{{ $item->umr_hamil ? $item->umr_hamil . ' Minggu' : '-' }}</td>
             <td>{{ $item->td ?? '-' }}</td>

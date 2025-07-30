@@ -59,6 +59,7 @@
                             <th class="border px-2 py-1 text-center">NO. Periksa</th>
                             <th class="border px-2 py-1 text-center">NO. RM</th>
                             <th class="border px-2 py-1 text-center">NAMA PASIEN</th>
+                            <th class="border px-2 py-1 text-center">NAMA KK</th>
                             <th class="border px-2 py-1 text-center">KELUHAN</th>
                             <th class="border px-2 py-1 text-center">UMUR KEHAMILAN</th>
                             <th class="border px-2 py-1 text-center">TD (mmHg) </th>
@@ -120,6 +121,8 @@
                                 <td class="border px-2 py-1 text-center">{{ $item->pendaftaran->pasien->no_rm ?? '-' }}
                                 </td>
                                  <td class="border px-2 py-1">{{ $item->pendaftaran->pasien->status.'. '.  $item->pendaftaran->pasien->nama_pasien ?? '-' }}</td>
+                                   <td class="border px-2 py-1 text-center">{{ $item->pendaftaran->pasien->nama_kk ?? '-' }}
+                                </td>
                                 <td class="border px-2 py-1">{{ $item->keluhan ?? '-' }}</td>
                                 <td class="border px-2 py-1">{{ $item->umr_hamil ? $item->umr_hamil . ' Minggu' : '-' }}
                                 </td>
